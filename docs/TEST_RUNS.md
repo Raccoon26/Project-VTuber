@@ -22,7 +22,8 @@
 | Live2D/VBridger/방송 앱 runtime | Not run | 상용 앱/권리 있는 preset·테스트 모델 미확보 |
 | 실제 AI GPU 추론/3D/자동 rigging | Not run | 모델 미설치, 자원·권리/승인 조건 미충족 |
 | expert fidelity/dance/RTL/clean-machine installer | Not run | 후속 DEV와 corpus 필요 |
-| GitHub Windows CI / PR main merge | Pending | 최종 PR/check run/merge SHA로 갱신 |
+| GitHub Windows CI | 원격 실행 결과 참조 | [PR #1 Checks](https://github.com/Raccoon26/Project-VTuber/pull/1/checks); 최종 head에서 suite/release build/audit 성공을 병합 조건으로 요구 |
+| PR main merge / main CI | 원격 상태 참조 | [PR #1](https://github.com/Raccoon26/Project-VTuber/pull/1)의 merged 상태·SHA와 [main workflow](https://github.com/Raccoon26/Project-VTuber/actions/workflows/ci.yml?query=branch%3Amain); 로컬 결과와 구별 |
 
 ## 최종 suite
 `./scripts/test.ps1 -Python <검증된 절대경로>`는 docs audit, frontend, contract, Python, rustfmt, Rust tests, clippy, UI 순서로 실행하고 실패 시 중단한다. 2026-10-26 JST 최종 로컬 suite는 모든 항목을 통과했다(`artifacts/final-suite.log`). 원격 CI는 별도 결과로 기록한다. 시뮬레이션으로 GPU나 방송 앱을 검증했다고 표시하지 않는다.

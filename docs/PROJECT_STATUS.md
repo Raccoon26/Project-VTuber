@@ -34,6 +34,8 @@
 후속 사용자 지침에 따라 신규 작업 데이터/cache/temp는 E에 고정했다. 지침 전 생성한 Cargo registry는 E `.tools/cargo/registry`로 이동했다. 기존 Rust 설치와 공유 npm cache 등 사용자 도구 경로는 무단 삭제하지 않았다. 앱/WebView data도 E에 생성된 것을 확인했다. OS/Codex 자체 로그까지 통제했다고 주장하지 않는다.
 
 ## Release evidence
-작업 브랜치 `codex/dev-00-foundation`, base `47efb6c0f80a37a58e584c17cca1a4955c977121`. GitHub 저장소 `Raccoon26/Project-VTuber`, main 보호 여부/리뷰/CI는 merge 직전 다시 조회한다. 최초 조회는 protected=false, branch rules 없음이었다. 필수 조건이 없어도 이 PR의 Windows CI 성공을 요구하며 관리자 강제 merge를 쓰지 않는다. 최종 PR URL·검사 run·merge SHA는 PR/최종 보고에서 확인한다.
+작업 브랜치 `codex/dev-00-foundation`, base `47efb6c0f80a37a58e584c17cca1a4955c977121`. 변경은 [PR #1](https://github.com/Raccoon26/Project-VTuber/pull/1)에 연결되어 있다. [해당 PR의 Checks](https://github.com/Raccoon26/Project-VTuber/pull/1/checks)에서 최종 head의 Windows 테스트·release build·의존성 감사를 확인하고, PR의 merged 상태와 merge commit으로 최종 완료 여부를 판정한다. 문서 작성 시점과 병합 시점은 다르므로 병합 전 상태를 성공으로 기록하지 않는다.
+
+2026-10-26 조회 결과 main은 protected=false, 적용 branch rules 없음, 요구 review 없음이었다. merge 직전에 다시 확인하며, 필수 조건이 없어도 Windows CI 성공을 요구하고 관리자 강제 merge를 쓰지 않는다. 병합 뒤 로컬/원격 main SHA 일치와 구현 commit 포함 여부를 확인한다. [main CI](https://github.com/Raccoon26/Project-VTuber/actions/workflows/ci.yml?query=branch%3Amain)도 별도로 확인한다. 최종 merge SHA 및 검증 결과는 PR과 작업 최종 보고에 남긴다.
 
 DEV-01 시작은 [로드맵의 시작 지침](DEV_ROADMAP.md#dev-01-정확한-시작-지침)을 따른다.
