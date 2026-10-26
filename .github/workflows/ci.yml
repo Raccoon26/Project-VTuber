@@ -1,0 +1,58 @@
+name: DEV foundation
+on:
+  pull_request:
+  push:
+    branches: [main, "codex/**"]
+permissions:
+  contents: read
+concurrency:
+  group: foundation-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  windows-foundation:
+    runs-on: windows-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: "22.15.0"
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: "3.12"
+      - name: Install fixed Rust toolchain
+        shell: pwsh
+        run: |
+          rustup toolchain install 1.99.1 --profile minimal --component rustfmt,clippy
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Install locked frontend and test browser
+        shell: pwsh
+        run: |
+          . ./scripts/env.ps1
+          npm ci
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          npx playwright install chromium
+          exit $LASTEXITCODE
+      - name: Foundation verification
+        shell: pwsh
+        run: ./scripts/test.ps1 -Python (Get-Command python).Source
+      - name: Windows release executable
+        shell: pwsh
+        run: |
+          . ./scripts/env.ps1
+          npm run desktop:build 2>&1 | Tee-Object artifacts/desktop-build.log
+          exit $LASTEXITCODE
+      - name: Dependency audit
+        shell: pwsh
+        run: |
+          . ./scripts/env.ps1
+          npm audit --audit-level=moderate 2>&1 | Tee-Object artifacts/npm-audit.log
+          exit $LASTEXITCODE
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: windows-evidence
+          path: |
+            artifacts/*.log
+            artifacts/browser-preview.png
+          retention-days: 14

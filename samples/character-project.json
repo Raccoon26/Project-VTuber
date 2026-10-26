@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "id": "00000000-0000-4000-8000-000000000001",
+  "revision": 1,
+  "name": "Sample · サンプル · 예제",
+  "dimension": "2d",
+  "target_profile": "vbridger-vts",
+  "sources": [],
+  "gates": [
+    {
+      "id": "A",
+      "status": "unverified",
+      "evidence": []
+    },
+    {
+      "id": "B",
+      "status": "unverified",
+      "evidence": []
+    },
+    {
+      "id": "C",
+      "status": "unverified",
+      "evidence": []
+    },
+    {
+      "id": "D",
+      "status": "unverified",
+      "evidence": []
+    },
+    {
+      "id": "E",
+      "status": "unverified",
+      "evidence": []
+    },
+    {
+      "id": "F",
+      "status": "unverified",
+      "evidence": []
+    }
+  ],
+  "master_status": "not_generated"
+}
