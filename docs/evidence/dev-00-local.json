@@ -1,0 +1,65 @@
+{
+  "recordedAt": "2026-10-26T11:09:40.806Z",
+  "timezone": "Asia/Tokyo",
+  "scope": "DEV-00 foundation only; no real model generation or broadcast application certification",
+  "environment": {
+    "os": "Windows 10 Pro 19045 x64",
+    "rust": "1.99.1",
+    "node": "22.15.0",
+    "python": "3.12.14",
+    "gpu": "RTX 2060 6144MiB",
+    "driver": "591.74"
+  },
+  "counts": {
+    "rust": 12,
+    "python": 2,
+    "contracts": 4,
+    "browser": 1,
+    "requirements": 62,
+    "devPlans": 34
+  },
+  "checks": [
+    {
+      "id": "full-local-suite",
+      "command": "./scripts/test.ps1 -Python <Python 3.12>",
+      "status": "pass",
+      "localEvidence": "artifacts/final-suite.log",
+      "sha256": "8959088a5a902d100534f4956e59db43090bbca64eb72e5a2700a144f8254449"
+    },
+    {
+      "id": "windows-release",
+      "command": "npm run desktop:build",
+      "status": "pass",
+      "localEvidence": "artifacts/desktop-build-final.log",
+      "sha256": "06e56c59188cf4b2c70c3609fcae07ca2612d2cf27dc1734ec1002291bf0fef8"
+    },
+    {
+      "id": "native-desktop",
+      "command": "node scripts/native-smoke.mjs",
+      "status": "pass",
+      "localEvidence": "artifacts/native-smoke.log",
+      "sha256": "82977c08f6b83d89785e647e3a3a6bf39b81a9828ea947ebc8d20936f0672d3a"
+    },
+    {
+      "id": "dependency-audit",
+      "command": "npm audit",
+      "status": "pass",
+      "localEvidence": "artifacts/npm-audit.log",
+      "sha256": "4b02d4a3c23d969c46bd2041360f80bfcb1fe760d9db864009acdd710f9de601"
+    }
+  ],
+  "executable": {
+    "path": "src-tauri/target/release/vtuber-desktop.exe",
+    "sha256": "dc96bdf9b9ff94b62a98784cb7d650278e25c595115611997346f2320338780c"
+  },
+  "notRun": [
+    "OS native file picker interaction",
+    "Live2D authoring/export runtime",
+    "VBridger and broadcasting app runtime",
+    "real AI GPU inference",
+    "expert rig quality",
+    "clean-machine installer",
+    "RTL usability"
+  ],
+  "remoteCI": "See associated GitHub PR for exact-head checks and merge result"
+}

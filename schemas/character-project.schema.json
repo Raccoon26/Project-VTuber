@@ -1,0 +1,245 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://project-vtuber.invalid/schema/character-project-v1",
+  "title": "CharacterProject v1 - no generated master",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "id",
+    "revision",
+    "name",
+    "dimension",
+    "target_profile",
+    "sources",
+    "gates",
+    "master_status"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+    },
+    "revision": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 99999999
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 120
+    },
+    "dimension": {
+      "enum": ["2d", "3d"]
+    },
+    "target_profile": {
+      "enum": [
+        "vtube-studio",
+        "vbridger-vts",
+        "inochi-session",
+        "prprlive",
+        "vseeface",
+        "warudo",
+        "vnyan",
+        "vrchat",
+        "vbridger-vmc",
+        "glb"
+      ]
+    },
+    "sources": {
+      "type": "array",
+      "maxItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "sha256",
+          "bytes",
+          "width",
+          "height",
+          "format",
+          "provenance"
+        ],
+        "properties": {
+          "sha256": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "bytes": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 67108864
+          },
+          "width": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "height": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "format": {
+            "const": "png"
+          },
+          "provenance": {
+            "const": "original"
+          }
+        }
+      }
+    },
+    "gates": {
+      "type": "array",
+      "minItems": 6,
+      "maxItems": 6,
+      "prefixItems": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["id", "status", "evidence"],
+          "properties": {
+            "id": {
+              "const": "A"
+            },
+            "status": {
+              "const": "unverified"
+            },
+            "evidence": {
+              "type": "array",
+              "maxItems": 0
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["id", "status", "evidence"],
+          "properties": {
+            "id": {
+              "const": "B"
+            },
+            "status": {
+              "const": "unverified"
+            },
+            "evidence": {
+              "type": "array",
+              "maxItems": 0
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["id", "status", "evidence"],
+          "properties": {
+            "id": {
+              "const": "C"
+            },
+            "status": {
+              "const": "unverified"
+            },
+            "evidence": {
+              "type": "array",
+              "maxItems": 0
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["id", "status", "evidence"],
+          "properties": {
+            "id": {
+              "const": "D"
+            },
+            "status": {
+              "const": "unverified"
+            },
+            "evidence": {
+              "type": "array",
+              "maxItems": 0
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["id", "status", "evidence"],
+          "properties": {
+            "id": {
+              "const": "E"
+            },
+            "status": {
+              "const": "unverified"
+            },
+            "evidence": {
+              "type": "array",
+              "maxItems": 0
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["id", "status", "evidence"],
+          "properties": {
+            "id": {
+              "const": "F"
+            },
+            "status": {
+              "const": "unverified"
+            },
+            "evidence": {
+              "type": "array",
+              "maxItems": 0
+            }
+          }
+        }
+      ]
+    },
+    "master_status": {
+      "const": "not_generated"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "dimension": {
+            "const": "2d"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "target_profile": {
+            "enum": [
+              "vtube-studio",
+              "vbridger-vts",
+              "inochi-session",
+              "prprlive"
+            ]
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "target_profile": {
+            "enum": [
+              "vseeface",
+              "warudo",
+              "vnyan",
+              "vrchat",
+              "vbridger-vmc",
+              "glb"
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "$comment": "Rust also enforces trimmed nonempty/control-free name and width*height <=40M; schema must not replace runtime validation."
+}
