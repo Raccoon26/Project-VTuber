@@ -2,7 +2,9 @@
 // Run with WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS=--remote-debugging-port=9223.
 // Seed only the synthetic fixture first; no production endpoint exposes raw IO.
 import { chromium, expect } from "@playwright/test";
-const browser = await chromium.connectOverCDP("http://127.0.0.1:9223");
+const browser = await chromium.connectOverCDP(
+  `http://127.0.0.1:${process.env.VTUBER_TEST_CDP_PORT ?? "9223"}`,
+);
 try {
   await expect
     .poll(

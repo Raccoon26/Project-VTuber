@@ -1,63 +1,36 @@
 use crate::{
+    durable::{lock, plain, publish},
     model::{CharacterProject, SourceAsset},
     AppError, Result,
 };
 use sha2::{Digest, Sha256};
 use std::{
-    fs::{self, File, OpenOptions},
-    io::{Read, Write},
+    fs::{self, File},
+    io::Read,
     path::{Path, PathBuf},
 };
 
 const MAX_MANIFEST: u64 = 1024 * 1024;
 pub struct ProjectStore {
-    root: PathBuf,
+    pub(crate) root: PathBuf,
 }
 
-fn plain(path: &Path) -> Result<()> {
-    let meta = fs::symlink_metadata(path)?;
-    #[cfg(windows)]
-    {
-        use std::os::windows::fs::MetadataExt;
-        if meta.file_attributes() & 0x400 != 0 {
-            return Err(AppError::new("unsafe_path"));
-        }
-    }
-    if meta.file_type().is_symlink() {
-        return Err(AppError::new("unsafe_path"));
-    }
-    Ok(())
-}
-fn publish(path: &Path, bytes: &[u8]) -> Result<()> {
-    // Publishing a hard link is atomic and never overwrites another revision.
-    let temp = path.with_extension(format!("{}.pending", uuid::Uuid::new_v4()));
-    let result = (|| {
-        let mut f = OpenOptions::new()
-            .write(true)
-            .create_new(true)
-            .open(&temp)?;
-        f.write_all(bytes)?;
-        f.sync_all()?;
-        drop(f);
-        fs::hard_link(&temp, path)?;
-        Ok(())
-    })();
-    let _ = fs::remove_file(temp);
-    result
-}
 pub fn hash(bytes: &[u8]) -> String {
     format!("{:x}", Sha256::digest(bytes))
 }
 
 impl ProjectStore {
     pub fn new(root: PathBuf) -> Result<Self> {
+        if root.try_exists()? {
+            plain(&root)?;
+        }
         fs::create_dir_all(&root)?;
         plain(&root)?;
         Ok(Self {
             root: fs::canonicalize(root)?,
         })
     }
-    fn dir(&self, id: &str) -> Result<PathBuf> {
+    pub(crate) fn dir(&self, id: &str) -> Result<PathBuf> {
         if uuid::Uuid::parse_str(id)
             .map(|v| v.to_string())
             .ok()
@@ -68,12 +41,12 @@ impl ProjectStore {
         }
         plain(&self.root)?;
         let dir = self.root.join(id);
-        if dir.exists() {
+        if dir.try_exists()? {
             plain(&dir)?;
         }
         Ok(dir)
     }
-    fn latest(&self, dir: &Path) -> Result<u64> {
+    pub(crate) fn latest(&self, dir: &Path) -> Result<u64> {
         let mut latest = 0;
         for file in fs::read_dir(dir)? {
             let file = file?;
@@ -99,6 +72,7 @@ impl ProjectStore {
         let project = CharacterProject::new(name, dimension, target)?;
         let dir = self.dir(&project.id)?;
         fs::create_dir(&dir)?;
+        let _lock = lock(&dir.join(".write.lock"))?;
         fs::create_dir(dir.join("sources"))?;
         publish(
             &dir.join("00000001.json"),
@@ -108,7 +82,15 @@ impl ProjectStore {
     }
     pub fn open(&self, id: &str) -> Result<CharacterProject> {
         let dir = self.dir(id)?;
-        let revision = self.latest(&dir)?;
+        let _lock = lock(&dir.join(".write.lock"))?;
+        self.open_unlocked(id)
+    }
+    pub(crate) fn open_unlocked(&self, id: &str) -> Result<CharacterProject> {
+        let revision = self.latest(&self.dir(id)?)?;
+        self.read_revision(id, revision)
+    }
+    pub(crate) fn read_revision(&self, id: &str, revision: u64) -> Result<CharacterProject> {
+        let dir = self.dir(id)?;
         let path = dir.join(format!("{revision:08}.json"));
         plain(&path)?;
         let mut bytes = Vec::new();
@@ -118,7 +100,15 @@ impl ProjectStore {
         if bytes.len() as u64 > MAX_MANIFEST {
             return Err(AppError::new("invalid_project"));
         }
-        let project: CharacterProject = serde_json::from_slice(&bytes)?;
+        let value: serde_json::Value = serde_json::from_slice(&bytes)?;
+        if value
+            .get("schema_version")
+            .and_then(|x| x.as_u64())
+            .is_some_and(|v| v != 1)
+        {
+            return Err(AppError::new("schema_unsupported"));
+        }
+        let project: CharacterProject = serde_json::from_value(value)?;
         project.validate()?;
         if project.id != id || project.revision != revision {
             return Err(AppError::new("invalid_project"));
@@ -127,22 +117,16 @@ impl ProjectStore {
         Ok(project)
     }
     pub fn list(&self) -> Result<Vec<CharacterProject>> {
-        let mut projects = Vec::new();
-        for item in fs::read_dir(&self.root)? {
-            let id = item?.file_name().to_string_lossy().into_owned();
-            if uuid::Uuid::parse_str(&id).is_ok() {
-                projects.push(self.open(&id)?);
-            }
-        }
-        projects.sort_by(|a, b| a.name.cmp(&b.name));
-        Ok(projects)
+        Ok(self.list_v2()?.healthy)
     }
     fn commit(&self, mut project: CharacterProject, expected: u64) -> Result<CharacterProject> {
         let dir = self.dir(&project.id)?;
         if self.latest(&dir)? != expected {
             return Err(AppError::new("revision_conflict"));
         }
-        project.revision = expected + 1;
+        project.revision = expected
+            .checked_add(1)
+            .ok_or_else(|| AppError::new("invalid_project"))?;
         project.validate()?;
         publish(
             &dir.join(format!("{:08}.json", project.revision)),
@@ -151,12 +135,14 @@ impl ProjectStore {
         Ok(project)
     }
     pub fn rename(&self, id: &str, revision: u64, name: String) -> Result<CharacterProject> {
-        let mut p = self.open(id)?;
+        let _lock = lock(&self.dir(id)?.join(".write.lock"))?;
+        let mut p = self.open_unlocked(id)?;
         p.name = name;
         self.commit(p, revision)
     }
     pub fn import_png(&self, id: &str, revision: u64, path: &Path) -> Result<CharacterProject> {
-        let mut p = self.open(id)?;
+        let _lock = lock(&self.dir(id)?.join(".write.lock"))?;
+        let mut p = self.open_unlocked(id)?;
         if p.revision != revision {
             return Err(AppError::new("revision_conflict"));
         }

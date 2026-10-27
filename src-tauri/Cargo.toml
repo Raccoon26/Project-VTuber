@@ -24,6 +24,7 @@ sha2 = "0.10"
 uuid = { version = "1", features = ["v4", "serde"] }
 png = "0.17"
 rfd = "0.15"
+rusqlite = { version = "=0.41.0", features = ["bundled"] }
 
 [dev-dependencies]
 tempfile = "3"
