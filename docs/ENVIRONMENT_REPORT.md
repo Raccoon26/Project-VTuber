@@ -33,3 +33,7 @@
 
 ## 재현
 `git status --short --branch`, `nvidia-smi --query-gpu=name,memory.total,driver_version --format=csv,noheader`, `rustc --version`, `cargo --version`, `node --version`, `npm --version`, 명시 Python `--version`을 기록한다. CIM 실패는 권한 문제와 장치 부재를 분리한다. raw 로그에는 사용자 경로가 들어가므로 ignore된 artifacts에 두고 공개 저장소에는 요약만 포함한다.
+
+## DEV-01 재확인 — 2026-10-27 JST
+
+base main ac7e257 및 CI40314991998 success, clean tree에서 codex/dev-01-project-resilience 생성. 기존 실제 Python3.12.14 경로/Node22.15.0/Rust1.99.1/SDK env를 유지했다. E 드라이브 DriveInfo는 NTFS, 조회 시 가용 2,777,176,973,312 bytes였다. 기존 app-data 프로젝트5개는 구조만 열거하고 테스트에는 새 tempfile/native fixture를 사용했다. 추가한 rusqlite/SQLite 및 캐시/빌드/로그는 E 작업 루트에 있다.

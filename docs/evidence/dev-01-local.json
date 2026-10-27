@@ -1,0 +1,72 @@
+{
+  "recordedAt": "2026-10-27T12:03:29.959792+00:00",
+  "baseCommit": "ac7e2573ed4a2086940842a01aecb7746fd72028",
+  "scope": "DEV-01 storage resilience; synthetic data only; no AI or broadcast certification",
+  "environment": {
+    "os": "Windows 10 x64",
+    "filesystem": "NTFS",
+    "rust": "1.99.1",
+    "node": "22.15.0",
+    "python": "3.12.14"
+  },
+  "counts": {
+    "rust": 28,
+    "subprocessFixture": 1,
+    "python": 2,
+    "contracts": 4,
+    "browser": 2,
+    "requirements": 78,
+    "documents": 23
+  },
+  "checks": [
+    {
+      "id": "baseline",
+      "command": "./scripts/test.ps1 -Python <validated Python3.12>",
+      "status": "pass",
+      "localEvidence": "artifacts/dev-01-baseline-clean.log",
+      "sha256": "80490c4724716b0d5309b86b41a4f51f696646452c30b0d7eed322982c092bbf"
+    },
+    {
+      "id": "full-suite",
+      "command": "./scripts/test.ps1 -Python <validated Python3.12>",
+      "status": "pass",
+      "localEvidence": "artifacts/dev-01-final-suite.log",
+      "sha256": "2a4415f73b6b3ecc93fb18469f92f130f8c174b8fbcbd3300bd5cd889fdb49be"
+    },
+    {
+      "id": "windows-release",
+      "command": "npm run desktop:build",
+      "status": "pass",
+      "localEvidence": "artifacts/dev-01-release-final.log",
+      "sha256": "eee68d862c610430ea8c375376a095e3a7dc0843580fdfcdc25128432c542bae"
+    },
+    {
+      "id": "native-recovery",
+      "command": "node scripts/native-recovery.mjs",
+      "status": "pass",
+      "localEvidence": "artifacts/dev-01-native-final-retry.log",
+      "sha256": "94836df393cb0dabce83298a70decf55187b61ab83eab630e80fe04076ba376f"
+    },
+    {
+      "id": "dependency-audit",
+      "command": "npm audit",
+      "status": "pass",
+      "localEvidence": "artifacts/dev-01-npm-audit.log",
+      "sha256": "4b02d4a3c23d969c46bd2041360f80bfcb1fe760d9db864009acdd710f9de601"
+    }
+  ],
+  "nativeHarnessSHA256": "b587e3041cb0a0a218e033d7d306a54544513a3677f7ebea21aadf4efa263444",
+  "executable": {
+    "path": "src-tauri/target/release/vtuber-desktop.exe",
+    "sha256": "c3b830c0d07c6be6ac183e833978b2b55e75ce664ca0bb23c08bdebbfd47581e"
+  },
+  "notRun": [
+    "power loss",
+    "actual disk exhaustion (StorageFull fault injected instead)",
+    "network/non-NTFS filesystems",
+    "full child process tree cleanup",
+    "AI checkpoint resume",
+    "OS native file picker interaction"
+  ],
+  "remoteCI": "Final PR checks and merged main workflow are authoritative; local success alone is not DEV completion."
+}

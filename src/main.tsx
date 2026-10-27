@@ -7,9 +7,11 @@ import {
   type Dimension,
   type GpuReport,
   type Job,
+  type ProjectList,
 } from "./contracts";
 import { message, type Locale } from "./i18n";
 import "./style.css";
+import { RecoveryPanel } from "./RecoveryPanel";
 
 function App() {
   const [locale, setLocale] = useState<Locale>("ko");
@@ -20,12 +22,20 @@ function App() {
   const [target, setTarget] = useState("vbridger-vts");
   const [project, setProject] = useState<CharacterProject | null>(null);
   const [saved, setSaved] = useState<CharacterProject[]>([]);
+  const [listing, setListing] = useState<ProjectList>({
+    version: 2,
+    healthy: [],
+    issues: [],
+    index_warning: null,
+  });
+  const [jobs, setJobs] = useState<Job[]>([]);
+  const [search, setSearch] = useState("");
   const [job, setJob] = useState<Job | null>(null);
   const [gpu, setGpu] = useState<GpuReport | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const native = isTauri();
-  const running = job?.status === "running";
+  const running = job?.status === "running" || job?.status === "queued";
   function report(e: unknown) {
     setError(
       typeof e === "object" && e !== null && "code" in e
@@ -44,8 +54,14 @@ function App() {
       setBusy(false);
     }
   }
-  const refresh = async () =>
-    setSaved(await invoke<CharacterProject[]>("list_projects"));
+  const refresh = async () => {
+    const result = await invoke<ProjectList>("search_projects", {
+      query: search,
+    });
+    setListing(result);
+    setSaved(result.healthy);
+    setJobs(await invoke<Job[]>("job_history"));
+  };
   const select = (p: CharacterProject) => {
     setProject(p);
     setName(p.name);
@@ -79,6 +95,10 @@ function App() {
       clearInterval(timer);
     };
   }, [running]);
+  useEffect(() => {
+    if (native && !running)
+      void invoke<Job[]>("job_history").then(setJobs).catch(report);
+  }, [native, running]);
   const blocked = !native || busy || !!running;
   return (
     <div className="shell">
@@ -139,6 +159,20 @@ function App() {
             <section>
               <h2>{t("step1")}</h2>
               <label>
+                {t("search")}
+                <input
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                />
+              </label>
+              <button
+                className="secondary"
+                disabled={blocked}
+                onClick={() => void action(refresh)}
+              >
+                {t("refresh")}
+              </button>
+              <label>
                 {t("open")}
                 <select
                   disabled={blocked}
@@ -153,11 +187,17 @@ function App() {
                   }}
                 >
                   <option value="">{t("choose")}</option>
-                  {saved.map((p) => (
-                    <option key={p.id} value={p.id}>
-                      {p.name}
-                    </option>
-                  ))}
+                  {saved
+                    .filter((p) =>
+                      p.name
+                        .toLocaleLowerCase()
+                        .includes(search.toLocaleLowerCase()),
+                    )
+                    .map((p) => (
+                      <option key={p.id} value={p.id}>
+                        {p.name}
+                      </option>
+                    ))}
                 </select>
               </label>
               <label>
@@ -249,6 +289,18 @@ function App() {
                 </small>
               )}
             </section>
+            <RecoveryPanel
+              list={listing}
+              project={project}
+              t={t}
+              expert={expert}
+              disabled={blocked}
+              report={report}
+              recovered={async (p) => {
+                select(p);
+                await refresh();
+              }}
+            />
             <section>
               <h2>{t("step2")}</h2>
               <div className="source">
@@ -300,6 +352,25 @@ function App() {
                 <p role="alert" className="error">
                   {t(job.error)}
                 </p>
+              )}
+              {jobs.length > 0 && (
+                <details>
+                  <summary>{t("jobHistory")}</summary>
+                  <ul>
+                    {jobs.map((j) => (
+                      <li key={j.id}>
+                        {t(j.status)} · {j.progress}%
+                        {expert && <code>{j.id}</code>}
+                        {[
+                          "interrupted",
+                          "failed",
+                          "cancelled",
+                          "recovery_required",
+                        ].includes(j.status) && <p>{t("retryHint")}</p>}
+                      </li>
+                    ))}
+                  </ul>
+                </details>
               )}
               <progress
                 max={100}

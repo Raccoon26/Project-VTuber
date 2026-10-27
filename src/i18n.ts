@@ -1,7 +1,66 @@
 export const en = {
+  recovery: "Storage recovery",
+  projectId: "Project ID",
+  diagnose: "Inspect saved versions",
+  history: "Saved versions",
+  historyHint:
+    "Only versions with intact referenced originals can be selected. This is a data preview, not a rendered character.",
+  previewRecovery: "Preview recovery",
+  changedFields: "Changed fields",
+  noChanges: "No content changes",
+  sourceCount: "Referenced originals",
+  recoveryPreserves:
+    "All existing saved versions and original files remain untouched. Recovery creates a new version.",
+  recoveryExcludes:
+    "Changes after the selected version are not included in the restored state. Missing or damaged originals cannot be reconstructed. Job history is separate.",
+  confirmRecovery:
+    "I reviewed the changes and want to create a restored version.",
+  restore: "Create restored version",
+  cancelRecovery: "Cancel recovery",
+  latest_unreadable: "Latest saved data cannot be read",
+  recoverable:
+    "This project has damaged saved data. Earlier versions may be available.",
+  unrecoverable:
+    "No intact saved version was found. Preserve the files and check a backup.",
+  uninspectable:
+    "This project could not be inspected. Check access and diagnostics.",
+  project_busy:
+    "Another process is using this project. Wait and refresh; do not delete lock files.",
+  access_denied:
+    "File access was denied. Check folder permissions and other applications.",
+  disk_full:
+    "There is not enough storage space. Existing versions remain preserved. Free space and inspect before retrying.",
+  inspection_limit:
+    "This history exceeds the inspection limit. Preserve it and request expert diagnostics.",
+  index_unavailable:
+    "The search index could not be updated. The list uses verified files; refresh to rebuild.",
+  queued: "Waiting to start",
+  interrupted:
+    "The previous job stopped unexpectedly; completion was not confirmed.",
+  recovery_required:
+    "Job records need inspection before their outcome can be trusted.",
+  job_interrupted:
+    "The application stopped before a terminal result was safely recorded.",
+  journal_invalid:
+    "The job record is damaged or unsupported. It has been preserved.",
+  journal_write_failed:
+    "Job state could not be saved. Do not treat this run as completed.",
+  jobHistory: "Job history",
+  retryHint:
+    "To retry, open and verify the original project, then start a new dummy job. No automatic resume is performed.",
+  search: "Search projects",
+  refresh: "Refresh and rebuild index",
+  field_name: "Name",
+  field_dimension: "Model type",
+  field_target_profile: "Broadcast profile",
+  field_sources: "Referenced originals",
+  field_gates: "Quality results",
+  field_master_status: "Model state",
+  field_latest_unreadable:
+    "Latest state is unreadable; exact differences are unknown",
   title: "Character workshop",
   subtitle: "Preserve the original. Build with evidence.",
-  foundation: "DEV-00 · Foundation preview",
+  foundation: "DEV-01 · Storage recovery",
   notice:
     "This build tests project storage and a dummy worker. It does not generate or rig a character.",
   language: "Language",
@@ -93,6 +152,58 @@ export const en = {
 export type MessageKey = keyof typeof en;
 export type Locale = "en" | "ja" | "ko";
 export const ja: Record<MessageKey, string> = {
+  recovery: "保存データの復旧",
+  projectId: "プロジェクト ID",
+  diagnose: "保存履歴を確認",
+  history: "保存履歴",
+  historyHint:
+    "参照元画像が正常な履歴のみ選択できます。これはデータの確認であり、キャラクター表示ではありません。",
+  previewRecovery: "復旧内容を確認",
+  changedFields: "変更される項目",
+  noChanges: "内容の変更なし",
+  sourceCount: "参照元画像数",
+  recoveryPreserves:
+    "既存の履歴と元画像を残したまま、新しい保存版を作成します。",
+  recoveryExcludes:
+    "選択版以降の変更は復旧状態に含まれません。欠損・破損した元画像は再生成できません。作業履歴は別に保持されます。",
+  confirmRecovery: "変更内容を確認し、復旧版を作成します。",
+  restore: "復旧版を作成",
+  cancelRecovery: "復旧をキャンセル",
+  latest_unreadable: "最新の保存データを読み取れません",
+  recoverable: "保存データに問題があります。以前の版を確認できます。",
+  unrecoverable:
+    "正常な保存版が見つかりません。ファイルを保管しバックアップを確認してください。",
+  uninspectable: "検査できませんでした。アクセス権と診断を確認してください。",
+  project_busy:
+    "別のプロセスが使用中です。待って再読み込みしてください。ロックファイルを削除しないでください。",
+  access_denied:
+    "ファイルへのアクセスが拒否されました。権限と他のアプリを確認してください。",
+  disk_full:
+    "保存容量が不足しています。既存の履歴は保持されています。空き容量と履歴を確認してください。",
+  inspection_limit:
+    "履歴が検査上限を超えています。保管して専門診断を行ってください。",
+  index_unavailable:
+    "検索索引を更新できません。検証済みファイルから表示しています。再読み込みで再構築します。",
+  queued: "開始待ち",
+  interrupted: "前回の作業が中断されました。完了は確認されていません。",
+  recovery_required: "結果を確認するには作業記録の検査が必要です。",
+  job_interrupted: "終了結果を安全に保存する前にアプリが停止しました。",
+  journal_invalid:
+    "作業記録が破損または未対応です。元の記録は保持されています。",
+  journal_write_failed:
+    "作業状態を保存できませんでした。完了とは扱わないでください。",
+  jobHistory: "作業履歴",
+  retryHint:
+    "再試行する場合は元のプロジェクトを開いて確認し、新しいダミー作業を開始してください。自動再開は行いません。",
+  search: "プロジェクト検索",
+  refresh: "再読み込み・索引再構築",
+  field_name: "名前",
+  field_dimension: "モデル形式",
+  field_target_profile: "配信プロファイル",
+  field_sources: "参照元画像",
+  field_gates: "品質結果",
+  field_master_status: "モデル状態",
+  field_latest_unreadable: "最新状態を読めないため差分は不明",
   title: "キャラクター工房",
   subtitle: "原画を守り、検証を重ねて制作。",
   foundation: "DEV-00 · 開発基盤プレビュー",
@@ -184,9 +295,64 @@ export const ja: Record<MessageKey, string> = {
     "処理データが不正なため停止しました。ワーカーとアプリのバージョンを確認してください。",
 };
 export const ko: Record<MessageKey, string> = {
+  recovery: "저장 데이터 복구",
+  projectId: "프로젝트 ID",
+  diagnose: "진단 및 저장 이력 확인",
+  history: "저장 이력",
+  historyHint:
+    "참조 원본까지 정상인 버전만 선택할 수 있습니다. 캐릭터 렌더링이 아닌 저장 데이터 미리보기입니다.",
+  previewRecovery: "복구 미리보기",
+  changedFields: "변경 항목",
+  noChanges: "내용 변경 없음",
+  sourceCount: "참조 원본 수",
+  recoveryPreserves:
+    "기존 저장 이력과 원본 파일은 모두 보존하고 새 버전을 만듭니다.",
+  recoveryExcludes:
+    "선택한 버전 이후 변경은 복구 상태에 포함되지 않습니다. 없거나 손상된 원본은 재생성하지 못합니다. 작업 기록은 별도로 유지됩니다.",
+  confirmRecovery: "변경 내용을 확인했으며 새 복구 버전을 만들겠습니다.",
+  restore: "새 복구 버전 만들기",
+  cancelRecovery: "복구 취소",
+  latest_unreadable: "최신 저장 데이터를 읽을 수 없습니다",
+  recoverable:
+    "이 프로젝트의 저장 데이터에 문제가 있습니다. 이전 버전을 확인할 수 있습니다.",
+  unrecoverable:
+    "정상 저장 버전을 찾지 못했습니다. 파일을 보존하고 백업을 확인하세요.",
+  uninspectable:
+    "프로젝트를 검사하지 못했습니다. 접근 권한과 진단을 확인하세요.",
+  project_busy:
+    "다른 프로세스가 사용 중입니다. 잠시 후 새로고침하세요. 잠금 파일을 삭제하지 마세요.",
+  access_denied:
+    "파일 접근이 거부되었습니다. 폴더 권한과 다른 프로그램의 사용 여부를 확인하세요.",
+  disk_full:
+    "저장 공간이 부족합니다. 기존 이력은 보존됩니다. 공간을 확보하고 이력을 확인한 뒤 다시 시도하세요.",
+  inspection_limit:
+    "이력이 검사 한도를 초과합니다. 데이터를 보존하고 전문가 진단을 진행하세요.",
+  index_unavailable:
+    "검색 인덱스를 갱신하지 못했습니다. 검증한 파일로 목록을 표시합니다. 새로고침하면 재구축합니다.",
+  queued: "실행 대기 중",
+  interrupted:
+    "이전 작업이 비정상적으로 중단되었습니다. 완료가 확인되지 않았습니다.",
+  recovery_required: "작업 결과를 확인하려면 기록 검사가 필요합니다.",
+  job_interrupted: "종료 결과를 안전하게 기록하기 전에 앱이 종료되었습니다.",
+  journal_invalid:
+    "작업 기록이 손상되었거나 지원하지 않는 형식입니다. 기존 기록은 보존했습니다.",
+  journal_write_failed:
+    "작업 상태를 저장하지 못했습니다. 완료된 작업으로 취급하지 마세요.",
+  jobHistory: "작업 기록",
+  retryHint:
+    "재시도하려면 원래 프로젝트를 열어 확인한 뒤 새 더미 작업을 시작하세요. 자동 재개는 하지 않습니다.",
+  search: "프로젝트 검색",
+  refresh: "새로고침 및 인덱스 재구축",
+  field_name: "이름",
+  field_dimension: "모델 종류",
+  field_target_profile: "방송 프로필",
+  field_sources: "참조 원본",
+  field_gates: "품질 결과",
+  field_master_status: "모델 상태",
+  field_latest_unreadable: "최신 상태를 읽지 못해 정확한 차이를 알 수 없음",
   title: "캐릭터 제작실",
   subtitle: "원본을 지키고, 검증을 거쳐 완성합니다.",
-  foundation: "DEV-00 · 개발 기반 미리보기",
+  foundation: "DEV-01 · 저장 및 복구",
   notice:
     "이 버전은 프로젝트 저장과 더미 작업을 시험합니다. 캐릭터 생성과 리깅은 아직 구현되지 않았습니다.",
   language: "언어",

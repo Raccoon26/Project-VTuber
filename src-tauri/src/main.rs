@@ -7,6 +7,7 @@ use tauri::{Manager, State};
 use vtuber_core::{
     gpu::{self, GpuReport},
     model::CharacterProject,
+    recovery::{ProjectList, RecoveryPreview, RevisionReport},
     storage::ProjectStore,
     worker::{Job, JobManager},
     AppError, Result,
@@ -30,6 +31,58 @@ fn create_project(
 #[tauri::command]
 fn list_projects(state: State<AppState>) -> Result<Vec<CharacterProject>> {
     state.store.lock().unwrap().list()
+}
+#[tauri::command]
+async fn list_projects_v2(state: State<'_, AppState>) -> Result<ProjectList> {
+    let store = state.store.clone();
+    tauri::async_runtime::spawn_blocking(move || store.lock().unwrap().list_v2())
+        .await
+        .map_err(|_| AppError::new("storage_error"))?
+}
+#[tauri::command]
+async fn search_projects(state: State<'_, AppState>, query: String) -> Result<ProjectList> {
+    let store = state.store.clone();
+    tauri::async_runtime::spawn_blocking(move || store.lock().unwrap().search_projects(&query))
+        .await
+        .map_err(|_| AppError::new("storage_error"))?
+}
+#[tauri::command]
+async fn project_history(state: State<'_, AppState>, id: String) -> Result<Vec<RevisionReport>> {
+    let store = state.store.clone();
+    tauri::async_runtime::spawn_blocking(move || store.lock().unwrap().inspect(&id))
+        .await
+        .map_err(|_| AppError::new("storage_error"))?
+}
+#[tauri::command]
+async fn preview_recovery(
+    state: State<'_, AppState>,
+    id: String,
+    revision: u64,
+) -> Result<RecoveryPreview> {
+    let store = state.store.clone();
+    tauri::async_runtime::spawn_blocking(move || {
+        store.lock().unwrap().preview_recovery(&id, revision)
+    })
+    .await
+    .map_err(|_| AppError::new("storage_error"))?
+}
+#[tauri::command]
+async fn recover_project(
+    state: State<'_, AppState>,
+    id: String,
+    revision: u64,
+    token: String,
+) -> Result<CharacterProject> {
+    let store = state.store.clone();
+    tauri::async_runtime::spawn_blocking(move || {
+        store.lock().unwrap().recover(&id, revision, &token)
+    })
+    .await
+    .map_err(|_| AppError::new("storage_error"))?
+}
+#[tauri::command]
+fn job_history(state: State<AppState>) -> Result<Vec<Job>> {
+    state.jobs.history()
 }
 #[tauri::command]
 fn open_project(state: State<AppState>, id: String) -> Result<CharacterProject> {
@@ -119,7 +172,7 @@ fn main() {
                 .unwrap_or_else(|| "python".into());
             app.manage(AppState {
                 store: Arc::new(Mutex::new(ProjectStore::new(root).map_err(|e| e.code)?)),
-                jobs: JobManager::default(),
+                jobs: JobManager::persistent(data.join("jobs")).map_err(|e| e.code)?,
                 script,
                 python,
             });
@@ -134,6 +187,12 @@ fn main() {
         .invoke_handler(tauri::generate_handler![
             create_project,
             list_projects,
+            list_projects_v2,
+            search_projects,
+            project_history,
+            preview_recovery,
+            recover_project,
+            job_history,
             open_project,
             save_project,
             import_source,

@@ -22,10 +22,41 @@ export interface CharacterProject {
 export interface Job {
   id: string;
   project_id: string;
-  status: "running" | "completed" | "cancelled" | "failed";
+  status:
+    | "queued"
+    | "running"
+    | "completed"
+    | "cancelled"
+    | "failed"
+    | "interrupted"
+    | "recovery_required";
   progress: number;
   provider: "dummy";
   error: string | null;
+}
+export interface ProjectIssue {
+  id: string;
+  status: string;
+  error: string;
+  recoverable: number[];
+}
+export interface ProjectList {
+  version: 2;
+  healthy: CharacterProject[];
+  issues: ProjectIssue[];
+  index_warning: string | null;
+}
+export interface RevisionReport {
+  revision: number;
+  project: CharacterProject | null;
+  error: string | null;
+}
+export interface RecoveryPreview {
+  selected: CharacterProject;
+  latest: CharacterProject | null;
+  latest_revision: number;
+  token: string;
+  changed_fields: string[];
 }
 export interface GpuReport {
   detection: "detected" | "unknown";

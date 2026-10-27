@@ -24,3 +24,7 @@
 `package-lock.json`과 `src-tauri/Cargo.lock`이 구현 의존성을 고정한다. `scripts/dependency-inventory.mjs`가 npm metadata와 Windows 타깃 Cargo metadata에서 명칭·버전·라이선스·출처를 출력하며, raw inventory는 `artifacts/dependency-inventory.json`에 저장한다. DEV-00 최종 inventory는 formatter 포함 npm86/Rust250개 항목이다. 생성 목록은 권리 검토 결과가 아니고 license 누락/비표준 항목은 출시 전 개별 검토해야 한다. AI weights가 0개이므로 model checksum을 지어내지 않는다.
 
 개발/컴파일 의존성의 OS별 선택도 기록한다. MIT/Apache라고 전체 제품이 무조건 출시 가능하다는 blanket clearance를 하지 않는다. DEV-29/30에서 실제 배포 binary에 포함되는 dependency closure, full notices, binary-source 대응과 SDK 계약을 잠근다. 출시 차단 항목이 해소되기 전 해당 기능의 enabled/redistributable을 true로 바꾸지 않는다.
+
+## DEV-01 의존성 추가
+
+rusqlite0.41.0(bundled) 및 libsqlite3-sys0.39.1을 Cargo.lock으로 고정했다. [rusqlite 공식 문서](https://docs.rs/rusqlite/0.41.0/rusqlite/)의 API에 따라 로컬 SQLite를 사용한다. rusqlite MIT, SQLite public-domain 표기와 정확한 전이 의존성 metadata는 dependency-inventory로 확인한다. 정식 배포 전 전체 notice/라이선스 closure 감사 의무는 유지하며 유료 DB/외부 DB 서비스는 사용하지 않는다.

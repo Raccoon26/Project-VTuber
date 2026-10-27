@@ -12,7 +12,8 @@ use std::{
     time::{Duration, Instant},
 };
 
-#[derive(Debug, Clone, Serialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
 pub struct Job {
     pub id: String,
     pub project_id: String,
@@ -30,12 +31,14 @@ struct Event {
     progress: u8,
 }
 pub struct JobManager {
+    journal: Option<PathBuf>,
     job: Arc<Mutex<Option<Job>>>,
     cancel: Arc<AtomicBool>,
 }
 impl Default for JobManager {
     fn default() -> Self {
         Self {
+            journal: None,
             job: Arc::new(Mutex::new(None)),
             cancel: Arc::new(AtomicBool::new(false)),
         }
@@ -53,6 +56,24 @@ fn hidden(command: &mut Command) {
     }
 }
 impl JobManager {
+    pub fn persistent(root: PathBuf) -> Result<Self> {
+        let jobs = crate::journal::initialize(&root)?;
+        Ok(Self {
+            journal: Some(root),
+            job: Arc::new(Mutex::new(
+                jobs.last()
+                    .filter(|j| j.status != "running" && j.status != "queued")
+                    .cloned(),
+            )),
+            cancel: Arc::new(AtomicBool::new(false)),
+        })
+    }
+    pub fn history(&self) -> Result<Vec<Job>> {
+        match &self.journal {
+            Some(root) => crate::journal::history(root),
+            None => Ok(self.snapshot().into_iter().collect()),
+        }
+    }
     pub fn snapshot(&self) -> Option<Job> {
         self.job.lock().unwrap().clone()
     }
@@ -69,10 +90,17 @@ impl JobManager {
     }
     pub fn start(&self, project_id: String, python: PathBuf, script: PathBuf) -> Result<Job> {
         let mut guard = self.job.lock().unwrap();
-        if guard.as_ref().is_some_and(|j| j.status == "running") {
+        if guard
+            .as_ref()
+            .is_some_and(|j| j.status == "running" || j.status == "queued")
+        {
             return Err(AppError::new("job_busy"));
         }
-        let job = Job {
+        let journal_guard = match &self.journal {
+            Some(root) => Some(crate::durable::lock(&root.join(".runtime.lock"))?),
+            None => None,
+        };
+        let mut job = Job {
             id: uuid::Uuid::new_v4().to_string(),
             project_id,
             status: "running".into(),
@@ -80,12 +108,31 @@ impl JobManager {
             provider: "dummy".into(),
             error: None,
         };
+        if let Some(root) = &self.journal {
+            job.status = "queued".into();
+            crate::journal::append(root, &job)?;
+        }
         *guard = Some(job.clone());
         self.cancel.store(false, Ordering::SeqCst);
         let state = self.job.clone();
         let cancel = self.cancel.clone();
         let id = job.id.clone();
+        let journal = self.journal.clone();
         thread::spawn(move || {
+            let _owner = journal_guard;
+            let mut journal_failed = false;
+            {
+                let mut guard = state.lock().unwrap();
+                let j = guard.as_mut().unwrap();
+                j.status = "running".into();
+                if let Some(root) = &journal {
+                    if crate::journal::append(root, j).is_err() {
+                        j.status = "recovery_required".into();
+                        j.error = Some("journal_write_failed".into());
+                        return;
+                    }
+                }
+            }
             let result = execute(
                 python,
                 script,
@@ -95,6 +142,12 @@ impl JobManager {
                 |progress| {
                     if let Some(j) = state.lock().unwrap().as_mut() {
                         j.progress = progress;
+                        if let Some(root) = &journal {
+                            if crate::journal::append(root, j).is_err() {
+                                journal_failed = true;
+                                cancel.store(true, Ordering::SeqCst);
+                            }
+                        }
                     }
                 },
             );
@@ -111,6 +164,17 @@ impl JobManager {
                     j.error = Some(e.code);
                 }
             }
+            if journal_failed {
+                j.status = "recovery_required".into();
+                j.error = Some("journal_write_failed".into());
+            }
+            if let Some(root) = &journal {
+                if crate::journal::append(root, j).is_err() {
+                    j.status = "recovery_required".into();
+                    j.error = Some("journal_write_failed".into());
+                }
+            }
+            drop(_owner); // release OS ownership before exposing terminal state
         });
         Ok(job)
     }

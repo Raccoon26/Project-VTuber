@@ -24,3 +24,19 @@
 - D00-003 Export: Live2D authoring/권리와 실제 VBridger preset writer 미검증. 생성 기능을 비활성화한 이유이며 버그 수정으로 해결됐다고 기록하지 않는다.
 
 새 오류에는 ID/DEV/모듈/증상/재현/증거/검증된 원인 또는 미확정/수정/기각 이유/회귀/예방/결과를 추가한다. 외부 도구의 실패를 제품 테스트 pass로 바꾸지 않는다.
+
+## DEV-01 실패 및 해결
+
+| ID / 모듈 | 재현·증상 | 근본 원인 / 확인 범위 | 수정 | 회귀·검증 |
+|---|---|---|---|---|
+| F01-001 test environment | 변경 전 baseline UI assertion 성공 후 종료 정지; 재실행은 ui-test.log 점유 오류 | Playwright/Vite 자식과 원래 PowerShell이 남아 로그를 점유한 것은 확인. sandbox 종료 지연의 세부 원인은 미확정 | 해당 baseline 프로세스 트리만 종료; 동일 suite를 승인된 실행 환경에서 재실행 | dev-01-baseline-clean.log 전체 통과. 코드/버전 변경으로 숨기지 않음 |
+| F01-002 authoring tool | Python patch read_text가 일본어 포함 소스에서 UnicodeDecodeError | Windows 기본 cp949로 UTF-8 파일을 읽음. 쓰기 이전 실패로 원본 변화 없음 | 모든 읽기/쓰기 encoding=utf-8 명시 | 이후 patch/format/build 통과 |
+| F01-003 SQLite integration | SQL parameter u64 ToSql 컴파일 오류 | rusqlite0.41의 u64 ToSql 부재 | 상한이 검증된 revision/time을 i64 parameter로 변환 | cargo check/SQL 재구축 테스트 통과 |
+| F01-004 index durability | SQLite 재구축에서 access_denied, 두 회귀 실패 | read-only File handle에 sync_all 호출. Windows FlushFileBuffers에 쓰기 권한 필요 | index 임시 파일을 read/write handle로 열어 sync_all | 같은 sqlite_missing... 재현 후 전체28 Rust 통과; index 실패에도 revision 보존 시험 |
+| F01-005 test UI | Node에서 JSON import needs type json | Playwright의 ESM JSON import attribute 누락 | with {type:json} 추가 | recovery UI와 기존 UI 2개 통과 |
+
+D00-001은 list v2의 per-project 결과 및 명시 복구로 해결했고 정상 항목 독립 사용을 Rust/native에서 검증했다. D00-002의 메모리 전용 job은 journal로 해결했다. 전체 OS 자식 트리 종료/실제 AI checkpoint 재개 부분은 DEV-28에 남으며 해결로 표시하지 않는다. F00-002/006/008은 기존 실제 Python 경로·lockfile·SDK 환경을 재사용했고 F00-009 화면 캡처를 반복하지 않았다. native harness는 F00-013의 URL 준비 조건을 유지한다.
+
+### F01-006 — native restart harness readiness
+
+DEV-01 native 재실행의 두 번째 launch에서 CDP ECONNRESET이 관찰되었다(artifacts/dev-01-native-final.log). HTTP endpoint 응답 뒤 실제 WebSocket 연결을 별도 수행해 준비 조건 사이에 단절을 허용한 것이 확인되었다. 직전 프로세스의 같은 포트 endpoint 잔존은 가능한 원인이며 확정하지 않는다. 재시작마다 OS가 제안한 빈 loopback 포트를 사용하고 실제 CDP connect 성공 및 tauri.localhost navigation을 bounded poll로 확인하도록 수정했다. 앱 데이터 코드는 바꾸지 않았다. 같은 native 전체 흐름 재실행은 dev-01-native-final-retry.log에서 통과했다.

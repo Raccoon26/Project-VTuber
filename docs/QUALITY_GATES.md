@@ -19,3 +19,7 @@ DEV-00의 합격 범위는 실행 가능한 기반·위험 조사·안전한 더
 
 ## 자동 repair
 수정 후보는 새 revision/artifact에만 저장한다. repair 전후 같은 pose/image 조건으로 A–D를 재검사하고 실패 시 되돌린다. confidence가 낮은 후면·얼굴 수정은 사람이 확인한다. 자동 수정 횟수 제한과 실패 원인 등록은 DEV-21에서 구현한다.
+
+## DEV-01 Gate A/F 증거 범위
+
+합성 PNG 원본 bytes/SHA-256 및 기존 정상·손상 manifest를 저장/복구/kill 전후 비교한다. 잠금·동시 저장·SQLite 복원·job 재시작·journal 저장 실패를 실행한다. 이 증거는 저장 기반의 Gate A/F 검증이며 앱의 캐릭터 Gate 상태를 pass로 바꾸지 않는다. Gate B/C/D 및 전문가 품질은 계속 미검증이다. 실제 전원 차단, E 디스크 소진, 악의적 동일 사용자 파일 race, 장시간 GPU checkpoint는 이번 증거 범위가 아니다.

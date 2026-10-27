@@ -26,3 +26,9 @@ PowerShell `scripts/test.ps1`은 첫 실패에 멈춘다. 선택적 `-SkipUI`는
 
 ## 회귀/실패 처리
 재현 → 기대/실제 비교 → 증거 수집 → 가설 → 최소 실험 → 근본 원인 수정 → 회귀 → 관련 기능 → 기록 갱신. 같은 수정이 실패하면 가설을 바꾼다. 버전 변경은 보안 advisory/지원 matrix 같은 증거로 정당화하고 lockfile/환경/실패 register에 남긴다. CI를 통과시키려고 테스트를 지우거나 성공을 강제하지 않는다.
+
+## DEV-01 확장
+
+Rust resilience_tests는 실제 Windows 자식 test process와 tempfile을 사용한다. ignored process_helper는 독립 테스트가 아니라 상위 테스트가 --exact --ignored로 호출하는 fixture다. 순서: checkpoint marker 대기 → child kill → wait → 다른 ProjectStore로 reopen → 기존 bytes 비교. 두 writer는 barrier 뒤 같은 revision을 저장하며 하나만 성공해야 한다.
+
+UI recovery.spec.ts는 **모의 IPC**로 취소/확인/키보드/3언어를 검사한다. scripts/native-recovery.mjs는 실제 release app을 별도 E fixture에서 실행하고 기존 native-smoke, app kill/relaunch, interrupted 표시, 손상 격리/선택 복구/hash 보존을 검사한다. OS file picker 조작은 포함하지 않는다. 디스크 부족은 test-only StorageFull 주입으로 분리한다. release build에는 주입 코드가 없으며 실제 디스크 용량을 고갈시키지 않는다.

@@ -1,8 +1,6 @@
 # Requirements and coverage audit
 
-기준: 이 채팅의 DEV-00 명세 전체 및 E 드라이브 저장 추가 지침. 이전 대화·별도 로드맵은 제공되지 않아 존재한다고 추정하지 않는다. 전문 제작 품질은 장기 목표이며 DEV-00의 dummy 성공과 구별한다. 원본 요구를 아래 추적 항목으로 정규화했다.
-
-기계 판독 정본: `requirements.json`. 상태는 Planned / Implemented / Verified / Blocked / Partially Implemented / Rejected with Reason. Verified는 명시된 좁은 검증 범위에만 적용한다. P0는 필수 요구이며 장기 DEV에 배정된 P0가 DEV-00 제품 기능 완료를 뜻하지 않는다.
+DEV-00의 62개 ID와 요구사항을 유지하고 DEV-01 명세를 REQ-063–078로 추가했다. 정본은 docs/requirements.json이며 루트 requirements.json은 요청된 진입점용 동일 mirror다. audit는 두 파일의 동등성을 검사한다. Verified는 표시된 시험 범위의 검증이며 제품 AI/방송 인증 완료를 뜻하지 않는다.
 
 | ID | 요구사항 | 우선 | 담당 DEV | 모듈 | 검증 | 현재 상태 | 미해결 위험 | 테스트·증거 |
 |---|---|---|---|---|---|---|---|---|
@@ -12,7 +10,7 @@
 | REQ-004 | 첫 다운로드 뒤 offline, 검증된 CPU/경량 대안 | P0 | DEV-03, DEV-31 | M04 | 모델 설치 후 disconnected 실행 | Planned | 현재 CPU dummy만 검증 | src-tauri/src/worker.rs |
 | REQ-005 | GPU/VRAM/backend 진단과 지원 불명 상태 | P0 | DEV-00, DEV-03 | M05 | 장치 query와 실제 tensor smoke 분리 | Partially Implemented | NVIDIA만 감지; 추론 미검증 | src-tauri/src/gpu.rs |
 | REQ-006 | 대형 AI 모델 설치·버전·무결성·권리 관리 | P0 | DEV-03 | M04 | consent/download/hash/offline fixtures | Planned | weights 미설치 | docs/MODEL_STRATEGY.md |
-| REQ-007 | 원본 파일 불변 및 해시 검사 | P0 | DEV-00, DEV-02 | M03 | 입력/저장 bytes 동일 및 변조 거부 | Verified | PNG 지원 범위 | src-tauri/src/storage.rs |
+| REQ-007 | 원본 파일 불변 및 해시 검사 | P0 | DEV-00, DEV-02, DEV-01 | M03 | 입력/저장 bytes 동일 및 변조 거부 | Verified | PNG 지원 범위 | src-tauri/src/storage.rs |
 | REQ-008 | 원해상도·색 정보·손실 압축/임의 축소 금지 | P0 | DEV-00, DEV-02 | M03 | 원본 byte 보존과 ICC/render 비교 | Partially Implemented | bytes 보존; 색 renderer 미구현 | src-tauri/src/storage.rs |
 | REQ-009 | 원본/generated/manual 구분과 수정 가능 중간 결과 | P0 | DEV-01, DEV-06, DEV-14 | M02 | provenance DAG/revision round-trip | Partially Implemented | 현재 원본만 존재 | docs/MODEL_CONTRACT.md |
 | REQ-010 | 시각·구조 비교 및 얼굴/눈/의상/색/머리/장식 충실도 | P0 | DEV-04, DEV-20 | M15 | 같은 조건의 render+전문가 평가 | Planned | 전문가급 실증 없음 | docs/QUALITY_GATES.md |
@@ -36,14 +34,14 @@
 | REQ-028 | 공통 master 보존·Export Profile별 손실 기록 | P0 | DEV-00, DEV-23 | M18 | export 전후 master hash | Partially Implemented | master 생성 미구현 | src/contracts.ts |
 | REQ-029 | 파일 열기만으로 완전 호환 인증 금지 | P0 | DEV-00, DEV-24 | M19 | per-feature/version 증거 검사 | Partially Implemented | runtime 증거 없음 | tests/contracts.test.ts |
 | REQ-030 | 초보자 6단계와 전문가 모드 분리 | P0 | DEV-00, DEV-25 | M01 | 초보자 usability study | Partially Implemented | 모드·기반 화면만 구현 | src/main.tsx |
-| REQ-031 | 친숙한 오류 설명/복구 경로·자동 수정 | P0 | DEV-00, DEV-21, DEV-28 | M16 | error UX/repair rollback | Partially Implemented | 복구·repair UI 후속 | src/i18n.ts |
+| REQ-031 | 친숙한 오류 설명/복구 경로·자동 수정 | P0 | DEV-00, DEV-21, DEV-28, DEV-01 | M16 | error UX/repair rollback | Partially Implemented | 선택 복구 UI 구현; AI 자동 repair는 후속 | src/i18n.ts |
 | REQ-032 | 핵심 무료·최하단 배너 최대1개·강제광고 금지 | P0 | DEV-00, DEV-27 | M21 | UI/계약/광고 수량 검사 | Partially Implemented | 현재 배너0 | src/contracts.ts |
 | REQ-033 | 공급업체 교체·desktop/Japan 계약·직접 스폰서 | P0 | DEV-00, DEV-27 | M21 | 계약/SDK 지원 audit | Partially Implemented | 미계약, 일본·지급 미확인 | docs/MONETIZATION.md |
 | REQ-034 | 광고 실패/offline에도 제작 정상·GPU/데이터 격리 | P0 | DEV-00, DEV-27 | M21 | network timeout/권한/traffic | Partially Implemented | offline null adapter만 구현 | tests/contracts.test.ts |
 | REQ-035 | 일본어·영어·한국어 UI/오류/quality/i18n | P0 | DEV-00, DEV-26 | M20 | key parity/언어 전환 | Partially Implemented | 튜토리얼·전체 도움말 후속 | tests/contracts.test.ts |
 | REQ-036 | 새 언어·RTL·긴 문자열 고려 | P0 | DEV-26 | M20 | pseudolocale/RTL/zoom | Planned | RTL 실동작 미검증 | docs/LOCALIZATION.md |
 | REQ-037 | 시작 시 저장소·OS·CPU/GPU/RAM/disk/tool 조사 | P0 | DEV-00 | M22 | 로컬 명령 증거 | Verified | 설치 부재는 탐색 범위 한정 | docs/ENVIRONMENT_REPORT.md |
-| REQ-038 | 기존 코드·사용자 변경 보존, main 직접 변경 금지 | P0 | DEV-00 | M02 | git diff/status/branch 확인 | Verified | 초기 README만 존재 | docs/ENVIRONMENT_REPORT.md |
+| REQ-038 | 기존 코드·사용자 변경 보존, main 직접 변경 금지 | P0 | DEV-00 | M02 | git diff/status/branch 확인 | Verified | DEV-00 사용자 변경 보존; DEV-01 별도 브랜치/합성 fixture 사용 | docs/ENVIRONMENT_REPORT.md |
 | REQ-039 | 기술 선택 비교·ADR·22개 모듈 경계 | P0 | DEV-00 | M01 | architecture/decision coverage audit | Verified | 후속 실험으로 교체 가능 | docs/ARCHITECTURE.md |
 | REQ-040 | 공개 schema·모델별 adapter·2D/3D 독립 | P0 | DEV-00, DEV-03 | M04 | schema/contract tests | Partially Implemented | 현재 schema는 최소 v1 | docs/MODEL_CONTRACT.md |
 | REQ-041 | Live2D/Inochi/Ayatsuri 편집·runtime·권리 조사 | P0 | DEV-00, DEV-11 | M18 | primary evidence+실험 계획 | Partially Implemented | 실제 변환 미실행 | docs/TECH_RESEARCH.md |
@@ -55,19 +53,34 @@
 | REQ-047 | Gate A–F 네 상태와 사람 품질 검토 | P0 | DEV-00, DEV-20 | M15 | schema/validator/전문가 review | Partially Implemented | 모델 gates 모두 unverified | docs/QUALITY_GATES.md |
 | REQ-048 | Tauri React TS Rust 실행 가능한 Windows 기반 | P0 | DEV-00 | M01 | frontend/native build+실행 | Verified | clean-machine installer는 후속 | src-tauri/src/main.rs |
 | REQ-049 | Python interface/dummy progress/cancel/failure | P0 | DEV-00 | M04 | 실제 subprocess 단위·통합 | Verified | OS 강제종료 트리 회수 후속 | src-tauri/src/worker.rs |
-| REQ-050 | CharacterProject 생성·저장·다시 열기·예제 | P0 | DEV-00 | M02 | round-trip/conflict/reopen | Verified | 손상 목록 격리 후속 | src-tauri/src/storage.rs |
-| REQ-051 | 테스트 실행 스크립트/CI/의존성 lock | P0 | DEV-00 | M22 | clean npm ci/cargo locked | Implemented | 원격 CI 최종 확인 필요 | scripts/test.ps1 |
+| REQ-050 | CharacterProject 생성·저장·다시 열기·예제 | P0 | DEV-00, DEV-01 | M02 | round-trip/conflict/reopen | Verified | v1 저장/다시 열기/손상 격리/선택 복구 검증; 전원 차단 제외 | src-tauri/src/storage.rs, src-tauri/src/resilience_tests.rs |
+| REQ-051 | 테스트 실행 스크립트/CI/의존성 lock | P0 | DEV-00 | M22 | clean npm ci/cargo locked | Verified | DEV-00 main CI 40314991998 성공, DEV-01은 최종 PR CI 확인 | scripts/test.ps1 |
 | REQ-052 | 잘못된 이미지·metadata·폭탄·경로 공격 | P0 | DEV-00, DEV-02, DEV-29 | M03 | malformed/limit/path regressions | Partially Implemented | 전면 fuzz/TOCTOU 미해결 | src-tauri/src/storage.rs |
 | REQ-053 | AI 체크포인트·plugin·출처·license·checksum | P0 | DEV-03, DEV-29 | M04 | manifest audit/quarantine | Planned | 실제 모델0 | docs/SECURITY.md |
-| REQ-054 | Worker crash/OOM/cancel·저장 실패·강제종료 복원 | P0 | DEV-00, DEV-28 | M22 | fault injection/soak | Partially Implemented | 실제 GPU OOM/전원 차단 미실행 | src-tauri/src/worker.rs |
+| REQ-054 | Worker crash/OOM/cancel·저장 실패·강제종료 복원 | P0 | DEV-00, DEV-28, DEV-01 | M22 | fault injection/soak | Partially Implemented | 프로세스 kill·job 복원 검증; 실제 GPU OOM/전원 차단/전체 process tree는 미검증 | src-tauri/src/worker.rs, docs/JOB_PERSISTENCE.md |
 | REQ-055 | 불필요한 관리자 권한 없이 설치/실행 | P0 | DEV-00, DEV-30 | M01 | 일반 사용자 실행/clean install | Partially Implemented | portable interpreter 번들 후속 | docs/SECURITY.md |
 | REQ-056 | 필수 문서/원본 요구사항/DEV00–33 로드맵 | P0 | DEV-00 | M22 | 문서 coverage audit | Verified | 최종 링크/상태 audit 필요 | scripts/audit-docs.mjs |
 | REQ-057 | 각 요구사항 ID/우선/DEV/모듈/검증/상태/위험/테스트 | P0 | DEV-00 | M22 | 요구사항 ledger validator | Verified | 제품 요구 Verified와 구분 | docs/requirements.json |
-| REQ-058 | 모든 DEV 시작/종료 누락·회귀 감사 | P0 | DEV-00, DEV-33 | M22 | CI와 PR checklist | Implemented | 후속 DEV 지속 준수 필요 | docs/DEV_ROADMAP.md |
-| REQ-059 | DEV 후 commit/push/PR/CI/조건충족 merge/main 검증 | P0 | DEV-00 | M22 | GitHub checks/protection/merge SHA | Implemented | 원격 merge 전까지 완료 아님 | docs/PROJECT_STATUS.md |
-| REQ-060 | 실패·충돌·권한·필수 리뷰 미충족 시 강제 merge 금지 | P0 | DEV-00 | M22 | GitHub rules/checks+head 검증 | Implemented | 관리자 bypass 사용 금지 | docs/PROJECT_STATUS.md |
+| REQ-058 | 모든 DEV 시작/종료 누락·회귀 감사 | P0 | DEV-00, DEV-33, DEV-01 | M22 | CI와 PR checklist | Implemented | 후속 DEV 지속 준수 필요 | docs/DEV_ROADMAP.md |
+| REQ-059 | DEV 후 commit/push/PR/CI/조건충족 merge/main 검증 | P0 | DEV-00, DEV-01 | M22 | GitHub checks/protection/merge SHA | Implemented | DEV-00 PR#1/main 검증 완료; DEV-01은 해당 PR/main CI 확인 후 최종 완료 | docs/PROJECT_STATUS.md |
+| REQ-060 | 실패·충돌·권한·필수 리뷰 미충족 시 강제 merge 금지 | P0 | DEV-00, DEV-01 | M22 | GitHub rules/checks+head 검증 | Implemented | 관리자 bypass 사용 금지 | docs/PROJECT_STATUS.md |
 | REQ-061 | 승인 없는 대형 모델/장시간GPU/유료/외부 전송 금지 | P0 | DEV-00, DEV-03 | M04 | 작업/모델 inventory audit | Verified | 현재 AI 다운로드0/GPU inference0 | docs/ENVIRONMENT_REPORT.md |
 | REQ-062 | 후속 지침: 신규 출력·cache·temp·앱 데이터는 E | P0 | DEV-00 | M02 | env/path/filesystem 확인 | Partially Implemented | 지침 전 C cache 이력·OS 자체 로그 제외 | scripts/env.ps1 |
+| REQ-063 | 손상 프로젝트 개별 격리 및 전역 오류 분리 | P0 | DEV-01 | M02 | 개별 상태/정상 목록/전역 열거 오류 시험 | Verified | 검사 한도·공유 폴더 경합은 명시 오류 | src-tauri/src/resilience_tests.rs |
+| REQ-064 | revision JSON/schema/ID/번호/원본 hash/path 검사 | P0 | DEV-01 | M02 | 과거/최신 손상·미래 schema·blob 변조 시험 | Verified | 복원 불가 원본은 정상 복구 후보 아님 | src-tauri/src/resilience_tests.rs |
+| REQ-065 | 사용자 선택·차이 확인·취소 후 새 revision 복구 | P0 | DEV-01 | M01 | UI 확인 차단/취소/명시 복구 및 stale token | Verified | 화면은 저장 메타데이터 preview, 렌더 아님 | tests/ui/recovery.spec.ts |
+| REQ-066 | 복구 전후 원본·정상/손상 이력 보존 | P0 | DEV-01 | M02 | recover kill before/after publish와 bytes/hash 비교 | Verified | 전원 차단 수준은 미검증 | src-tauri/src/resilience_tests.rs |
+| REQ-067 | SQLite 파생 검색 인덱스와 없음/손상/구버전/stale 재구축 | P0 | DEV-01 | M02 | 파일 재검사/SQL search/manual add/move/cache fail | Verified | snapshot는 순간적으로 오래될 수 있어 open 재검증 | src-tauri/src/resilience_tests.rs |
+| REQ-068 | 프로젝트 OS 잠금·동시 저장·stale revision 충돌 | P0 | DEV-01 | M02 | Windows 실제 두 프로세스 경쟁/owner kill/lock 재획득 | Verified | 로컬 NTFS 검증; 타 FS/네트워크 미검증 | src-tauri/src/resilience_tests.rs |
+| REQ-069 | 20개 실패 주입 사례와 실제/모의/미실행 구분 | P0 | DEV-01 | M22 | 테스트 매트릭스와 실제 데이터 보존 assertion | Verified | StorageFull은 주입; 실제 디스크 소진·전원 차단 미실행 | docs/TEST_RUNS.md |
+| REQ-070 | queued/running/terminal/interrupted/recovery_required 영속화 | P0 | DEV-01 | M04 | journal 저장 실패·손상·owner kill·restart·실제 Python | Verified | OS process tree 정리·AI 자동 재개는 DEV-28 | src-tauri/src/resilience_tests.rs |
+| REQ-071 | job 기록과 프로젝트 revision 분리 | P0 | DEV-01 | M04 | progress/complete/cancel 후 manifest 번호 불변 | Verified | 장시간 journal 압축/retention은 후속 | src-tauri/src/resilience_tests.rs |
+| REQ-072 | CharacterProject v1 및 미래 schema 안전 거부 | P0 | DEV-01 | M02 | DEV-00 sample/unknown field/future schema 격리 | Verified | v2 변환 필요 없어 미구현; migration 수행 주장 금지 | docs/MIGRATION_STRATEGY.md |
+| REQ-073 | 복구·충돌·중단 안내 3언어 및 키보드 조작 | P0 | DEV-01 | M20 | key parity/ko-ja-en 전환/checkbox Space/cancel | Verified | 전문가/초보자 전체 사용성 평가는 후속 | tests/ui/recovery.spec.ts |
+| REQ-074 | DEV-00 모든 구현 기능 회귀 보존 | P0 | DEV-01 | M22 | 기존 suite와 native-smoke를 확장 suite에 포함 | Verified | 기존 미구현 AI/export를 완료로 바꾸지 않음 | scripts/native-recovery.mjs |
+| REQ-075 | DEV-01 reparse/접근 거부/경로 안전성 | P0 | DEV-01 | M02 | Windows 실제 junction/배타 handle 및 기존 경로 검사 | Verified | 악의적 동일 사용자 TOCTOU 완전 방어 제외 | src-tauri/src/resilience_tests.rs |
+| REQ-076 | 기존62+신규 요구 전수 감사 및 증거 문서 동기화 | P0 | DEV-01 | M22 | ID 불변/중복/정본-루트 mirror/문서 링크 audit | Verified | Verified는 해당 시험 범위에만 한정 | scripts/audit-docs.mjs |
+| REQ-077 | 실제 Tauri 종료·재시작·복구 검증 | P0 | DEV-01 | M01 | native Windows IPC와 OS process kill/rehash | Verified | OS file picker 직접 조작은 이전처럼 미실행 | scripts/native-recovery.mjs |
+| REQ-078 | DEV-01 PR/CI/보호 조건/main 병합 및 후속 CI | P0 | DEV-01 | M22 | PR checks/merge SHA/remote-local tree/main CI | Implemented | 병합 전 완료 아님 | docs/PROJECT_STATUS.md |
 
-## 감사 결과 해석
-출시 기능을 삭제한 항목은 없다. 특정 기술 경로(RigAnything의 상업 제품 이용, AdSense software 삽입)를 기각한 이유는 LICENSE_AUDIT/MONETIZATION에 있고 요구사항 자체는 유지한다. Live2D 자동 authoring과 고급 리깅은 아직 해결했다고 표시하지 않는다. 현재 구현·검증은 TEST_RUNS/TECH_SPIKES를 따른다. 시작/종료 audit에서 상태를 바꿀 때 evidence와 담당 DEV를 함께 갱신한다.
+DEV-01 시작 감사: main ac7e257 및 CI 40314991998 성공, clean working tree. 기존62개 중 저장·Worker·i18n·schema·CI 관련 항목을 재검사하고 나머지 장기 AI/출력/광고 요구는 담당 DEV와 미검증 상태를 유지했다. 삭제/ID 재배정/품질 Gate 승격은 없다. 종료 증거는 TEST_RUNS와 PROJECT_STATUS에 연결한다.
