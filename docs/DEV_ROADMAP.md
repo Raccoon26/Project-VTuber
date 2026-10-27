@@ -47,3 +47,9 @@
 3. `scripts/test.ps1` baseline을 실행한다. `samples/character-project.json`의 schema v1을 보존한다.
 4. 우선순위: 손상된 하나의 프로젝트가 목록 전체를 막는 문제 → revision 선택 복구 → 작업 상태 영속화 → SQLite는 파생 index → 다중 writer 및 파일 race 최소화.
 5. DEV-01에는 대형 모델 다운로드/추론이나 자동 리깅 구현을 끼워 넣지 않는다. DEV-00의 수동 외부 앱 미검증은 그대로 남긴다. 사용자 기능은 축소하지 않는다.
+
+## DEV-01 결과와 DEV-02 정확한 시작 지침
+
+DEV-01은 immutable v1 저장, 선택 복구, OS lock, SQLite 파생 인덱스, job journal을 연결한다. main PR/CI 및 시험 증거는 PROJECT_STATUS/TEST_RUNS 기준으로 확인한다. 자동 AI 재개와 전체 process tree 정리는 DEV-28에 남는다.
+
+DEV-02 시작: (1) DEV-01 merge SHA/main CI와 clean tree 확인, (2) E env 및 실제 Python 경로 설정, (3) 전체 suite + native-recovery 기준선, (4) storage.import_png의 bounded read/decoder/source publication 계약 검토, (5) PSD·ICC·16bit·alpha 합성 corpus와 원본 hash 기대값부터 작성한다. 새 importer는 소스 bytes를 재압축하거나 manifest v1을 조용히 확장하지 않는다. PSD metadata/layer가 새 schema를 요구하면 MIGRATION_STRATEGY의 새 사본 검증 절차를 먼저 설계한다. raw 원본 보존과 색 관리 preview의 정확성을 별도로 평가하고 decoder 자원 한도·원해상도 처리 실패를 명시한다.

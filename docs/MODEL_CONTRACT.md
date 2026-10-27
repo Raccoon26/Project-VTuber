@@ -24,3 +24,9 @@ ExportProfile는 대상 앱/버전, 포맷 버전, 지원 표정·물리·재질
 
 ## schema 변경 규칙
 미래 schema는 조용히 읽지 않는다. 입력 크기 한도와 deny_unknown_fields를 유지한다. migration은 새 디렉터리에 작성→검증→사용자 선택으로 전환한다. 구버전 fixture를 CI에 남기고 원본을 덮어쓰지 않는다. uint64 revision의 JS 안전정수 범위를 벗어나지 않도록 현재 최대 99,999,999로 제한한다.
+
+## DEV-01 추가 DTO (project v1 변경 없음)
+
+ProjectList v2 = version:2 + healthy CharacterProject[] + issues[{id,status,error,recoverable revision[]}] + index_warning. RevisionReport는 revision/project|null/error|null을 가진다. RecoveryPreview는 selected/latest|null/latest_revision/token/changed_fields다. recover_project는 id/revision/token을 받고 새 CharacterProject를 반환한다. token은 preview 이후 manifest 변경을 감지하며 원본 hash는 실행 시 다시 확인한다.
+
+Job에 queued/interrupted/recovery_required 상태를 추가했다. 별도 journal record v1은 sequence/updated_ms/Job을 저장한다. 프로젝트 revision이나 Gate는 Worker 진행률로 바뀌지 않는다. job_history는 실제 기록에서 읽으며 손상 항목은 복구 확인 필요로 표시한다. 계약은 src/contracts.ts 및 Rust 타입에 함께 정의한다. 자세한 schema 호환 방침은 MIGRATION_STRATEGY.md.

@@ -9,3 +9,7 @@ DEV-00은 브라우저 locale 자동 감지/영구 저장/ICU 복수형 라이�
 RTL 확장 계획: locale metadata에 direction을 추가하고 `<html dir>`로 전달한다. margin/padding inline-start/end, 긴 문장 wrapping, bidirectional parameter ID는 `bdi`/LTR code isolate 사용, 아이콘의 방향 의미 검토. 현재 3개 언어는 LTR이며 RTL **실동작은 미검증**이다.
 
 검증: TS key 타입 + parity 테스트, Playwright 3언어 전환, 800px에서 가로 overflow 확인. DEV-26은 pseudolocale 2배 길이/RTL, 200% zoom, 키보드, screen reader, 독립 번역 검수를 수행한다. 색상만으로 pass/fail을 전달하지 않는다.
+
+## DEV-01
+
+저장 상태 7종, 이력/메타데이터 preview, 차이/보존/제외 항목, 명시 확인/취소, 잠금·공간·권한·index 오류, 작업 중단/재시도 설명을 ja/en/ko에 추가했다. checkbox Space와 언어 전환은 UI 테스트로 검사한다. 전문가 모드의 UUID/오류 코드는 번역하지 않으며 개인 파일 경로는 노출하지 않는다. RTL/전체 screen reader 실사용은 후속 검증이다.

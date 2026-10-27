@@ -21,6 +21,9 @@ const docs = [
   "DECISIONS",
   "ENVIRONMENT_REPORT",
   "TEST_RUNS",
+  "STORAGE_RECOVERY",
+  "MIGRATION_STRATEGY",
+  "JOB_PERSISTENCE",
 ];
 for (const doc of docs)
   assert.ok(
@@ -31,8 +34,22 @@ assert.ok(fs.readFileSync("README.md", "utf8").includes("desktop"));
 const requirements = JSON.parse(
   fs.readFileSync("docs/requirements.json", "utf8"),
 );
-assert.equal(requirements.length, 62);
-assert.equal(new Set(requirements.map((r) => r.id)).size, 62);
+assert.equal(requirements.length, 78);
+assert.equal(new Set(requirements.map((r) => r.id)).size, 78);
+assert.deepEqual(
+  requirements,
+  JSON.parse(fs.readFileSync("requirements.json", "utf8")),
+);
+for (let n = 1; n <= 78; n++)
+  assert.equal(requirements[n - 1].id, `REQ-${String(n).padStart(3, "0")}`);
+const coverage = fs.readFileSync("docs/REQUIREMENTS.md", "utf8");
+for (const r of requirements)
+  assert.ok(
+    coverage.includes(
+      `| ${r.id} | ${r.description} | ${r.priority} | ${r.dev.join(", ")} | ${r.module} | ${r.verification} | ${r.status} |`,
+    ),
+    `Markdown out of sync: ${r.id}`,
+  );
 const allowed = [
   "Planned",
   "Implemented",
@@ -78,5 +95,5 @@ const sample = JSON.parse(
 assert.equal(sample.schema_version, 1);
 assert.equal(sample.master_status, "not_generated");
 console.log(
-  `PASS ${docs.length} required documents, 62 requirements, 34 DEV ownership plans, evidence references; content quality needs human review.`,
+  `PASS ${docs.length} required documents, ${requirements.length} requirements, mirrors, 34 DEV ownership plans, evidence references; content quality needs human review.`,
 );

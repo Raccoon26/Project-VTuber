@@ -1,4 +1,4 @@
-# Architecture — DEV-00
+# Architecture — DEV-01
 
 ## 제품 경계
 제작용 데스크톱 앱이다. 방송 중 추적·리깅 서버가 아니다. 사용자가 보유한 원화를 로컬에서 분석하고 수정 가능한 마스터를 만들며, 검증된 대상별 사본을 내보내는 것이 제품 목표다. DEV-00은 저장/IPC/더미 실행만 구현한다. 얼굴·전신 자동 리깅 엔진은 연구 단계다.
@@ -48,14 +48,20 @@ flowchart LR
 ## 저장 및 트랜잭션
 `VTUBER_DATA_DIR/projects/<uuid>/`에 `00000001.json`, `00000002.json`과 `sources/<sha256>.png`를 저장한다. 개발 환경은 `scripts/env.ps1`이 E 작업 폴더의 `.tools/app-data`로 고정한다. 설정이 없으면 실행 파일 옆 `vtuber-data`를 사용한다. WebView2 캐시도 같은 데이터 루트에 둔다. 이름은 경로에 쓰지 않는다. 기존 원본은 읽기만 하고, 저장 시 디코딩 결과가 아니라 원래 bytes를 복사한다. PNG의 ICC/텍스트/감마/비트 깊이는 원본 blob에 보존된다. 현재 화면에는 색 관리 미리보기가 없으므로 렌더링 색 충실도는 미검증이다.
 
-새 revision은 `.pending` 파일에 쓰고 `sync_all`, hard-link publish로 확정한다. 이미 있는 revision을 덮어쓰지 않는다. 미완료 pending은 읽기에서 제외한다. 최신 정식 revision이 손상된 경우 자동으로 성공한 것처럼 이전 상태를 열지 않고 오류를 낸다. 깨진 프로젝트 하나가 목록을 막는 현상과 복구 선택 UI는 DEV-01 우선 개선 대상이다. 원본 checksum 불일치는 fail-closed다. NTFS에서 검증하고 hard-link 미지원 파일시스템은 저장 오류로 안내한다. 전원 차단, 디렉터리 엔트리 내구성, 다중 프로세스·네트워크 드라이브의 완전한 내구성은 보장하지 않는다.
+새 revision은 `.pending` 파일에 쓰고 `sync_all`, hard-link publish로 확정한다. 이미 있는 revision을 덮어쓰지 않는다. 미완료 pending은 읽기에서 제외한다. 최신 정식 revision이 손상된 경우 자동으로 성공한 것처럼 이전 상태를 열지 않고 오류를 낸다. DEV-01에서는 개별 손상 항목을 격리하고 사용자 선택으로 새 revision을 복구한다. 원본 checksum 불일치는 fail-closed다. NTFS에서 검증하고 hard-link 미지원 파일시스템은 저장 오류로 안내한다. 전원 차단, 디렉터리 엔트리 내구성, 다중 프로세스·네트워크 드라이브의 완전한 내구성은 보장하지 않는다.
 
-SQLite는 DEV-01부터 검색·작업 인덱스에 사용한다. 원본/마스터의 유일한 정본은 파일이다. DB 유실 시 파일 스캔으로 재구축한다. 이 단계에서 DB와 파일을 동시에 정본으로 만드는 이중 커밋은 기각했다.
+DEV-01 SQLite는 프로젝트 검색·검사 상태의 재구축 인덱스에 사용한다. Job은 별도 journal 정본으로 관리한다. 원본/마스터의 유일한 정본은 파일이다. DB 유실 시 파일 스캔으로 재구축한다. 이 단계에서 DB와 파일을 동시에 정본으로 만드는 이중 커밋은 기각했다.
 
 ## 작업과 오류 격리
-현재 상태 머신: idle → running → completed/cancelled/failed. 앱당 한 작업, progress 단조 증가, JSONL 64KiB, 최대 1,000 이벤트, 20초 더미 제한. 취소/timeout/프로토콜 오류는 자식 종료·회수 후 최종 상태가 된다. 모델 생성 성공과 더미 완료는 별개다. 더미는 프로젝트와 Gate를 변경하지 않는다. 실행 종료 시 취소 신호를 보내며, 강제 앱 종료 시 OS job-object 기반 자식 트리 정리는 DEV-28의 미해결 항목이다.
+현재 상태 머신: idle → queued → running → completed/cancelled/failed, 재시작 시 interrupted/recovery_required. 앱당 한 작업, progress 단조 증가, JSONL 64KiB, 최대 1,000 이벤트, 20초 더미 제한. 취소/timeout/프로토콜 오류는 자식 종료·회수 후 최종 상태가 된다. 모델 생성 성공과 더미 완료는 별개다. 더미는 프로젝트와 Gate를 변경하지 않는다. 실행 종료 시 취소 신호를 보내며, 강제 앱 종료 시 OS job-object 기반 자식 트리 정리는 DEV-28의 미해결 항목이다.
 
 실제 AI는 별도 모델 환경, 단계별 staging, 체크포인트, CUDA OOM 분류, 재시작, 선택적 재작업을 사용한다. 수락된 artifact만 코어가 검증하고 커밋한다. CPU 대안은 provider가 실제 검증한 기능에만 표시한다. NVIDIA 장치를 발견한 사실은 PyTorch/CUDA 지원 증거가 아니다.
 
 ## 교체·확장
 UI는 provider 세부 코드를 import하지 않는다. Python 모델 어댑터는 버전 협상과 공통 artifact 계약을 구현한다. 2D와 3D는 서로의 메시를 강제로 공유하지 않고 `SemanticExpression`만 공유한다. exporter는 마스터를 수정하지 않으며 손실·최소 대상 버전·원본 hash를 보고한다. schema 변경은 별도 복사본 migration, rollback fixture와 구버전 읽기 테스트를 먼저 추가한다.
+
+## DEV-01 구현 경계
+
+M02는 storage.rs + durable.rs + recovery.rs + index.rs로 구분한다. 저장 API는 프로젝트 OS lock 아래에서 read/expected revision/write를 직렬화한다. 목록/검색/복구 IPC는 blocking pool에서 검사하며 v2 DTO가 정상/문제 항목을 분리한다. 구 list API는 정상 배열을 유지한다. M04는 worker.rs와 journal.rs로 실행과 내구 기록을 분리한다. 모델/Worker protocol과 CharacterProject v1은 유지한다.
+
+정확한 디스크 구조·파일/DB 트랜잭션·실패 한계는 STORAGE_RECOVERY, job 재시작은 JOB_PERSISTENCE, schema 경계는 MIGRATION_STRATEGY가 정본이다. release에는 test-only fault hook이 포함되지 않는다.

@@ -27,3 +27,9 @@
 오류는 기계 코드와 번역된 복구 설명으로 반환한다. raw path/이미지/모델/토큰은 로그·telemetry에 넣지 않는다. 자동 crash upload 없음. 공유 진단 번들은 DEV-28에서 내용 preview와 명시 동의 후에만 생성/공유한다. 원격 저장소에는 코드·문서·합성 fixture만 포함하며 실제 캐릭터 입력·대형 모델·로컬 경로가 포함된 raw 로그는 ignore한다.
 
 보안 이슈는 재현 가능한 합성 입력으로 기록하고 실제 비밀을 넣지 않는다. 수정은 원인 증거→최소 patch→회귀→관련 기능 재검증 순서다. dependency audit는 SBOM/라이선스 감사의 대체물이 아니다.
+
+## DEV-01 추가 방어 및 남은 범위
+
+프로젝트별 OS lock을 사용하며 lock 파일을 PID로 삭제하지 않는다. Windows handle은 delete sharing을 허용하지 않는다. 진단 중 source/manifest/reparse를 검사하고 복구 후보의 원본 hash를 재확인한다. SQLite는 fresh DB를 parameter binding으로 구성하고 extension loader를 활성화하지 않는다. journal/manifest 크기와 개수 제한을 둔다.
+
+OS share-denied handle과 junction은 합성 경로로 시험했다. 관리자 권한으로 사용자 폴더 ACL을 변경하지 않는다. 파일 경로를 검사한 뒤 handle을 여는 TOCTOU 및 동일 사용자에 의한 hardlink/상위 경로 교체의 완전 방어는 아직 보장하지 않는다. 공유·공격 가능한 저장 루트는 지원 범위에서 제외한다. 프로젝트 목록/진단에는 UUID와 기계 오류만 반환하고 원래 사용자의 개인 파일 경로를 넣지 않는다.

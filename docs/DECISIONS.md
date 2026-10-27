@@ -18,3 +18,11 @@
 | 012 | 고정 Node/Rust 도구+lockfile+Windows CI, Accepted | 실환경의 Tauri JS/Rust minor 불일치와 테스트 의존성 취약점 발견 | 의존성 변경 시 audit/build 회귀; 자동 force upgrade 기각 |
 
 외부 기술 근거는 [TECH_RESEARCH](TECH_RESEARCH.md), 라이선스 근거는 [LICENSE_AUDIT](LICENSE_AUDIT.md)에 모은다. 최신 버전이라는 이유만으로 모델 품질을 승인하지 않는다.
+
+## DEV-01 추가 결정
+
+- ADR-013 Accepted: persistent lock file + Rust std File::try_lock. PID/exists 기반 잠금과 stale lock 삭제는 기각. Windows OS handle 해제 의미론을 실제 프로세스 kill/race로 검증한다. 상세 STORAGE_RECOVERY.
+- ADR-014 Accepted: 복구 미리보기 token + 명시 확인 + 새 revision. 자동 rollback/손상 파일 덮어쓰기 기각. stale preview는 충돌 처리한다.
+- ADR-015 Accepted: rusqlite0.41.0 bundled, 파일 검사 후 fresh DB transaction/교체. 파일+DB 원자적 이중 commit 가정 기각. index 실패는 파일 저장을 취소하지 않는다. 향후 증분 index로 교체해도 파일 정본 정책 유지.
+- ADR-016 Accepted: job별 immutable journal + 데이터 루트 runtime OS lock. progress를 프로젝트 revision으로 기록하는 방식 기각. 현재 전체 앱당 한 Worker; 실제 AI 병렬 scheduler와 retention은 DEV-03/28.
+- ADR-017 Accepted: CharacterProject v1 보존, 목록 v2·job v1을 분리. 불필요한 project migration과 unknown schema 자동 변환 기각.
