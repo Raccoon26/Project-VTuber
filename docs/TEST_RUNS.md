@@ -113,3 +113,5 @@ Not run / not certified: licensed Photoshop runtime comparison, physical monitor
 Synthetic D65 Display P3 ICC conversion numeric sample passes within2 levels (dev-02-p3.log); physical monitor/P3 full profile conformance remains unverified. Cancellation during4000² decode and retry succeeds (dev-02-mid-cancel.log). Final performance source hash unchanged for every repeat; original/preview dimensions are distinct. Tests reference current log hashes in docs/evidence/dev-02-local.json.
 
 Final resource-only packaging: dev-02-release-notices.log Pass; installed notices/IMAGE_INPUT_NOTICES.md hash matches checked-in notice. Final coverage audit27 documents/94 requirements in dev-02-docs-final.log. Source and runtime behavior remain the accepted40M build; subsequent GitHub CI verifies the exact committed tree.
+
+Remote release: [PR #3 checks](https://github.com/Raccoon26/Project-VTuber/pull/3/checks), [merged PR/commit](https://github.com/Raccoon26/Project-VTuber/pull/3) and the main workflow at its merge SHA. CI/protection/review/conflict and post-merge tree/SHA evidence are verified externally and in local ignored release-verification evidence.

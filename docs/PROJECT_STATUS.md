@@ -57,3 +57,5 @@ DEV-02는 DEV_ROADMAP의 정확한 시작 지침과 STORAGE_RECOVERY/MIGRATION_S
 ## DEV-02 release evidence
 
 Local evidence: docs/evidence/dev-02-local.json; TEST_RUNS final acceptance. Final PR URL/checks/main merge SHA are remote release authority. No force/admin bypass is authorized. Tested tree must equal merged main tree, CI must succeed for that merge SHA, and local/remote main must match before completion is reported. Original CharacterProject v1 sample/schema and user cleanup script were preserved.
+
+[DEV-02 PR #3](https://github.com/Raccoon26/Project-VTuber/pull/3), [exact-head checks](https://github.com/Raccoon26/Project-VTuber/pull/3/checks), [main workflow](https://github.com/Raccoon26/Project-VTuber/actions/workflows/ci.yml?query=branch%3Amain) are the final remote release evidence. Merge/main CI status must be read from GitHub; local implementation alone is not completion.
