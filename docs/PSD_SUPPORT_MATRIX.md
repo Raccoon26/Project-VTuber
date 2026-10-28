@@ -5,7 +5,7 @@ Facts are scoped to bounded PSD v1 RGB/Grayscale8/16 documents with an embedded 
 | Feature | Implementation | Limit / validation |
 |---|---|---|
 | Header/canvas/mode/depth | Read with checked section bounds | PSD v1 only, bounded dimensions |
-| Layer names/order/positions/size/visible/opacity/blend/clipping | Original record metadata and byte ranges | Stored bottom-to-top; Unicode luni overrides legacy name |
+| Layer names/order/positions/size/visible/opacity/blend/clipping | Original record metadata and byte ranges | Stored bottom-to-top; Unicode luni overrides legacy Macintosh name; non-ASCII legacy fallback is explicitly warned when producer encoding may differ |
 | Groups | lsct/lsdk markers and validated nesting | 64 levels; structural records, not compositor |
 | Channels/alpha | Channel IDs and original channel ranges; raw/RLE/ZIP/ZIP-prediction validation | RGB/gray8/16, per-row bounds |
 | Layer mask | Presence and record/channel ranges preserved | Mask rendering/complex coordinates not certified |

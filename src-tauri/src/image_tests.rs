@@ -517,3 +517,28 @@ fn display_p3_matrix_profile_is_converted_in_the_derivative_only() {
     assert_ne!(pixel[..3], [255, 128, 0]);
     assert_eq!(hash(&bytes), source_hash);
 }
+#[test]
+fn repeated_global_extensions_have_a_count_budget_and_unique_diagnostics() {
+    let raw = psd_fixture(8, false);
+    let global = |count: usize| [u32v(0), u32v(0), b"8BIMxxxx\0\0\0\0".repeat(count)].concat();
+    let valid = [raw[..34].to_vec(), section(global(8)), raw[38..].to_vec()].concat();
+    let report = inspect(&valid, &off()).unwrap();
+    assert_eq!(
+        report
+            .warnings
+            .iter()
+            .filter(|w| w.as_str() == "psd_global_data_uninterpreted")
+            .count(),
+        1
+    );
+    let hostile = [
+        raw[..34].to_vec(),
+        section(global(4097)),
+        raw[38..].to_vec(),
+    ]
+    .concat();
+    assert_eq!(
+        inspect(&hostile, &off()).unwrap_err().code,
+        "image_too_large"
+    );
+}

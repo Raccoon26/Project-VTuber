@@ -1,4 +1,6 @@
 export const en = {
+  legacy_name_encoding:
+    "Some legacy layer names may use a different regional encoding. Original name bytes are preserved; Unicode names are preferred.",
   previewLoading: "Preparing a display copy…",
   originalPreview: "Source image display copy",
   previewCopy: "Display copy: sRGB / 8-bit; original precision preserved",
@@ -192,6 +194,8 @@ export const en = {
 export type MessageKey = keyof typeof en;
 export type Locale = "en" | "ja" | "ko";
 export const ja: Record<MessageKey, string> = {
+  legacy_name_encoding:
+    "古いレイヤー名は地域別の文字コードにより異なって表示される場合があります。原本の名前データは保持しています。",
   previewLoading: "表示用コピーを準備しています…",
   originalPreview: "原画の表示用コピー",
   previewCopy: "表示用コピー: sRGB / 8-bit・原本の精度は保持",
@@ -374,6 +378,8 @@ export const ja: Record<MessageKey, string> = {
     "処理データが不正なため停止しました。ワーカーとアプリのバージョンを確認してください。",
 };
 export const ko: Record<MessageKey, string> = {
+  legacy_name_encoding:
+    "일부 오래된 레이어 이름은 지역별 문자 인코딩에 따라 다르게 보일 수 있습니다. 원본 이름 데이터는 보존됩니다.",
   previewLoading: "화면에 표시할 사본을 준비하고 있습니다…",
   originalPreview: "원본 이미지의 표시용 사본",
   previewCopy: "표시용 사본: sRGB / 8-bit · 원본 정밀도 보존",

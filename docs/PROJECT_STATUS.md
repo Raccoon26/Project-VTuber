@@ -4,7 +4,7 @@
 
 구현: 원본 PNG/PSD capture/hash/immutable publication, known v1/v2, 별도 RGB16/ICC/sRGB8 preview, bounded PSD 구조/압축, 취소, native drop authority, 3언어/전문가 세부정보/자동 프로젝트 생성. 기존 저장·복구·index·job 구조를 유지한다. IMAGE_IMPORT/PSD_SUPPORT_MATRIX/COLOR_MANAGEMENT가 실제 지원 경계다.
 
-기준선: 최초 실행은 작업 중 변경이 섞여 기준선으로 무효 처리했다. E 전용 DEV-01 추출본의 전체 suite가 통과했다. 새 이미지 tests 및 독립 psd-tools synthetic composite/codecs가 통과했다. 실제 native OS PSD 선택창→preview→layers→3언어→reload/hash가 통과했다. Windows 측정에서4000²8-bit peak181,014,528 bytes,4096²16-bit peak240,410,624 bytes;초기160MiB 작업 사본 한도를320MiB로 조정하여 기존40M 8-bit PNG 범위를 유지했다. 최종8000×5000은 peak445,517,824B/wall431ms,8001×5000은 image_too_large로 거부했다. 최종 로컬 acceptance suite는40 Rust/helper1,4contracts,2Python,3UI 및 format/build/clippy/docs audit를 통과했다. release40M, actual native recovery 및 native PSD file dialog/preview/reload/hash도 통과했다. 원격 PR/main CI 성공 전 최종 완료로 표시하지 않는다.
+기준선: 최초 실행은 작업 중 변경이 섞여 기준선으로 무효 처리했다. E 전용 DEV-01 추출본의 전체 suite가 통과했다. 새 이미지 tests 및 독립 psd-tools synthetic composite/codecs가 통과했다. 실제 native OS PSD 선택창→preview→layers→3언어→reload/hash가 통과했다. Windows 측정에서4000²8-bit peak181,014,528 bytes,4096²16-bit peak240,410,624 bytes;초기160MiB 작업 사본 한도를320MiB로 조정하여 기존40M 8-bit PNG 범위를 유지했다. 최종8000×5000은 peak445,517,824B/wall431ms,8001×5000은 image_too_large로 거부했다. 최종 로컬 acceptance suite는42 Rust/helper1,4contracts,2Python,3UI 및 format/build/clippy/docs audit를 통과했다. release40M, actual native recovery 및 native PSD file dialog/preview/reload/hash도 통과했다. 원격 PR/main CI 성공 전 최종 완료로 표시하지 않는다.
 
 미해결: Photoshop-equivalent editable compositor/고급 mask·effects·smart object 렌더링, monitor/grayICC/customgAMA/P3 인증, PSB32·CMYK, 타일/격리decoder/fuzz/wholeprocesscleanup는 명시 범위 제한이다. AI 생성·rig·방송 호환 및 캐릭터 의미 비교는 후속 DEV이다. 신규 permanent principles079–081을 DEV04–24/32에 연결했다.
 
@@ -59,3 +59,7 @@ DEV-02는 DEV_ROADMAP의 정확한 시작 지침과 STORAGE_RECOVERY/MIGRATION_S
 Local evidence: docs/evidence/dev-02-local.json; TEST_RUNS final acceptance. Final PR URL/checks/main merge SHA are remote release authority. No force/admin bypass is authorized. Tested tree must equal merged main tree, CI must succeed for that merge SHA, and local/remote main must match before completion is reported. Original CharacterProject v1 sample/schema and user cleanup script were preserved.
 
 [DEV-02 PR #3](https://github.com/Raccoon26/Project-VTuber/pull/3), [exact-head checks](https://github.com/Raccoon26/Project-VTuber/pull/3/checks), [main workflow](https://github.com/Raccoon26/Project-VTuber/actions/workflows/ci.yml?query=branch%3Amain) are the final remote release evidence. Merge/main CI status must be read from GitHub; local implementation alone is not completion.
+
+Final review fix: legacy Pascal layer names now use explicit MacRoman decoding with authoritative UTF16BE luni; uncertain regional fallback has3locale warning. Global extension count and total name bytes are bounded. Final42-test suite/release/native recovery and OS PSD input rerun are recorded in TEST_RUNS.
+
+Actual40M native preview responsiveness was measured:972ms to displayed copy, max sampled rAF gap100.1ms/54 samples, cached3.8ms. Original8000×5000 remains unchanged while displayed copy1000×625. This is a synthetic machine-specific sample; five-person beginner/OS drop studies remain unverified.

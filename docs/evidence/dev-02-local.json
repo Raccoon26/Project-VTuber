@@ -15,7 +15,14 @@
     "artifacts\\dev-02-npm-audit.log": "4b02d4a3c23d969c46bd2041360f80bfcb1fe760d9db864009acdd710f9de601",
     "artifacts/dev-02-release-notices.log": "630e845be4c7e2a28b89944daea12f7b85dfb482a491c56c945ffc09c4134aed",
     "artifacts/dev-02-docs-final.log": "dda34dff0f7e65c6e8ad9ba528b47ca58cf2e98170a0b4183c329447ac1b4225",
-    "artifacts/dev-02-release-packaging.log": "45c0f91cac0958021baa8a6ce6bc883327bbc78c569bcc75139cba0a6d595c41"
+    "artifacts/dev-02-release-packaging.log": "45c0f91cac0958021baa8a6ce6bc883327bbc78c569bcc75139cba0a6d595c41",
+    "artifacts/dev-02-review-suite.log": "731a1e2f17c4dd975e16b7e348004ca23824a633e3784ebef45d6842c7a0709b",
+    "artifacts/dev-02-review-release.log": "fe37b5e02e57d9edb73b5db48a44f2a33b7c344ee647f631cb758e7980fd1493",
+    "artifacts/dev-02-review-native-recovery.log": "2548a8407ca6adaf8c84ed7eb70fdaf4da7a2111cf467d23d3b9a2780b854934",
+    "artifacts/dev-02-review-native-input.log": "a747f43b3bc5b8fce6e6ce75c5201f4c56e48cf91a99e7e7a9e9534759072a46",
+    "artifacts/dev-02-review-dependencies.log": "db9ddcdffeca54e8dda6b3ccb905acef146e27f2e9e22068d0ffd8dfd6e28fb5",
+    "artifacts/dev-02-native-large.log": "8819300389a56f00005c357be394ed942c9e78b99c2d2789e359fa1e3af7d0f3",
+    "artifacts/dev-02-review-clippy-final.log": "fd59249a637a36b74f5a29d52a8f7d57dc8a37b54c635ca3d150509a1e647c39"
   },
   "fixtures_sha256": {
     "tests\\fixtures\\source\\groups-merged.png": "1980d7d031f19567b358706af9e386a2bf465fa8a157f83a1137d07cb35cd5be",
@@ -27,7 +34,7 @@
     "tests\\fixtures\\source\\rgb8-codec2.psd": "5cf0f526f0065c4bd432e38e3e92274fdc5aaf51da8b0d423f7e399f15e7020e",
     "tests\\fixtures\\source\\rgb8-codec3.psd": "cc242ac73a36577f735f1976652a9950b92a0735e714c136dfe625fa8ac03367"
   },
-  "executable_sha256": "09db9dec44c4548e1b17191dbac6f2a394147209b5b2a9663ab1fd39fd3acb3e",
+  "executable_sha256": "67c5eca467a506b07bf6abe59e5abefad5df3c960d5415c978ee1fa004665931",
   "not_run": [
     "Photoshop runtime conformance",
     "physical monitor/gray ICC/custom gAMA accuracy",
@@ -38,5 +45,12 @@
     "5-person beginner study"
   ],
   "remote_release": "PR/main merge and CI must be verified separately",
-  "notice_sha256": "594b23cab40aff4cff7d97f87f438980a57c67ab39acba29c5a3e4566b4f6c98"
+  "notice_sha256": "c2b4e8a8bc277f34447d583c38587eb725c75849ad406718d08b3ddbd4030d7d",
+  "final_test_count": {
+    "rust_passed": 42,
+    "subprocess_helper": 1,
+    "contracts": 4,
+    "python": 2,
+    "ui": 3
+  }
 }

@@ -95,6 +95,6 @@ DEV-00–01의 기존78개 ID를 유지하고 DEV-02 요구를 REQ-079–094로 
 | REQ-089 | PNG v1 보존 및 PSD 별도 v2 불변 revision·복구 호환 | P0 | DEV-02 | M02 | v1 bytes 보존/PSD reopen/recover/index 시험 | Verified | 기존 프로젝트 무단 변환 금지 | src-tauri/src/image_tests.rs |
 | REQ-090 | 입력·색·미지원 안내 3언어와 native preview | P0 | DEV-02 | M20 | catalog parity/UI/native 입력 확인 | Verified | actual OS PSD dialog and3locale preview/reload tested; OS drop gesture not run | src/SourcePreview.tsx |
 | REQ-091 | 합성 PNG·PSD corpus 및 독립 기준/검증 범위 구분 | P0 | DEV-02 | M22 | fixture별 expected 픽셀/구조/hash 검증 | Verified | Photoshop 원본 reference 없음 | tests/fixtures/source |
-| REQ-092 | DEV-00·01 저장·복구·Worker·프로필 전체 회귀 | P0 | DEV-02 | M22 | 전체 suite/native recovery | Verified | final local suite40 Rust/helper1,4contracts,2Python,3UI + native recovery; actual AI still unimplemented | docs/TEST_RUNS.md |
+| REQ-092 | DEV-00·01 저장·복구·Worker·프로필 전체 회귀 | P0 | DEV-02 | M22 | 전체 suite/native recovery | Verified | final42 Rust/helper1,4contracts,2Python,3UI + native recovery/input/40M preview; AI remains unimplemented | docs/TEST_RUNS.md |
 | REQ-093 | DEV-02 전체 요구 감사·문서·비용·E 경로·사용자 수정 보호 | P0 | DEV-02 | M22 | 78 ID 보존/mirror/status/path audit | Verified | cleanup 파일은 ignore된 사용자 로컬 파일로 보존 | docs/PROJECT_STATUS.md |
 | REQ-094 | DEV-02 PR·CI·보호 조건·main 병합 후 검증 | P0 | DEV-02 | M22 | GitHub PR/main SHA/CI/tree 검증 | Implemented | 필수 구현과 검증 전 완료 처리 금지 | docs/PROJECT_STATUS.md |

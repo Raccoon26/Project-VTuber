@@ -1008,7 +1008,7 @@
     "module": "M22",
     "verification": "전체 suite/native recovery",
     "status": "Verified",
-    "risk": "final local suite40 Rust/helper1,4contracts,2Python,3UI + native recovery; actual AI still unimplemented",
+    "risk": "final42 Rust/helper1,4contracts,2Python,3UI + native recovery/input/40M preview; AI remains unimplemented",
     "tests": ["docs/TEST_RUNS.md"]
   },
   {

@@ -43,7 +43,12 @@ impl<'a> Cursor<'a> {
     }
     fn pascal(&mut self, pad: usize) -> Result<String> {
         let n = self.u8()? as usize;
-        let s = String::from_utf8_lossy(self.take(n)?).into_owned();
+        // PSD Pascal strings use the legacy Macintosh encoding; Unicode luni
+        // blocks below remain authoritative when supplied by the producer.
+        let s = encoding_rs::MACINTOSH
+            .decode_without_bom_handling(self.take(n)?)
+            .0
+            .into_owned();
         let padding = (pad - (n + 1) % pad) % pad;
         self.take(padding)?;
         Ok(s)
@@ -120,7 +125,12 @@ pub(crate) fn read(bytes: &[u8], cancel: &AtomicBool) -> Result<Raster> {
                 warnings.push("psd_global_data_uninterpreted".into());
             }
         }
+        let mut global_blocks = 0usize;
         while layer_mask.remaining() >= 12 {
+            global_blocks += 1;
+            if global_blocks > 4096 {
+                return Err(AppError::new("image_too_large"));
+            }
             check_cancel(cancel)?;
             if layer_mask.take(4)? != b"8BIM" {
                 return Err(invalid());
@@ -228,9 +238,17 @@ pub(crate) fn read(bytes: &[u8], cancel: &AtomicBool) -> Result<Raster> {
     {
         warnings.push("psd_layer_render_unverified".into());
     }
+    if layers
+        .iter()
+        .any(|l| !l.name.is_ascii() && !l.additional.iter().any(|k| k == "luni"))
+    {
+        warnings.push("legacy_name_encoding".into());
+    }
     if depth == 16 && layers.is_empty() {
         warnings.push("psd_16bit_layer_blocks_uninterpreted".into());
     }
+    warnings.sort();
+    warnings.dedup();
     Ok(Raster {
         width,
         height,
@@ -353,6 +371,7 @@ fn parse_layers(mut li: Cursor<'_>, depth: u16, cancel: &AtomicBool) -> Result<(
         }
         let mut channel_lengths = vec![];
         let mut budget = 0usize;
+        let mut name_bytes = 0usize;
         for index in 0..count {
             check_cancel(cancel)?;
             let start = li.base + li.at;
@@ -437,6 +456,10 @@ fn parse_layers(mut li: Cursor<'_>, depth: u16, cancel: &AtomicBool) -> Result<(
             if extra.remaining() > 0 && extra.take(extra.remaining())?.iter().any(|v| *v != 0) {
                 return Err(invalid());
             }
+            name_bytes += name.len();
+            if name_bytes > 1024 * 1024 {
+                return Err(AppError::new("image_too_large"));
+            }
             channel_lengths.push((lengths, w as u32, h as u32));
             layers.push(Layer {
                 index,
@@ -485,4 +508,16 @@ fn parse_layers(mut li: Cursor<'_>, depth: u16, cancel: &AtomicBool) -> Result<(
     }
 
     Ok((layers, merged_alpha))
+}
+
+#[cfg(test)]
+mod legacy_tests {
+    use super::*;
+    #[test]
+    fn legacy_pascal_names_are_macroman_and_not_lossy_utf8() {
+        let mut reader = Cursor::new(&[4, b'C', b'a', b'f', 0x8e, 0, 0, 0], 0);
+        assert_eq!(reader.pascal(4).unwrap(), "Café");
+        assert_eq!(reader.remaining(), 0);
+        assert!(Cursor::new(&[255, 0], 0).pascal(4).is_err());
+    }
 }

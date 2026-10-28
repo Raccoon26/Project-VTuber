@@ -115,3 +115,10 @@ Synthetic D65 Display P3 ICC conversion numeric sample passes within2 levels (de
 Final resource-only packaging: dev-02-release-notices.log Pass; installed notices/IMAGE_INPUT_NOTICES.md hash matches checked-in notice. Final coverage audit27 documents/94 requirements in dev-02-docs-final.log. Source and runtime behavior remain the accepted40M build; subsequent GitHub CI verifies the exact committed tree.
 
 Remote release: [PR #3 checks](https://github.com/Raccoon26/Project-VTuber/pull/3/checks), [merged PR/commit](https://github.com/Raccoon26/Project-VTuber/pull/3) and the main workflow at its merge SHA. CI/protection/review/conflict and post-merge tree/SHA evidence are verified externally and in local ignored release-verification evidence.
+
+
+### Post-review final acceptance (supersedes earlier final snapshots)
+
+DEV-02 legacy-name/resource hardening: dev-02-review-suite.log Pass42 Rust/helper1,4contracts,2Python,3UI plus all format/build/clippy/doc checks. dev-02-review-release.log Pass; dev-02-review-native-recovery.log and dev-02-review-native-input.log Pass actual Windows recovery and OS PSD dialog/preview/3locale/reload/hash. These runs supersede the earlier40-test/packaging snapshots. Legacy MacRoman Café + truncation and4097 global extension rejection regressions were added. Inventory after encoding_rs0.8.42:86npm/270Rust Windows packages; license notices include MIT and required BSD/WHATWG/COPYRIGHT. No unrelated package version was upgraded.
+
+Actual native high-resolution responsiveness: `node scripts/native-large-input.mjs` Pass in dev-02-native-large.log/.json. Original8000×5000, derived1000×625; preview visible972ms after selection,54 rAF samples with max gap100.1ms, cached verified preview3.8ms. Input was created by developer-only Rust import helper; this is not an OS large-file drag/drop gesture test. It measures this machine/fixture, not universal responsiveness.

@@ -26,6 +26,7 @@ png = "0.17"
 lcms2 = { version = "=6.2.0", features = ["static"] }
 flate2 = "1"
 base64 = "0.22"
+encoding_rs = "=0.8.42"
 rfd = "0.15"
 rusqlite = { version = "=0.41.0", features = ["bundled"] }
 
