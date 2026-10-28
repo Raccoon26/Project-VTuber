@@ -15,7 +15,7 @@ flowchart LR
  AD[Optional isolated banner host - future] -. no project capability .-> UI
 ```
 
-현재 신뢰 경계: UI는 경로·실행 명령을 선택할 수 없다. 원본은 Rust가 표시한 파일 선택 창으로만 입력한다. Worker에는 protocol/job_id/provider만 전달하며 파일 접근을 위임하지 않는다. Python `-I`로 사용자 모듈 경로 영향을 줄이고 `-B`로 설치 위치의 bytecode 쓰기를 막는다. 이것은 OS 보안 샌드박스가 아니다. 실제 외부 모델 코드는 DEV-03/29의 프로세스 권한 제한 후에만 도입한다.
+현재 신뢰 경계: UI는 경로·실행 명령을 선택할 수 없다. 원본 경로 권한은 Rust 파일 선택 창과 검증된 native OS drop에서만 얻는다. Worker에는 protocol/job_id/provider만 전달하며 파일 접근을 위임하지 않는다. Python `-I`로 사용자 모듈 경로 영향을 줄이고 `-B`로 설치 위치의 bytecode 쓰기를 막는다. 이것은 OS 보안 샌드박스가 아니다. 실제 외부 모델 코드는 DEV-03/29의 프로세스 권한 제한 후에만 도입한다.
 
 ## 22개 독립 모듈의 계약과 소유권
 공개 계약은 `src/contracts.ts`, IPC의 현재 구현은 `src-tauri/src/model.rs`, JSON 스키마는 `schemas/`에 있다. 아래의 Planned 모듈은 이름만 있는 구현으로 취급하지 않는다.
@@ -46,7 +46,7 @@ flowchart LR
 | M22 Diagnostic and Recovery | 오류 코드+허용 로그 → 복구 행동 | 제한 구현 / 00,28 |
 
 ## 저장 및 트랜잭션
-`VTUBER_DATA_DIR/projects/<uuid>/`에 `00000001.json`, `00000002.json`과 `sources/<sha256>.png`를 저장한다. 개발 환경은 `scripts/env.ps1`이 E 작업 폴더의 `.tools/app-data`로 고정한다. 설정이 없으면 실행 파일 옆 `vtuber-data`를 사용한다. WebView2 캐시도 같은 데이터 루트에 둔다. 이름은 경로에 쓰지 않는다. 기존 원본은 읽기만 하고, 저장 시 디코딩 결과가 아니라 원래 bytes를 복사한다. PNG의 ICC/텍스트/감마/비트 깊이는 원본 blob에 보존된다. 현재 화면에는 색 관리 미리보기가 없으므로 렌더링 색 충실도는 미검증이다.
+`VTUBER_DATA_DIR/projects/<uuid>/`에 `00000001.json`, `00000002.json`과 `sources/<sha256>.png`를 저장한다. 개발 환경은 `scripts/env.ps1`이 E 작업 폴더의 `.tools/app-data`로 고정한다. 설정이 없으면 실행 파일 옆 `vtuber-data`를 사용한다. WebView2 캐시도 같은 데이터 루트에 둔다. 이름은 경로에 쓰지 않는다. 기존 원본은 읽기만 하고, 저장 시 디코딩 결과가 아니라 원래 bytes를 복사한다. PNG의 ICC/텍스트/감마/비트 깊이는 원본 blob에 보존된다. DEV-00에는 색 관리 미리보기가 없었다. DEV-02는 별도 RGB ICC 변환/미리보기를 제공하며 실제 디스플레이 색 충실도 인증은 미검증이다.
 
 새 revision은 `.pending` 파일에 쓰고 `sync_all`, hard-link publish로 확정한다. 이미 있는 revision을 덮어쓰지 않는다. 미완료 pending은 읽기에서 제외한다. 최신 정식 revision이 손상된 경우 자동으로 성공한 것처럼 이전 상태를 열지 않고 오류를 낸다. DEV-01에서는 개별 손상 항목을 격리하고 사용자 선택으로 새 revision을 복구한다. 원본 checksum 불일치는 fail-closed다. NTFS에서 검증하고 hard-link 미지원 파일시스템은 저장 오류로 안내한다. 전원 차단, 디렉터리 엔트리 내구성, 다중 프로세스·네트워크 드라이브의 완전한 내구성은 보장하지 않는다.
 
@@ -65,3 +65,8 @@ UI는 provider 세부 코드를 import하지 않는다. Python 모델 어댑터�
 M02는 storage.rs + durable.rs + recovery.rs + index.rs로 구분한다. 저장 API는 프로젝트 OS lock 아래에서 read/expected revision/write를 직렬화한다. 목록/검색/복구 IPC는 blocking pool에서 검사하며 v2 DTO가 정상/문제 항목을 분리한다. 구 list API는 정상 배열을 유지한다. M04는 worker.rs와 journal.rs로 실행과 내구 기록을 분리한다. 모델/Worker protocol과 CharacterProject v1은 유지한다.
 
 정확한 디스크 구조·파일/DB 트랜잭션·실패 한계는 STORAGE_RECOVERY, job 재시작은 JOB_PERSISTENCE, schema 경계는 MIGRATION_STRATEGY가 정본이다. release에는 test-only fault hook이 포함되지 않는다.
+
+
+## DEV-02 integration
+
+M03 now contains image_input.rs (PNG/ICC/derived preview), psd_input.rs (checked borrowed PSD sections), source_input.rs (stable source capture/publication). Dialog and native OS drop are the only path authorities; UI drop command carries no pathname. A process-local single-entry preview cache is derived and source hash checked. Parsing runs in a blocking pool; cancellation uses an atomic flag. This is bounded CPU decoding, not a full OS sandbox. IMAGE_IMPORT/PSD_SUPPORT_MATRIX/COLOR_MANAGEMENT define exact limits.

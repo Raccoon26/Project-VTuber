@@ -3,11 +3,11 @@
 ## 구현된 schema v1
 정의: `schemas/character-project.schema.json`, `src-tauri/src/model.rs`, `src/contracts.ts`. 예제: `samples/character-project.json`.
 
-`CharacterProject`는 schema_version=1, 정규화된 UUID, 1부터 증가하는 revision, 1–120자 name, dimension(2d/3d), 유효한 target_profile, source 0–1개, A–F 미검증 Gate, `master_status=not_generated`를 가진다. 현재 importer는 PNG만 허용한다. v1에서 완료 master나 pass Gate를 주입하면 Rust가 거부한다. 문서상 목표를 저장 데이터의 구현으로 오인하지 않는다.
+`CharacterProject`는 schema_version=1, 정규화된 UUID, 1부터 증가하는 revision, 1–120자 name, dimension(2d/3d), 유효한 target_profile, source 0–1개, A–F 미검증 Gate, `master_status=not_generated`를 가진다. v1 source는 PNG만 허용한다. DEV-02의 별도 v2는 원본 PSD 참조를 허용한다. v1에서 완료 master나 pass Gate를 주입하면 Rust가 거부한다. 문서상 목표를 저장 데이터의 구현으로 오인하지 않는다.
 
 SourceAsset는 sha256/bytes/width/height/format/provenance=original을 가진다. 물리 경로는 외부 입력 대신 코어가 해시로 만든다. 원본의 색 정보는 재인코딩하지 않은 blob 자체에 보존한다. source path/개인 파일명은 프로젝트 manifest와 Worker에 넣지 않는다.
 
-## v2 이후 설계 (미구현)
+## 후속 마스터 아티팩트 설계 (미구현, PSD source v2와 구별)
 `ArtifactRef`: SHA-256, original/generated/manual, parentHashes, 모델 ID+버전+가중치 hash, seed, 설정, 작성 도구, 좌표계/단위/색 공간, observed/inferred/unknown, confidence map. seed만 같다고 GPU 연산 결과의 bitwise 재현성을 보장하지 않는다.
 
 2D Master: layer graph(픽셀 원좌표·Z 순서·mask·blend mode), texture 원본/작업본, mesh topology, deformers, keyforms, clipping, 표정 조합 보정, physics graph. 3D Master: 실제 topology/UV/material/texture, meter 단위 right-handed 기준 좌표계, skeleton(rest pose/inverse bind), normalized weights, corrective shapes, semantic face channels, colliders/springs. GLB/VRM은 export 사본이며 모든 편집 이력의 정본이 아니다.
@@ -30,3 +30,8 @@ ExportProfile는 대상 앱/버전, 포맷 버전, 지원 표정·물리·재질
 ProjectList v2 = version:2 + healthy CharacterProject[] + issues[{id,status,error,recoverable revision[]}] + index_warning. RevisionReport는 revision/project|null/error|null을 가진다. RecoveryPreview는 selected/latest|null/latest_revision/token/changed_fields다. recover_project는 id/revision/token을 받고 새 CharacterProject를 반환한다. token은 preview 이후 manifest 변경을 감지하며 원본 hash는 실행 시 다시 확인한다.
 
 Job에 queued/interrupted/recovery_required 상태를 추가했다. 별도 journal record v1은 sequence/updated_ms/Job을 저장한다. 프로젝트 revision이나 Gate는 Worker 진행률로 바뀌지 않는다. job_history는 실제 기록에서 읽으며 손상 항목은 복구 확인 필요로 표시한다. 계약은 src/contracts.ts 및 Rust 타입에 함께 정의한다. 자세한 schema 호환 방침은 MIGRATION_STRATEGY.md.
+
+
+## DEV-02 integration
+
+DEV-02 introduces CharacterProject v2 only for newly imported PSD sources (same reference fields, format=psd). PNG remains v1. Existing v1 manifest/sample/schema is unchanged. Readers accept known v1/v2 and reject unknown schemas. Inspection DTO v1 separately binds source_hash, parser, ICC hash, source dimensions/depth/mode, original layer/channel byte ranges, support warnings, decode/preview timing and explicitly derived preview. Source/working/preview provenance roles and future semantic identity anchors are specified in CHARACTER_IDENTITY_POLICY.

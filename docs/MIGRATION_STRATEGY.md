@@ -9,3 +9,8 @@ SQLite는 독립 user_version=1의 버려도 되는 파생 인덱스다. 이전 
 향후 manifest v2가 필요한 경우 구버전 읽기 지원 → 사용자 선택 → 새 디렉터리/새 파일에서 변환 → 참조·원본 hash 검사 → 검증된 사본 전환 순서를 따른다. 구버전과 백업을 유지하고 실패 시 전환하지 않는다. 미래 schema가 있는 프로젝트를 v1 과거 버전으로 복구하는 우회는 차단한다.
 
 현재 검증: DEV-00 sample 읽기, unknown field 거부, 미래 schema 격리/복구 차단, 잘못된 ID/번호 검사, SQLite version999 및 손상 DB 재구축. 실제 v1→v2 migration은 필요하지 않아 미구현이며 수행했다고 주장하지 않는다.
+
+
+## DEV-02 integration
+
+DEV-02 does not batch-convert existing projects. Selecting a PSD in an empty project creates a validated in-memory v2 copy then publishes it as the next immutable revision, preserving the v1 file. The v1 JSON schema and sample remain byte-for-byte unchanged. Existing PNG projects save as v1. User-selected recovery may create a new v1 or v2 revision from its validated source; previous data is preserved. Old DEV-01 binaries safely reject v2 instead of treating PSD bytes as PNG.

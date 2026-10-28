@@ -53,3 +53,8 @@
 DEV-01은 immutable v1 저장, 선택 복구, OS lock, SQLite 파생 인덱스, job journal을 연결한다. main PR/CI 및 시험 증거는 PROJECT_STATUS/TEST_RUNS 기준으로 확인한다. 자동 AI 재개와 전체 process tree 정리는 DEV-28에 남는다.
 
 DEV-02 시작: (1) DEV-01 merge SHA/main CI와 clean tree 확인, (2) E env 및 실제 Python 경로 설정, (3) 전체 suite + native-recovery 기준선, (4) storage.import_png의 bounded read/decoder/source publication 계약 검토, (5) PSD·ICC·16bit·alpha 합성 corpus와 원본 hash 기대값부터 작성한다. 새 importer는 소스 bytes를 재압축하거나 manifest v1을 조용히 확장하지 않는다. PSD metadata/layer가 새 schema를 요구하면 MIGRATION_STRATEGY의 새 사본 검증 절차를 먼저 설계한다. raw 원본 보존과 색 관리 preview의 정확성을 별도로 평가하고 decoder 자원 한도·원해상도 처리 실패를 명시한다.
+
+
+## DEV-02→03 start contract
+
+DEV-03 starts only after DEV-02 PR/main CI verification, local/remote main identity and clean tree. Read IMAGE_IMPORT, PSD_SUPPORT_MATRIX, COLOR_MANAGEMENT and CHARACTER_IDENTITY_POLICY; run scripts/test.ps1 with actual Python3.12 and native-recovery baseline. Do not alter original/PSD blob permissions or source contracts for model convenience. Implement versioned ModelManifest consent/hash/license/backend/resource preflight before any real download. Test with tiny local synthetic provider fixtures and CPU fallback; no heavy model, paid API, sustained GPU or source upload is implicitly authorized. Plan worker process/resource isolation around source read-only grants, derived staging, cancellation and journal; full OS process-tree/AI checkpoint guarantee remains DEV-28 until actually verified.

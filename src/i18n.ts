@@ -1,4 +1,46 @@
 export const en = {
+  legacy_name_encoding:
+    "Some legacy layer names may use a different regional encoding. Original name bytes are preserved; Unicode names are preferred.",
+  previewLoading: "Preparing a display copy…",
+  originalPreview: "Source image display copy",
+  previewCopy: "Display copy: sRGB / 8-bit; original precision preserved",
+  originalSize: "Original",
+  sourceDetails: "Source and layer information",
+  layerInspectionOnly:
+    "Layer records are preserved for inspection. This view does not recomposite edited layers.",
+  layerVisible: "Visible",
+  layerHidden: "Hidden",
+  importWorking:
+    "Reading and checking the image. The original remains unchanged.",
+  cancelInput: "Cancel image input",
+  import_cancelled:
+    "Image input was cancelled. Existing saved versions are preserved.",
+  invalid_icc:
+    "The embedded color profile could not be read safely. Open a separate copy in an image editor and check its profile.",
+  unsupported_color:
+    "This color mode or precision is not supported yet. Keep the original and try an RGB 8-bit or 16-bit copy.",
+  unsupported_psb:
+    "Large-document PSB is not supported yet. Keep the original and use a supported PSD copy.",
+  unsupported_compression:
+    "This PSD compression method is not supported yet. Keep the original; try a PSD copy with a compatible saved composite.",
+  unsupported_image:
+    "This image type is not supported. Use a static PNG or a supported PSD.",
+  psd_cached_composite_only:
+    "This preview uses the composite saved inside the PSD. Layer edits, effects and masks are not re-rendered here.",
+  psd_global_data_uninterpreted:
+    "Some Photoshop document data is preserved in the original but is not interpreted.",
+  psd_layer_render_unverified:
+    "Some layer features are preserved as records only. Photoshop-equivalent layer rendering is unverified.",
+  psd_16bit_layer_blocks_uninterpreted:
+    "16-bit layer extension blocks are preserved but are not yet interpreted.",
+  color_assumed:
+    "No usable color profile is declared. The display copy assumes sRGB; color accuracy is unverified.",
+  gamma_chromaticities_preview_unverified:
+    "Gamma/chromaticity information is preserved. This preview does not yet apply that custom color space.",
+  srgb_declared: "sRGB declared",
+  srgb_assumed: "sRGB assumed; unverified",
+  icc_to_srgb: "ICC converted to display sRGB",
+
   recovery: "Storage recovery",
   projectId: "Project ID",
   diagnose: "Inspect saved versions",
@@ -60,7 +102,7 @@ export const en = {
     "Latest state is unreadable; exact differences are unknown",
   title: "Character workshop",
   subtitle: "Preserve the original. Build with evidence.",
-  foundation: "DEV-01 · Storage recovery",
+  foundation: "DEV-02 · Original image input",
   notice:
     "This build tests project storage and a dummy worker. It does not generate or rig a character.",
   language: "Language",
@@ -78,9 +120,9 @@ export const en = {
   save: "Save name",
   open: "Open a saved project",
   choose: "Choose a project",
-  import: "Choose PNG illustration",
+  import: "Choose PNG / PSD illustration",
   sourceHint:
-    "PNG only in DEV-00 · Up to 64 MiB / 40 million pixels. Originals are copied without resizing or recompression.",
+    "Select or drop a PNG/PSD. Original bytes stay intact. Input up to64MiB; preview has a separate memory limit.",
   sourceEmpty: "No illustration added",
   sourcePreserved: "Original preserved",
   revision: "Saved revision",
@@ -137,7 +179,7 @@ export const en = {
   image_too_large:
     "This illustration exceeds the current safe input limit. The original will not be resized. Use a supported source or wait for large-image support.",
   invalid_image:
-    "This is not a valid supported PNG. Export a non-animated PNG from your illustration editor and try again.",
+    "This image is damaged or outside the supported PNG/PSD structure. Keep the original and try a separate supported copy.",
   source_required: "Choose an illustration before starting the workflow.",
   python_unavailable:
     "Python could not start. Configure VTUBER_PYTHON with a Python 3.12 executable and restart the app.",
@@ -152,6 +194,47 @@ export const en = {
 export type MessageKey = keyof typeof en;
 export type Locale = "en" | "ja" | "ko";
 export const ja: Record<MessageKey, string> = {
+  legacy_name_encoding:
+    "古いレイヤー名は地域別の文字コードにより異なって表示される場合があります。原本の名前データは保持しています。",
+  previewLoading: "表示用コピーを準備しています…",
+  originalPreview: "原画の表示用コピー",
+  previewCopy: "表示用コピー: sRGB / 8-bit・原本の精度は保持",
+  originalSize: "原本",
+  sourceDetails: "原本とレイヤー情報",
+  layerInspectionOnly:
+    "レイヤーの記録を保持して表示します。この画面は編集したレイヤーを再合成しません。",
+  layerVisible: "表示",
+  layerHidden: "非表示",
+  importWorking: "画像を読み込み検査しています。原本は変更しません。",
+  cancelInput: "画像入力をキャンセル",
+  import_cancelled:
+    "画像入力をキャンセルしました。既存の保存履歴は保持されています。",
+  invalid_icc:
+    "埋め込みプロファイルを安全に読めませんでした。画像編集ソフトで別コピーのプロファイルを確認してください。",
+  unsupported_color:
+    "未対応の色モードまたは精度です。原本を保管し、RGB 8-bit または16-bitのコピーをお試しください。",
+  unsupported_psb:
+    "大判文書PSBは未対応です。原本を保管し、対応するPSDコピーを使用してください。",
+  unsupported_compression:
+    "未対応のPSD圧縮方式です。原本を保管し、合成画像付きの互換PSDコピーをお試しください。",
+  unsupported_image:
+    "未対応の画像形式です。静止PNGまたは対応PSDを使用してください。",
+  psd_cached_composite_only:
+    "PSDに保存された合成画像を表示しています。レイヤー・効果・マスクは再描画しません。",
+  psd_global_data_uninterpreted:
+    "一部のPhotoshop文書情報は原本に保持されますが、まだ解釈しません。",
+  psd_layer_render_unverified:
+    "一部のレイヤー機能は記録のみ保持します。Photoshopと同等の描画は未検証です。",
+  psd_16bit_layer_blocks_uninterpreted:
+    "16-bitレイヤー拡張は原本に保持しますが、まだ解釈しません。",
+  color_assumed:
+    "使用可能な色プロファイルがありません。表示コピーはsRGBと仮定し、色の正確性は未検証です。",
+  gamma_chromaticities_preview_unverified:
+    "ガンマ・色度情報は保持します。この表示は独自色空間をまだ適用しません。",
+  srgb_declared: "sRGB指定",
+  srgb_assumed: "sRGB仮定・未検証",
+  icc_to_srgb: "ICCから表示用sRGBへ変換",
+
   recovery: "保存データの復旧",
   projectId: "プロジェクト ID",
   diagnose: "保存履歴を確認",
@@ -206,7 +289,7 @@ export const ja: Record<MessageKey, string> = {
   field_latest_unreadable: "最新状態を読めないため差分は不明",
   title: "キャラクター工房",
   subtitle: "原画を守り、検証を重ねて制作。",
-  foundation: "DEV-00 · 開発基盤プレビュー",
+  foundation: "DEV-02 · 原画の読み込み",
   notice:
     "このビルドでは保存とダミー処理を検証します。キャラクター生成・リギングは未実装です。",
   language: "言語",
@@ -224,9 +307,9 @@ export const ja: Record<MessageKey, string> = {
   save: "名前を保存",
   open: "保存済みプロジェクトを開く",
   choose: "プロジェクトを選択",
-  import: "PNGイラストを選択",
+  import: "PNG / PSDイラストを選択",
   sourceHint:
-    "DEV-00はPNGのみ · 最大64 MiB / 4,000万画素。原画の縮小・再圧縮は行いません。",
+    "PNG/PSDを選択またはドロップしてください。原本を保持します。入力64MiBまで・表示用メモリ制限は別です。",
   sourceEmpty: "イラスト未選択",
   sourcePreserved: "原画を保存済み",
   revision: "保存リビジョン",
@@ -282,7 +365,7 @@ export const ja: Record<MessageKey, string> = {
   image_too_large:
     "現在の安全な入力上限を超えています。原画は縮小しません。対応する原画か大画像対応機能をご利用ください。",
   invalid_image:
-    "対応するPNGではありません。編集ソフトから静止PNGを書き出して再試行してください。",
+    "画像が破損しているか未対応のPNG/PSD構造です。原本を保管し、対応する別コピーをお試しください。",
   source_required: "処理の前にイラストを選んでください。",
   python_unavailable:
     "Pythonを起動できません。VTUBER_PYTHONにPython 3.12の実行ファイルを設定して再起動してください。",
@@ -295,6 +378,46 @@ export const ja: Record<MessageKey, string> = {
     "処理データが不正なため停止しました。ワーカーとアプリのバージョンを確認してください。",
 };
 export const ko: Record<MessageKey, string> = {
+  legacy_name_encoding:
+    "일부 오래된 레이어 이름은 지역별 문자 인코딩에 따라 다르게 보일 수 있습니다. 원본 이름 데이터는 보존됩니다.",
+  previewLoading: "화면에 표시할 사본을 준비하고 있습니다…",
+  originalPreview: "원본 이미지의 표시용 사본",
+  previewCopy: "표시용 사본: sRGB / 8-bit · 원본 정밀도 보존",
+  originalSize: "원본",
+  sourceDetails: "원본 및 레이어 정보",
+  layerInspectionOnly:
+    "레이어 기록을 보존하여 보여 줍니다. 이 화면은 수정한 레이어를 다시 합성하지 않습니다.",
+  layerVisible: "표시",
+  layerHidden: "숨김",
+  importWorking: "이미지를 읽고 검사하고 있습니다. 원본은 변경되지 않습니다.",
+  cancelInput: "이미지 입력 취소",
+  import_cancelled: "이미지 입력을 취소했습니다. 기존 저장 이력은 보존됩니다.",
+  invalid_icc:
+    "색상 프로필을 안전하게 읽지 못했습니다. 이미지 편집기에서 별도 사본의 프로필을 확인하세요.",
+  unsupported_color:
+    "아직 지원하지 않는 색상 모드 또는 정밀도입니다. 원본을 보관하고 RGB 8-bit 또는 16-bit 사본을 사용하세요.",
+  unsupported_psb:
+    "대형 문서 PSB는 아직 지원하지 않습니다. 원본을 보관하고 지원되는 PSD 사본을 사용하세요.",
+  unsupported_compression:
+    "아직 지원하지 않는 PSD 압축 방식입니다. 원본을 보관하고 합성 이미지가 저장된 호환 PSD 사본을 사용하세요.",
+  unsupported_image:
+    "지원하지 않는 이미지 유형입니다. 정지 PNG 또는 지원되는 PSD를 사용하세요.",
+  psd_cached_composite_only:
+    "PSD 안에 저장된 합성 이미지입니다. 이 화면에서 레이어·효과·마스크를 다시 렌더링하지 않습니다.",
+  psd_global_data_uninterpreted:
+    "일부 Photoshop 문서 정보는 원본에 보존되지만 아직 해석하지 않습니다.",
+  psd_layer_render_unverified:
+    "일부 레이어 기능은 기록으로만 보존합니다. Photoshop과 동일한 레이어 렌더링은 미검증입니다.",
+  psd_16bit_layer_blocks_uninterpreted:
+    "16-bit 레이어 확장 블록은 원본에 보존하지만 아직 해석하지 않습니다.",
+  color_assumed:
+    "사용할 수 있는 색상 프로필이 없습니다. 표시용 사본은 sRGB로 가정하며 색상 정확성은 미검증입니다.",
+  gamma_chromaticities_preview_unverified:
+    "감마·색도 정보는 보존합니다. 이 미리보기는 해당 사용자 색 공간을 아직 적용하지 않습니다.",
+  srgb_declared: "sRGB 명시",
+  srgb_assumed: "sRGB 가정 · 미검증",
+  icc_to_srgb: "ICC에서 표시용 sRGB로 변환",
+
   recovery: "저장 데이터 복구",
   projectId: "프로젝트 ID",
   diagnose: "진단 및 저장 이력 확인",
@@ -352,7 +475,7 @@ export const ko: Record<MessageKey, string> = {
   field_latest_unreadable: "최신 상태를 읽지 못해 정확한 차이를 알 수 없음",
   title: "캐릭터 제작실",
   subtitle: "원본을 지키고, 검증을 거쳐 완성합니다.",
-  foundation: "DEV-01 · 저장 및 복구",
+  foundation: "DEV-02 · 원본 이미지 입력",
   notice:
     "이 버전은 프로젝트 저장과 더미 작업을 시험합니다. 캐릭터 생성과 리깅은 아직 구현되지 않았습니다.",
   language: "언어",
@@ -370,9 +493,9 @@ export const ko: Record<MessageKey, string> = {
   save: "이름 저장",
   open: "저장된 프로젝트 열기",
   choose: "프로젝트 선택",
-  import: "PNG 일러스트 선택",
+  import: "PNG / PSD 일러스트 선택",
   sourceHint:
-    "DEV-00은 PNG만 지원 · 최대 64 MiB / 4천만 픽셀. 원본을 축소하거나 재압축하지 않습니다.",
+    "PNG/PSD를 선택하거나 끌어 놓으세요. 원본을 그대로 보존합니다. 입력 최대64MiB · 미리보기 메모리 한도는 별도입니다.",
   sourceEmpty: "일러스트가 없습니다",
   sourcePreserved: "원본 보존됨",
   revision: "저장 버전",
@@ -429,7 +552,7 @@ export const ko: Record<MessageKey, string> = {
   image_too_large:
     "현재 안전한 입력 한도를 초과합니다. 원본을 임의로 축소하지 않습니다. 지원되는 원본을 사용하거나 대형 이미지 지원을 기다려 주세요.",
   invalid_image:
-    "유효한 지원 PNG가 아닙니다. 그림 편집기에서 정지 PNG로 내보내고 다시 시도하세요.",
+    "이미지가 손상되었거나 지원 범위를 벗어난 PNG/PSD 구조입니다. 원본을 보관하고 지원되는 별도 사본을 사용하세요.",
   source_required: "작업을 시작하기 전에 일러스트를 선택하세요.",
   python_unavailable:
     "Python을 실행할 수 없습니다. VTUBER_PYTHON에 Python 3.12 실행 파일을 지정하고 앱을 다시 시작하세요.",

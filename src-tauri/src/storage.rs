@@ -104,7 +104,7 @@ impl ProjectStore {
         if value
             .get("schema_version")
             .and_then(|x| x.as_u64())
-            .is_some_and(|v| v != 1)
+            .is_some_and(|v| ![1, 2].contains(&v))
         {
             return Err(AppError::new("schema_unsupported"));
         }
@@ -119,7 +119,11 @@ impl ProjectStore {
     pub fn list(&self) -> Result<Vec<CharacterProject>> {
         Ok(self.list_v2()?.healthy)
     }
-    fn commit(&self, mut project: CharacterProject, expected: u64) -> Result<CharacterProject> {
+    pub(crate) fn commit(
+        &self,
+        mut project: CharacterProject,
+        expected: u64,
+    ) -> Result<CharacterProject> {
         let dir = self.dir(&project.id)?;
         if self.latest(&dir)? != expected {
             return Err(AppError::new("revision_conflict"));
@@ -208,7 +212,7 @@ impl ProjectStore {
         let sources = self.dir(&p.id)?.join("sources");
         plain(&sources)?;
         for source in &p.sources {
-            let path = sources.join(format!("{}.png", source.sha256));
+            let path = sources.join(format!("{}.{}", source.sha256, source.format));
             plain(&path)?;
             let mut file = File::open(path)?;
             if file.metadata()?.len() != source.bytes {
@@ -239,7 +243,7 @@ mod tests {
         let mut p: CharacterProject =
             serde_json::from_str(include_str!("../../samples/character-project.json")).unwrap();
         p.validate().unwrap();
-        p.schema_version = 2;
+        p.schema_version = 999;
         assert_eq!(p.validate().unwrap_err().code, "schema_unsupported");
         p.schema_version = 1;
         p.gates[0].status = crate::model::GateStatus::Pass;

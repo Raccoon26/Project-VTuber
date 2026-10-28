@@ -31,3 +31,8 @@ rusqlite 0.41.0 bundled SQLite를 사용한다. `projects/index.sqlite`, user_ve
 ## 실패 주입 범위
 
 `resilience_tests`의 child helper는 테스트 바이너리에만 포함된다. checkpoint 환경 변수나 journal 실패 marker는 release 코드에 들어가지 않는다. 데이터는 tempfile의 합성 fixture뿐이다. 실제 권한 없는 공유 handle과 junction, kill, 동시 프로세스를 시험한다. 디스크 부족은 StorageFull 오류를 주입하며 실제 E 드라이브를 채우지 않는다. 전원 차단을 시험했다고 표시하지 않는다.
+
+
+## DEV-02 integration
+
+DEV-02 PSD original blobs use sources/<sha256>.psd and are verified by the same byte length/hash rules. v2 import publishes a new immutable revision; the earlier v1 revision is preserved. History/list/index/recovery read both versions. Raw originals remain authority; the preview cache is dispensable. Import cancellation before commit can leave an unreferenced blob, never a modified old revision. No source pruning is performed.

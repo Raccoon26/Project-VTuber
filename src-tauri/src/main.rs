@@ -1,7 +1,10 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 use std::{
     path::PathBuf,
-    sync::{Arc, Mutex},
+    sync::{
+        atomic::{AtomicBool, Ordering},
+        Arc, Mutex,
+    },
 };
 use tauri::{Manager, State};
 use vtuber_core::{
@@ -18,6 +21,10 @@ struct AppState {
     jobs: JobManager,
     script: PathBuf,
     python: PathBuf,
+    import_cancel: Arc<AtomicBool>,
+    importing: Arc<AtomicBool>,
+    preview_cache: Arc<Mutex<Option<(String, serde_json::Value)>>>,
+    dropped: Mutex<Option<PathBuf>>,
 }
 #[tauri::command]
 fn create_project(
@@ -104,23 +111,93 @@ async fn import_source(
     revision: u64,
 ) -> Result<Option<CharacterProject>> {
     let selected = rfd::AsyncFileDialog::new()
-        .add_filter("PNG", &["png"])
+        .add_filter("PNG / PSD", &["png", "psd"])
         .pick_file()
         .await;
     let Some(file) = selected else {
         return Ok(None);
     };
-    let path = file.path().to_owned();
+    run_import(&state, id, revision, file.path().to_owned())
+        .await
+        .map(Some)
+}
+#[tauri::command]
+async fn import_dropped(
+    state: State<'_, AppState>,
+    id: String,
+    revision: u64,
+) -> Result<CharacterProject> {
+    let path = state
+        .dropped
+        .lock()
+        .unwrap()
+        .take()
+        .ok_or_else(|| AppError::new("unsupported_image"))?;
+    run_import(&state, id, revision, path).await
+}
+async fn run_import(
+    state: &AppState,
+    id: String,
+    revision: u64,
+    path: PathBuf,
+) -> Result<CharacterProject> {
+    if state.importing.swap(true, Ordering::SeqCst) {
+        return Err(AppError::new("project_busy"));
+    }
+    state.import_cancel.store(false, Ordering::SeqCst);
+    let cancel = state.import_cancel.clone();
+    let importing = state.importing.clone();
     let store = state.store.clone();
     tauri::async_runtime::spawn_blocking(move || {
-        store
+        let result = store
             .lock()
             .unwrap()
-            .import_png(&id, revision, &path)
-            .map(Some)
+            .import_image(&id, revision, &path, &cancel);
+        importing.store(false, Ordering::SeqCst);
+        result
     })
     .await
     .map_err(|_| AppError::new("storage_error"))?
+}
+#[tauri::command]
+fn cancel_import(state: State<AppState>) {
+    state.import_cancel.store(true, Ordering::SeqCst);
+}
+#[tauri::command]
+async fn source_preview(state: State<'_, AppState>, id: String) -> Result<serde_json::Value> {
+    use base64::Engine;
+    let store = state.store.clone();
+    let cache = state.preview_cache.clone();
+    tauri::async_runtime::spawn_blocking(move || {
+        let source_hash = store
+            .lock()
+            .unwrap()
+            .open(&id)?
+            .sources
+            .first()
+            .ok_or_else(|| AppError::new("source_required"))?
+            .sha256
+            .clone();
+        if let Some((key, value)) = cache.lock().unwrap().as_ref() {
+            if key == &source_hash {
+                return Ok(value.clone());
+            }
+        }
+        let mut inspection = store
+            .lock()
+            .unwrap()
+            .inspect_source(&id, &AtomicBool::new(false))?;
+        let data = base64::engine::general_purpose::STANDARD.encode(&inspection.preview_png);
+        inspection.preview_png.clear();
+        let mut value = serde_json::to_value(inspection)?;
+        value["preview_url"] = format!("data:image/png;base64,{data}").into();
+        if serde_json::to_vec(&value)?.len() < 8 * 1024 * 1024 {
+            *cache.lock().unwrap() = Some((source_hash, value.clone()));
+        }
+        Ok(value)
+    })
+    .await
+    .map_err(|_| AppError::new("invalid_image"))?
 }
 #[tauri::command]
 fn start_job(state: State<AppState>, id: String) -> Result<Job> {
@@ -175,14 +252,27 @@ fn main() {
                 jobs: JobManager::persistent(data.join("jobs")).map_err(|e| e.code)?,
                 script,
                 python,
+                import_cancel: Arc::new(AtomicBool::new(false)),
+                importing: Arc::new(AtomicBool::new(false)),
+                preview_cache: Arc::new(Mutex::new(None)),
+                dropped: Mutex::new(None),
             });
             tauri::WebviewWindowBuilder::new(app, "main", tauri::WebviewUrl::default())
-                .title("Project VTuber AI · DEV-00")
+                .title("Project VTuber AI · DEV-02")
                 .inner_size(1180.0, 860.0)
                 .min_inner_size(800.0, 650.0)
                 .data_directory(data.join("webview"))
                 .build()?;
             Ok(())
+        })
+        .on_window_event(|window, event| {
+            if let tauri::WindowEvent::DragDrop(tauri::DragDropEvent::Drop { paths, .. }) = event {
+                *window.state::<AppState>().dropped.lock().unwrap() = if paths.len() == 1 {
+                    Some(paths[0].clone())
+                } else {
+                    None
+                };
+            }
         })
         .invoke_handler(tauri::generate_handler![
             create_project,
@@ -196,6 +286,9 @@ fn main() {
             open_project,
             save_project,
             import_source,
+            import_dropped,
+            cancel_import,
+            source_preview,
             start_job,
             job_status,
             cancel_job,

@@ -5,11 +5,11 @@ export interface SourceAsset {
   bytes: number;
   width: number;
   height: number;
-  format: "png";
+  format: "png" | "psd";
   provenance: "original";
 }
 export interface CharacterProject {
-  schema_version: 1;
+  schema_version: 1 | 2;
   id: string;
   revision: number;
   name: string;

@@ -28,3 +28,10 @@
 ## DEV-01 의존성 추가
 
 rusqlite0.41.0(bundled) 및 libsqlite3-sys0.39.1을 Cargo.lock으로 고정했다. [rusqlite 공식 문서](https://docs.rs/rusqlite/0.41.0/rusqlite/)의 API에 따라 로컬 SQLite를 사용한다. rusqlite MIT, SQLite public-domain 표기와 정확한 전이 의존성 metadata는 dependency-inventory로 확인한다. 정식 배포 전 전체 notice/라이선스 closure 감사 의무는 유지하며 유료 DB/외부 DB 서비스는 사용하지 않는다.
+
+
+## DEV-02 integration
+
+DEV-02: lcms2=6.2.0 MIT and lcms2-sys=4.0.7 MIT (static LittleCMS2.19 family MIT). flate2 existing transitive dependency now explicit (MIT/Apache-2.0); base64=0.22.x MIT/Apache-2.0. Exact checksums remain Cargo.lock. psd-tools1.26.0 MIT plus attrs25.4.0 MIT are E-only independent test tools, not bundled. No Photoshop SDK, paid API, commercial editor or user artwork was acquired or redistributed. Synthetic PSD/reference fixtures contain only generated solid shapes; retain notices for distributed dependencies.
+
+Legacy PSD name decoder: encoding_rs=0.8.42, (MIT OR Apache-2.0) AND BSD-3-Clause; MIT/COPYRIGHT/WHATWG notices are bundled in IMAGE_INPUT_NOTICES. Input≤255 bytes per Pascal name; luni UTF16BE remains authoritative. This is a new narrowly scoped decoder dependency, not an unrelated version upgrade.

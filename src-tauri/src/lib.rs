@@ -1,11 +1,16 @@
 pub mod durable;
 pub mod gpu;
+pub mod image_input;
+#[cfg(test)]
+mod image_tests;
 pub mod index;
 pub mod journal;
 pub mod model;
+pub mod psd_input;
 pub mod recovery;
 #[cfg(test)]
 mod resilience_tests;
+pub mod source_input;
 pub mod storage;
 pub mod worker;
 

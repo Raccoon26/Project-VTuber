@@ -73,3 +73,52 @@
 ### 최종 로컬 증거
 
 전체 suite: artifacts/dev-01-final-suite.log 통과(Rust28 + helper1, Python2, 계약4, UI2, docs78/23, format/build/clippy). release: dev-01-release-final.log 통과. native 최종 재검증: dev-01-native-final-retry.log 통과; 직전 CDP 연결 오류는 F01-006에 기록했다. npm audit 취약점0, dependency inventory npm86/Rust257(Windows)이다. 마지막 변경은 native harness 연결 준비 및 문서이며 최종 format/docs audit로 확인한다.
+
+
+## DEV-02 — 2026-10-28 JST (validation in progress)
+
+All commands dot-source scripts/env.ps1. Actual Python is the existing3.12 path in ENVIRONMENT_REPORT. No original user artwork or heavy AI model is used. New data/builds/cache/reference dependencies are on E.
+
+| Command / method | Result | Evidence / scope |
+|---|---|---|
+| scripts/test.ps1 -Python <actual3.12>, original5d38dcb extraction | Pass | artifacts/dev-02-baseline-isolated.log (28 Rust/helper1,4 contracts,2 Python,2 UI); first mixed-source attempt is invalid baseline F02-001 |
+| cargo test --locked image_tests | Pass through image-tests5.log | PNG modes/16/ICC/transparent RGB, PSD layers/hash/recovery/Lr16, independent compression/group reference, white matte/alpha |
+| cargo test --locked with VTUBER_PYTHON | Pass | artifacts/dev-02-rust-full2.log; earlier direct command without Python env failed two journal tests F02-005 |
+| cargo clippy --locked --all-targets -- -D warnings | Pass before last additions | artifacts/dev-02-clippy2.log; final suite still required |
+| npm run build / npm run test:ui | Pass | artifacts/dev-02-drop-build.log / dev-02-ui.log; original2 UI tests (mock recovery separate from native) |
+| npm run desktop:build | Pass | artifacts/dev-02-release.log; final rebuilt labels still to check |
+| node scripts/native-input.mjs + computer-use native dialog selection | Pass | artifacts/dev-02-native-input.log/.json/.png; actual OS dialog→PSD→automatic project→preview→expert layer→3locale→reload→original bytes/hash. Computer-use click returned unknown geometry error, independently verified action result F02-006 |
+| cargo build --release --example inspect_image; python scripts/measure-image-input.py | Pass / bounded refusal | artifacts/dev-02-performance.json/.log; actual Windows peak working set via GetProcessMemoryInfo, includes process overhead; decoder/preview times separate |
+| independent psd-tools1.26.0/attrs25.4.0 E-only reference | Pass | artifacts/dev-02-reference-check4.log; self-created solid-shape PSD composite matches exact RGBA. Unicode legacy-name generation initially failed F02-002 |
+
+Measured4000² RGB8: decode145ms/preview6ms, process wall187–195ms, peak181,014,528B.4096² RGB16: decode211–238ms/preview6ms, wall260–286ms, peak240,410,624B.초기5000² 거부는 기존40M 지원 범위를 좁혀서 작업 버퍼만320MiB로 조정했다. 최종8000×5000은 peak445,517,824B/wall431ms,8001×5000은 peak≤4,476,928B로 거부했다. Process cold start/file cache affects wall time; these are synthetic examples, not universal performance guarantees. Native cached8² source preview≈3.6ms on this machine, source hash still verified.
+
+Not run / not certified: licensed Photoshop runtime comparison, physical monitor/P3/grayICC accuracy, OS cross-window file drop gesture, true disk exhaustion/power loss/non-NTFS durability, exhaustive hostile ICC fuzzing, actual AI generation or checkpoint resume, five-person beginner study. Final CI/PR/main and final suite will be recorded separately.
+
+
+### DEV-02 final validation update (chronological intermediate results)
+
+- artifacts/dev-02-suite-final.log: full suite Pass (before final40M budget/test additions), Rust37/helper1, contracts4, Python2, UI3. All requested checks passed.
+- artifacts/dev-02-mid-cancel.log: actual concurrent4000² decode cancellation passed; subsequent independent parse succeeds. No automatic import resume is claimed.
+- artifacts/dev-02-performance-40m.log and dev-02-performance.json: actual40M8-bit support retained; decode/preview/time/peak memory measured independently from original bytes. Layer benchmark1/128/1024 succeeds (27–39ms,peak≤7,589,888B);1025 refuses with no success report.
+- artifacts/dev-02-native-recovery.log: actual final release DEV-00/01 workflow, Python progress/cancel, GPU query, app kill/restart, recovery/index/source/history checks Pass.
+- artifacts/dev-02-npm-audit.log:0 vulnerabilities; dev-02-dependencies.log:86npm/265Rust Windows inventory. Static color MIT notices in third_party/IMAGE_INPUT_NOTICES.md.
+- UI mock missing currentWindow/unregisterListener caused initial recovery crash/unhandled rejection; real Tauri metadata and event cleanup were added to mock, and subscription errors are caught without whole-app crash. Final UI rerun required after mock fix.
+
+
+### Final acceptance (DEV-02)
+
+`./scripts/test.ps1 -Python <actual3.12>`: Pass in artifacts/dev-02-acceptance-suite.log,40 Rust tests +1 subprocess helper,4contract/2Python/3UI, format/tsc/Vite/rustfmt/clippy/doc coverage. `npm run desktop:build`: Pass in dev-02-release-40m.log. `node scripts/native-recovery.mjs`: Pass in dev-02-native-recovery-final.log; `node scripts/native-input.mjs` with actual OS file selection: Pass in dev-02-native-input-final.log (screenshot and hash evidence). No mock native pass substituted for OS dialog. Final cached8² preview≈12.4ms includes source verification; previous3.6ms was an earlier sample, not a guarantee.
+
+Synthetic D65 Display P3 ICC conversion numeric sample passes within2 levels (dev-02-p3.log); physical monitor/P3 full profile conformance remains unverified. Cancellation during4000² decode and retry succeeds (dev-02-mid-cancel.log). Final performance source hash unchanged for every repeat; original/preview dimensions are distinct. Tests reference current log hashes in docs/evidence/dev-02-local.json.
+
+Final resource-only packaging: dev-02-release-notices.log Pass; installed notices/IMAGE_INPUT_NOTICES.md hash matches checked-in notice. Final coverage audit27 documents/94 requirements in dev-02-docs-final.log. Source and runtime behavior remain the accepted40M build; subsequent GitHub CI verifies the exact committed tree.
+
+Remote release: [PR #3 checks](https://github.com/Raccoon26/Project-VTuber/pull/3/checks), [merged PR/commit](https://github.com/Raccoon26/Project-VTuber/pull/3) and the main workflow at its merge SHA. CI/protection/review/conflict and post-merge tree/SHA evidence are verified externally and in local ignored release-verification evidence.
+
+
+### Post-review final acceptance (supersedes earlier final snapshots)
+
+DEV-02 legacy-name/resource hardening: dev-02-review-suite.log Pass42 Rust/helper1,4contracts,2Python,3UI plus all format/build/clippy/doc checks. dev-02-review-release.log Pass; dev-02-review-native-recovery.log and dev-02-review-native-input.log Pass actual Windows recovery and OS PSD dialog/preview/3locale/reload/hash. These runs supersede the earlier40-test/packaging snapshots. Legacy MacRoman Café + truncation and4097 global extension rejection regressions were added. Inventory after encoding_rs0.8.42:86npm/270Rust Windows packages; license notices include MIT and required BSD/WHATWG/COPYRIGHT. No unrelated package version was upgraded.
+
+Actual native high-resolution responsiveness: `node scripts/native-large-input.mjs` Pass in dev-02-native-large.log/.json. Original8000×5000, derived1000×625; preview visible972ms after selection,54 rAF samples with max gap100.1ms, cached verified preview3.8ms. Input was created by developer-only Rust import helper; this is not an OS large-file drag/drop gesture test. It measures this machine/fixture, not universal responsiveness.
