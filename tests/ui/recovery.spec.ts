@@ -11,10 +11,19 @@ test("simulated IPC recovery requires explicit review, supports cancel and three
       restores: number;
     };
     w.isTauri = true;
+    Object.assign(w, {
+      __TAURI_EVENT_PLUGIN_INTERNALS__: { unregisterListener: () => {} },
+    });
     w.restores = 0;
     const p = { ...fixture, name: "Preserved fixture", revision: 1 };
     w.__TAURI_INTERNALS__ = {
+      metadata: {
+        currentWindow: { label: "main" },
+        currentWebview: { label: "main" },
+      },
+      transformCallback: () => 1,
       invoke: async (cmd: string) => {
+        if (cmd.startsWith("plugin:event|")) return 1;
         if (cmd === "job_status") return null;
         if (cmd === "job_history") return [];
         if (cmd === "search_projects" || cmd === "list_projects_v2")

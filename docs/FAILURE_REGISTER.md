@@ -40,3 +40,20 @@ D00-001은 list v2의 per-project 결과 및 명시 복구로 해결했고 정�
 ### F01-006 — native restart harness readiness
 
 DEV-01 native 재실행의 두 번째 launch에서 CDP ECONNRESET이 관찰되었다(artifacts/dev-01-native-final.log). HTTP endpoint 응답 뒤 실제 WebSocket 연결을 별도 수행해 준비 조건 사이에 단절을 허용한 것이 확인되었다. 직전 프로세스의 같은 포트 endpoint 잔존은 가능한 원인이며 확정하지 않는다. 재시작마다 OS가 제안한 빈 loopback 포트를 사용하고 실제 CDP connect 성공 및 tauri.localhost navigation을 bounded poll로 확인하도록 수정했다. 앱 데이터 코드는 바꾸지 않았다. 같은 native 전체 흐름 재실행은 dev-01-native-final-retry.log에서 통과했다.
+
+
+## DEV-02 failures and evidence
+
+| ID | Reproduction / symptom | Confirmed cause | Fix / verification |
+|---|---|---|---|
+| F02-001 baseline isolation | First baseline compile saw newly-added module/dependency mismatch | Edited source before baseline process finished; not a DEV-01 defect | Preserve log; extract exact5d38dcb into E/.tools/dev02-baseline, run full suite successfully (dev-02-baseline-isolated.log) |
+| F02-002 reference fixture writing | psd-tools save failed on Japanese/Korean legacy name | reference writer attempted macroman encode; original project files untouched | ASCII independent fixture plus separate Rust luni Unicode fixture; log reference-fixtures.log/2.log |
+| F02-003 PSD groups/padding | Independent valid grouped PSD rejected | Bottom-to-top divider ordering and2-byte trailing zero padding differed from initial assumption | Bounded zero padding≤3 and group marker balance; independent groups.psd + expected RGBA fixture regression |
+| F02-004 reference pixel comparator | RGB reference and RGBA output byte arrays differed | Test helper compared different channel layouts | Normalize RGB reference alpha255, rerun independent numeric tests; production parser unchanged |
+| F02-005 direct cargo environment | Two existing journal tests unwrapped missing Python env | Direct cargo shell did not set VTUBER_PYTHON, unlike scripts/test.ps1 | Explicit actual Python3.12 path; same full Rust regression passed (dev-02-rust-full2.log) |
+| F02-006 UI tooling result | sky.click reported coordinate input geometry unavailable | Error response confirmed; underlying click effect initially unknown | Fresh window list showed dialog closed; independent native IPC/source hash/reload checks passed. No repeated blind click. No claim helper geometry root cause known |
+
+Initial source test compile/lint errors (unused React import, constant-chunk lint) were corrected with TypeScript build/clippy; no dependency version changes were used to hide errors. The first reference package needed attrs, installed only in E with explicit version.
+
+F02-007 UI mock regression: existing simulated Tauri fixture omitted currentWindow/currentWebview and event-plugin unregisterListener. Adding native drop subscription exposed that omission (suite3/UI2 logs); actual native app worked. Mock now represents event metadata/cleanup and subscription setup catches synchronous failures. Added source UI test; full final suite reruns all3UI tests.
+F02-008 bounded-memory compatibility: the first new RGBA16 buffer160MiB cap accidentally reduced accepted8-bit canvases below the old40M limit. Windows measurements showed40M RGB8 uses≈445.5MB peak. Keep original64MiB input/40M canvas/160MiB decoded caps and set separate320MiB working cap; final40M succeeds and40,005,000 pixels refuses. No original resize or quality reduction was used.

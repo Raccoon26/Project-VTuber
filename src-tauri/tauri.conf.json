@@ -17,6 +17,9 @@
   },
   "bundle": {
     "active": false,
-    "resources": { "../workers/dummy.py": "workers/dummy.py" }
+    "resources": {
+      "../workers/dummy.py": "workers/dummy.py",
+      "../third_party/IMAGE_INPUT_NOTICES.md": "notices/IMAGE_INPUT_NOTICES.md"
+    }
   }
 }

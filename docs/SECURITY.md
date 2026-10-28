@@ -33,3 +33,8 @@
 프로젝트별 OS lock을 사용하며 lock 파일을 PID로 삭제하지 않는다. Windows handle은 delete sharing을 허용하지 않는다. 진단 중 source/manifest/reparse를 검사하고 복구 후보의 원본 hash를 재확인한다. SQLite는 fresh DB를 parameter binding으로 구성하고 extension loader를 활성화하지 않는다. journal/manifest 크기와 개수 제한을 둔다.
 
 OS share-denied handle과 junction은 합성 경로로 시험했다. 관리자 권한으로 사용자 폴더 ACL을 변경하지 않는다. 파일 경로를 검사한 뒤 handle을 여는 TOCTOU 및 동일 사용자에 의한 hardlink/상위 경로 교체의 완전 방어는 아직 보장하지 않는다. 공유·공격 가능한 저장 루트는 지원 범위에서 제외한다. 프로젝트 목록/진단에는 UUID와 기계 오류만 반환하고 원래 사용자의 개인 파일 경로를 넣지 않는다.
+
+
+## DEV-02 integration
+
+DEV-02 adds bounded signature-based PSD reading; no smart-object external path or executable payload is opened. PSD offsets/record counts/channel sizes/nesting/decoded allocations have independent limits. Raw/RLE/ZIP/predictor errors fail explicitly; no black replacement pixels. Windows selected-source handle denies write/delete sharing; reparse ancestors and modified/length checks protect cooperative workflows. LittleCMS2.19 vendored source was examined for the CubeSize pre-multiplication overflow fix; no broad absence-of-vulnerabilities claim. PNG metadata decompression is still within the decoder budget; native ICC fuzzing/OS-isolated parser remain DEV-29 work.

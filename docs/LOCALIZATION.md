@@ -13,3 +13,8 @@ RTL 확장 계획: locale metadata에 direction을 추가하고 `<html dir>`로 
 ## DEV-01
 
 저장 상태 7종, 이력/메타데이터 preview, 차이/보존/제외 항목, 명시 확인/취소, 잠금·공간·권한·index 오류, 작업 중단/재시도 설명을 ja/en/ko에 추가했다. checkbox Space와 언어 전환은 UI 테스트로 검사한다. 전문가 모드의 UUID/오류 코드는 번역하지 않으며 개인 파일 경로는 노출하지 않는다. RTL/전체 screen reader 실사용은 후속 검증이다.
+
+
+## DEV-02 integration
+
+DEV-02 adds input/cancel/ICC/precision/layer/unsupported-feature messages in en/ja/ko. Beginner preview avoids color setup dialogs; expert details expose original precision/profile/layer records. Source path is omitted from diagnostics. Locale parity remains mandatory.

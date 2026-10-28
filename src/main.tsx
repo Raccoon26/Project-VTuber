@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { invoke, isTauri } from "@tauri-apps/api/core";
+import { getCurrentWebviewWindow } from "@tauri-apps/api/webviewWindow";
 import {
   profiles,
   type CharacterProject,
@@ -12,6 +13,7 @@ import {
 import { message, type Locale } from "./i18n";
 import "./style.css";
 import { RecoveryPanel } from "./RecoveryPanel";
+import { SourcePreview } from "./SourcePreview";
 
 function App() {
   const [locale, setLocale] = useState<Locale>("ko");
@@ -33,6 +35,7 @@ function App() {
   const [job, setJob] = useState<Job | null>(null);
   const [gpu, setGpu] = useState<GpuReport | null>(null);
   const [busy, setBusy] = useState(false);
+  const [inputBusy, setInputBusy] = useState(false);
   const [error, setError] = useState("");
   const native = isTauri();
   const running = job?.status === "running" || job?.status === "queued";
@@ -100,6 +103,53 @@ function App() {
       void invoke<Job[]>("job_history").then(setJobs).catch(report);
   }, [native, running]);
   const blocked = !native || busy || !!running;
+  async function inputImage(dropped = false) {
+    setInputBusy(true);
+    try {
+      let current = project;
+      if (!current) {
+        current = await invoke<CharacterProject>("create_project", {
+          name: name.trim() || "Character",
+          dimension,
+          target,
+        });
+        select(current);
+      }
+      const imported = await invoke<CharacterProject | null>(
+        dropped ? "import_dropped" : "import_source",
+        { id: current.id, revision: current.revision },
+      );
+      if (imported) select(imported);
+      await refresh();
+    } finally {
+      setInputBusy(false);
+    }
+  }
+  useEffect(() => {
+    if (!native) return;
+    let disposed = false;
+    let unlisten: (() => void) | undefined;
+    void Promise.resolve()
+      .then(() =>
+        getCurrentWebviewWindow().onDragDropEvent((event) => {
+          if (
+            event.payload.type === "drop" &&
+            !blocked &&
+            !project?.sources.length
+          )
+            void action(() => inputImage(true));
+        }),
+      )
+      .then((fn) => {
+        if (disposed) fn();
+        else unlisten = fn;
+      })
+      .catch(report);
+    return () => {
+      disposed = true;
+      unlisten?.();
+    };
+  }, [native, blocked, project, name, dimension, target]);
   return (
     <div className="shell">
       <header>
@@ -144,7 +194,7 @@ function App() {
             <h1>{t("title")}</h1>
             <p>{t("subtitle")}</p>
           </div>
-          <span className="version">00 / FOUNDATION</span>
+          <span className="version">02 / SOURCE FIDELITY</span>
         </div>
         <div className="notice">{t("notice")}</div>
         {!native && <div className="notice browser">{t("browser")}</div>}
@@ -318,29 +368,33 @@ function App() {
                   {project?.sources.map((s) => (
                     <p key={s.sha256}>
                       {s.width} × {s.height} · {(s.bytes / 1024).toFixed(1)} KiB
-                      · PNG{expert && <code>SHA-256 {s.sha256}</code>}
+                      · {s.format.toUpperCase()}
+                      {expert && <code>SHA-256 {s.sha256}</code>}
                     </p>
                   ))}
                 </div>
               </div>
               <p className="muted">{t("sourceHint")}</p>
+              <SourcePreview
+                project={project}
+                expert={expert}
+                t={t}
+                report={report}
+              />
+              {inputBusy && (
+                <div role="status">
+                  <p>{t("importWorking")}</p>
+                  <button
+                    onClick={() => void invoke("cancel_import").catch(report)}
+                  >
+                    {t("cancelInput")}
+                  </button>
+                </div>
+              )}
               <button
                 className="secondary"
-                disabled={blocked || !project || !!project.sources.length}
-                onClick={() =>
-                  void action(async () => {
-                    if (project) {
-                      const p = await invoke<CharacterProject | null>(
-                        "import_source",
-                        { id: project.id, revision: project.revision },
-                      );
-                      if (p) {
-                        select(p);
-                        await refresh();
-                      }
-                    }
-                  })
-                }
+                disabled={blocked || !!project?.sources.length}
+                onClick={() => void action(() => inputImage())}
               >
                 {t("import")}
               </button>

@@ -83,7 +83,7 @@ impl CharacterProject {
         })
     }
     pub fn validate(&self) -> Result<()> {
-        if self.schema_version != 1 {
+        if ![1, 2].contains(&self.schema_version) {
             return Err(AppError::new("schema_unsupported"));
         }
         if uuid::Uuid::parse_str(&self.id)
@@ -113,7 +113,8 @@ impl CharacterProject {
                     .bytes()
                     .all(|c| c.is_ascii_hexdigit() && !c.is_ascii_uppercase())
                 || s.provenance != "original"
-                || s.format != "png"
+                || !((self.schema_version == 1 && s.format == "png")
+                    || (self.schema_version == 2 && s.format == "psd"))
                 || s.bytes > 64 * 1024 * 1024
                 || s.width == 0
                 || s.height == 0

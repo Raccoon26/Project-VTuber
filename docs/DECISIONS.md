@@ -26,3 +26,8 @@
 - ADR-015 Accepted: rusqlite0.41.0 bundled, 파일 검사 후 fresh DB transaction/교체. 파일+DB 원자적 이중 commit 가정 기각. index 실패는 파일 저장을 취소하지 않는다. 향후 증분 index로 교체해도 파일 정본 정책 유지.
 - ADR-016 Accepted: job별 immutable journal + 데이터 루트 runtime OS lock. progress를 프로젝트 revision으로 기록하는 방식 기각. 현재 전체 앱당 한 Worker; 실제 AI 병렬 scheduler와 retention은 DEV-03/28.
 - ADR-017 Accepted: CharacterProject v1 보존, 목록 v2·job v1을 분리. 불필요한 project migration과 unknown schema 자동 변환 기각.
+
+
+## DEV-02 integration
+
+ADR-018 Accepted: preserve v1 PNG and introduce explicit PSD-only v2 references; original sections stay in content-addressed PSD, inspection metadata is reproducible derived DTO. ADR-019 Provisional: bounded Rust PSD subset based on Adobe spec; psd-tools is independent test oracle rather than runtime dependency because unrestricted Photoshop-specific interpretation and smart-object IO are outside the trust boundary. Replace parser through Inspection v1 contract, keeping original bytes and reference tests. ADR-020 Accepted: lcms2 RGB16 row transforms to separate sRGB8 preview; gamma-only unprofiled rendering is disclosed unverified. ADR-021 Accepted: native-authorized OS drop path and bounded one-entry cache; UI does not acquire arbitrary read-path IPC. PSD layer recomposition/PSB32 are explicit limitations, not silently substituted.

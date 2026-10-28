@@ -1,6 +1,6 @@
 # Requirements and coverage audit
 
-DEV-00의 62개 ID와 요구사항을 유지하고 DEV-01 명세를 REQ-063–078로 추가했다. 정본은 docs/requirements.json이며 루트 requirements.json은 요청된 진입점용 동일 mirror다. audit는 두 파일의 동등성을 검사한다. Verified는 표시된 시험 범위의 검증이며 제품 AI/방송 인증 완료를 뜻하지 않는다.
+DEV-00–01의 기존78개 ID를 유지하고 DEV-02 요구를 REQ-079–094로 추가한다. Verified는 기록된 시험 범위이며 AI 제작·방송 인증을 뜻하지 않는다. 정본 docs/requirements.json과 루트 mirror를 검사한다.
 
 | ID | 요구사항 | 우선 | 담당 DEV | 모듈 | 검증 | 현재 상태 | 미해결 위험 | 테스트·증거 |
 |---|---|---|---|---|---|---|---|---|
@@ -81,6 +81,20 @@ DEV-00의 62개 ID와 요구사항을 유지하고 DEV-01 명세를 REQ-063–07
 | REQ-075 | DEV-01 reparse/접근 거부/경로 안전성 | P0 | DEV-01 | M02 | Windows 실제 junction/배타 handle 및 기존 경로 검사 | Verified | 악의적 동일 사용자 TOCTOU 완전 방어 제외 | src-tauri/src/resilience_tests.rs |
 | REQ-076 | 기존62+신규 요구 전수 감사 및 증거 문서 동기화 | P0 | DEV-01 | M22 | ID 불변/중복/정본-루트 mirror/문서 링크 audit | Verified | Verified는 해당 시험 범위에만 한정 | scripts/audit-docs.mjs |
 | REQ-077 | 실제 Tauri 종료·재시작·복구 검증 | P0 | DEV-01 | M01 | native Windows IPC와 OS process kill/rehash | Verified | OS file picker 직접 조작은 이전처럼 미실행 | scripts/native-recovery.mjs |
-| REQ-078 | DEV-01 PR/CI/보호 조건/main 병합 및 후속 CI | P0 | DEV-01 | M22 | PR checks/merge SHA/remote-local tree/main CI | Implemented | 병합 전 완료 아님 | docs/PROJECT_STATUS.md |
-
-DEV-01 시작 감사: main ac7e257 및 CI 40314991998 성공, clean working tree. 기존62개 중 저장·Worker·i18n·schema·CI 관련 항목을 재검사하고 나머지 장기 AI/출력/광고 요구는 담당 DEV와 미검증 상태를 유지했다. 삭제/ID 재배정/품질 Gate 승격은 없다. 종료 증거는 TEST_RUNS와 PROJECT_STATUS에 연결한다.
+| REQ-078 | DEV-01 PR/CI/보호 조건/main 병합 및 후속 CI | P0 | DEV-01 | M22 | PR checks/merge SHA/remote-local tree/main CI | Verified | DEV-01 PR#2 / main CI40502328646 success; proof applies to that merge only | docs/PROJECT_STATUS.md |
+| REQ-079 | 캐릭터 재창조 금지 및 Observed/Inferred/Unknown/User Approved 근거 추적 | P0 | DEV-02, DEV-04, DEV-06, DEV-12, DEV-20, DEV-32 | M03 | 원본 anchor/provenance 및 승인 없는 관찰 영역 변경 비교 | Partially Implemented | 의미 특징 인식·AI 정체성 비교는 후속 | docs/CHARACTER_IDENTITY_POLICY.md |
+| REQ-080 | 초보자 최소 클릭 입력·미리보기·자동 제작 UX | P0 | DEV-02, DEV-25, DEV-32 | M01 | 파일 선택부터 preview까지 사용자 흐름/실사용자 검사 | Partially Implemented | 전체 자동 제작·초보자 실사용자 평가는 후속 | src/SourcePreview.tsx |
+| REQ-081 | 방송용 모델 자동 완성 및 품질·대상 앱 검증 후 출력 | P0 | DEV-04, DEV-24, DEV-32 | M18 | 원본→rig→quality→대상 runtime 종단 검증 | Planned | AI/rig/export 미구현; 입력 성공은 모델 완료 아님 | docs/CHARACTER_IDENTITY_POLICY.md |
+| REQ-082 | PNG 유형·16-bit·ICC·투명도 원본 보존 입력 | P0 | DEV-02 | M03 | 유형별 bytes/hash/pixel 검사 | Verified | 색 렌더 범위는 COLOR_MANAGEMENT 참조 | src-tauri/src/image_tests.rs |
+| REQ-083 | PSD 원본 및 레이어 이름·순서·위치·표시·불투명도·mask·clipping 보존 | P0 | DEV-02, DEV-05, DEV-07 | M03 | PSD 구조/byte range 및 독립 fixture 비교 | Verified | 고급 레이어 재합성 미지원 | docs/PSD_SUPPORT_MATRIX.md |
+| REQ-084 | 원본/미리보기/작업/생성/승인 데이터 분리 | P0 | DEV-02, DEV-06, DEV-14 | M03 | source hash와 derivative 부모 참조 검사 | Partially Implemented | 생성/승인 아티팩트는 후속 | docs/IMAGE_IMPORT.md |
+| REQ-085 | 색 프로필 보존 및 표시용 ICC 변환·16-bit 작업 정밀도 | P0 | DEV-02 | M03 | RGB ICC 변환과 preview 정밀도 고지 검사 | Verified | RGB ICC/synthetic P3 numerical path tested; monitor/gray ICC certification remains unverified | docs/COLOR_MANAGEMENT.md |
+| REQ-086 | Alpha 경계 및 blend 미지원 처리의 명시성 | P0 | DEV-02, DEV-08 | M17 | transparent RGB/반투명/저장 composite 기준 비교 | Partially Implemented | 레이어 compositor 미구현 | src-tauri/src/image_tests.rs |
+| REQ-087 | 고해상도 입력 자원 한도·취소·CPU 미리보기 | P0 | DEV-02 | M03 | Windows 시간/peak RAM/취소 후 자원 측정 | Verified | 40M RGB8 measured; independent decoded160MiB/working320MiB limits, true OS power-loss excluded | docs/IMAGE_IMPORT.md |
+| REQ-088 | 손상 PSD·오프셋·폭탄·계층·레이어·ICC·읽기 변경 방어 | P0 | DEV-02, DEV-29 | M03 | 잘린 파일/한도/구조 mutation과 경로 검사 | Partially Implemented | bounded parsing/mutation/reparse checks; exhaustive fuzz/hostile same-user race remains DEV-29 | src-tauri/src/image_tests.rs |
+| REQ-089 | PNG v1 보존 및 PSD 별도 v2 불변 revision·복구 호환 | P0 | DEV-02 | M02 | v1 bytes 보존/PSD reopen/recover/index 시험 | Verified | 기존 프로젝트 무단 변환 금지 | src-tauri/src/image_tests.rs |
+| REQ-090 | 입력·색·미지원 안내 3언어와 native preview | P0 | DEV-02 | M20 | catalog parity/UI/native 입력 확인 | Verified | actual OS PSD dialog and3locale preview/reload tested; OS drop gesture not run | src/SourcePreview.tsx |
+| REQ-091 | 합성 PNG·PSD corpus 및 독립 기준/검증 범위 구분 | P0 | DEV-02 | M22 | fixture별 expected 픽셀/구조/hash 검증 | Verified | Photoshop 원본 reference 없음 | tests/fixtures/source |
+| REQ-092 | DEV-00·01 저장·복구·Worker·프로필 전체 회귀 | P0 | DEV-02 | M22 | 전체 suite/native recovery | Verified | final local suite40 Rust/helper1,4contracts,2Python,3UI + native recovery; actual AI still unimplemented | docs/TEST_RUNS.md |
+| REQ-093 | DEV-02 전체 요구 감사·문서·비용·E 경로·사용자 수정 보호 | P0 | DEV-02 | M22 | 78 ID 보존/mirror/status/path audit | Verified | cleanup 파일은 ignore된 사용자 로컬 파일로 보존 | docs/PROJECT_STATUS.md |
+| REQ-094 | DEV-02 PR·CI·보호 조건·main 병합 후 검증 | P0 | DEV-02 | M22 | GitHub PR/main SHA/CI/tree 검증 | Implemented | 필수 구현과 검증 전 완료 처리 금지 | docs/PROJECT_STATUS.md |

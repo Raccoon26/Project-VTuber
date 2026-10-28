@@ -1,0 +1,42 @@
+{
+  "dev": "DEV-02",
+  "local_verified_at": "2026-10-28T12:43:57.212692+00:00",
+  "scope": "local Windows NTFS synthetic files, actual OS PSD dialog/real native app, independent saved composite/codecs and numeric ICC sample",
+  "baseline": "5d38dcb817e7f9d53c373ab584c280dc251154ce",
+  "logs_sha256": {
+    "artifacts\\dev-02-baseline-isolated.log": "bf6f9232deb0e632cd67e299af6e000010d93f4a730f799b3f08062a39e9c4d1",
+    "artifacts\\dev-02-acceptance-suite.log": "b602eed13b7c26f31e4915b7ebd03a76bcc7bbcdc3f131690b14746177774157",
+    "artifacts\\dev-02-release-40m.log": "bcbda5d59923ed3e942a5bbd89eb1d2951439830be067e39d7a940443dad41cd",
+    "artifacts\\dev-02-native-recovery-final.log": "f01559cc30b0fcb429dcb7c52825904022b4009ccce9363426730e7487cd3708",
+    "artifacts\\dev-02-native-input-final.log": "a747f43b3bc5b8fce6e6ce75c5201f4c56e48cf91a99e7e7a9e9534759072a46",
+    "artifacts\\dev-02-performance-40m.log": "d4baa58443331852a6b24e1d29d8cb08e1527f89d8a78073439d858348dc19e8",
+    "artifacts\\dev-02-p3.log": "03d1766133ac050a87642fd65a21db817cba91deff8a77da792e20e79bce8b9b",
+    "artifacts\\dev-02-mid-cancel.log": "5daccc0ead22f95854445f71edc3366d32e67edbfe0ff6e345d4475fde76de94",
+    "artifacts\\dev-02-npm-audit.log": "4b02d4a3c23d969c46bd2041360f80bfcb1fe760d9db864009acdd710f9de601",
+    "artifacts/dev-02-release-notices.log": "630e845be4c7e2a28b89944daea12f7b85dfb482a491c56c945ffc09c4134aed",
+    "artifacts/dev-02-docs-final.log": "dda34dff0f7e65c6e8ad9ba528b47ca58cf2e98170a0b4183c329447ac1b4225",
+    "artifacts/dev-02-release-packaging.log": "45c0f91cac0958021baa8a6ce6bc883327bbc78c569bcc75139cba0a6d595c41"
+  },
+  "fixtures_sha256": {
+    "tests\\fixtures\\source\\groups-merged.png": "1980d7d031f19567b358706af9e386a2bf465fa8a157f83a1137d07cb35cd5be",
+    "tests\\fixtures\\source\\groups.psd": "1bc1286ffa8836a1e1897d824179b756e9f486e02fcd42ac3de570dc27f16821",
+    "tests\\fixtures\\source\\rgb16-codec1.psd": "b6891171a1cf7b463594717136e31932cecc15622f8bdafe70802eb06106bb5c",
+    "tests\\fixtures\\source\\rgb16-codec2.psd": "79005a459a5fa35e414bc29b467cfea3863cf863454c383ea2bc6f2b7212655d",
+    "tests\\fixtures\\source\\rgb16-codec3.psd": "6dbc69009fae4b6e3dbba883c8e975d275de0f4f38f4a6960a75f4b16cb624b3",
+    "tests\\fixtures\\source\\rgb8-codec1.psd": "d74e3d9818bbbf687b3be6df8062fccd8695e3ba56d740c5b2bc0eda4f83553b",
+    "tests\\fixtures\\source\\rgb8-codec2.psd": "5cf0f526f0065c4bd432e38e3e92274fdc5aaf51da8b0d423f7e399f15e7020e",
+    "tests\\fixtures\\source\\rgb8-codec3.psd": "cc242ac73a36577f735f1976652a9950b92a0735e714c136dfe625fa8ac03367"
+  },
+  "executable_sha256": "09db9dec44c4548e1b17191dbac6f2a394147209b5b2a9663ab1fd39fd3acb3e",
+  "not_run": [
+    "Photoshop runtime conformance",
+    "physical monitor/gray ICC/custom gAMA accuracy",
+    "OS cross-window drop gesture",
+    "power loss/non-NTFS/real disk exhaustion",
+    "exhaustive ICC/PSD fuzz",
+    "actual AI rig/export",
+    "5-person beginner study"
+  ],
+  "remote_release": "PR/main merge and CI must be verified separately",
+  "notice_sha256": "594b23cab40aff4cff7d97f87f438980a57c67ab39acba29c5a3e4566b4f6c98"
+}

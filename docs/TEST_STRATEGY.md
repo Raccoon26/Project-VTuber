@@ -32,3 +32,8 @@ PowerShell `scripts/test.ps1`은 첫 실패에 멈춘다. 선택적 `-SkipUI`는
 Rust resilience_tests는 실제 Windows 자식 test process와 tempfile을 사용한다. ignored process_helper는 독립 테스트가 아니라 상위 테스트가 --exact --ignored로 호출하는 fixture다. 순서: checkpoint marker 대기 → child kill → wait → 다른 ProjectStore로 reopen → 기존 bytes 비교. 두 writer는 barrier 뒤 같은 revision을 저장하며 하나만 성공해야 한다.
 
 UI recovery.spec.ts는 **모의 IPC**로 취소/확인/키보드/3언어를 검사한다. scripts/native-recovery.mjs는 실제 release app을 별도 E fixture에서 실행하고 기존 native-smoke, app kill/relaunch, interrupted 표시, 손상 격리/선택 복구/hash 보존을 검사한다. OS file picker 조작은 포함하지 않는다. 디스크 부족은 test-only StorageFull 주입으로 분리한다. release build에는 주입 코드가 없으며 실제 디스크 용량을 고갈시키지 않는다.
+
+
+## DEV-02 integration
+
+DEV-02 adds modes/precision/ICC/alpha/hash tests, PSD original-layer and Lr16 contracts, malformed prefixes and offset mutation, and independent synthetic psd-tools compression/group fixtures. The reference package is only an E development installation, not product/CI dependency. TEST_RUNS distinguishes actual OS/file-picker/native IPC, browser mocks, numeric pixels, injected failures and unexecuted Photoshop/monitor certification.

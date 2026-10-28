@@ -1220,8 +1220,263 @@
     ],
     "module": "M22",
     "verification": "PR checks/merge SHA/remote-local tree/main CI",
+    "status": "Verified",
+    "risk": "DEV-01 PR#2 / main CI40502328646 success; proof applies to that merge only",
+    "tests": [
+      "docs/PROJECT_STATUS.md"
+    ]
+  },
+  {
+    "id": "REQ-079",
+    "description": "캐릭터 재창조 금지 및 Observed/Inferred/Unknown/User Approved 근거 추적",
+    "priority": "P0",
+    "dev": [
+      "DEV-02",
+      "DEV-04",
+      "DEV-06",
+      "DEV-12",
+      "DEV-20",
+      "DEV-32"
+    ],
+    "module": "M03",
+    "verification": "원본 anchor/provenance 및 승인 없는 관찰 영역 변경 비교",
+    "status": "Partially Implemented",
+    "risk": "의미 특징 인식·AI 정체성 비교는 후속",
+    "tests": [
+      "docs/CHARACTER_IDENTITY_POLICY.md"
+    ]
+  },
+  {
+    "id": "REQ-080",
+    "description": "초보자 최소 클릭 입력·미리보기·자동 제작 UX",
+    "priority": "P0",
+    "dev": [
+      "DEV-02",
+      "DEV-25",
+      "DEV-32"
+    ],
+    "module": "M01",
+    "verification": "파일 선택부터 preview까지 사용자 흐름/실사용자 검사",
+    "status": "Partially Implemented",
+    "risk": "전체 자동 제작·초보자 실사용자 평가는 후속",
+    "tests": [
+      "src/SourcePreview.tsx"
+    ]
+  },
+  {
+    "id": "REQ-081",
+    "description": "방송용 모델 자동 완성 및 품질·대상 앱 검증 후 출력",
+    "priority": "P0",
+    "dev": [
+      "DEV-04",
+      "DEV-24",
+      "DEV-32"
+    ],
+    "module": "M18",
+    "verification": "원본→rig→quality→대상 runtime 종단 검증",
+    "status": "Planned",
+    "risk": "AI/rig/export 미구현; 입력 성공은 모델 완료 아님",
+    "tests": [
+      "docs/CHARACTER_IDENTITY_POLICY.md"
+    ]
+  },
+  {
+    "id": "REQ-082",
+    "description": "PNG 유형·16-bit·ICC·투명도 원본 보존 입력",
+    "priority": "P0",
+    "dev": [
+      "DEV-02"
+    ],
+    "module": "M03",
+    "verification": "유형별 bytes/hash/pixel 검사",
+    "status": "Verified",
+    "risk": "색 렌더 범위는 COLOR_MANAGEMENT 참조",
+    "tests": [
+      "src-tauri/src/image_tests.rs"
+    ]
+  },
+  {
+    "id": "REQ-083",
+    "description": "PSD 원본 및 레이어 이름·순서·위치·표시·불투명도·mask·clipping 보존",
+    "priority": "P0",
+    "dev": [
+      "DEV-02",
+      "DEV-05",
+      "DEV-07"
+    ],
+    "module": "M03",
+    "verification": "PSD 구조/byte range 및 독립 fixture 비교",
+    "status": "Verified",
+    "risk": "고급 레이어 재합성 미지원",
+    "tests": [
+      "docs/PSD_SUPPORT_MATRIX.md"
+    ]
+  },
+  {
+    "id": "REQ-084",
+    "description": "원본/미리보기/작업/생성/승인 데이터 분리",
+    "priority": "P0",
+    "dev": [
+      "DEV-02",
+      "DEV-06",
+      "DEV-14"
+    ],
+    "module": "M03",
+    "verification": "source hash와 derivative 부모 참조 검사",
+    "status": "Partially Implemented",
+    "risk": "생성/승인 아티팩트는 후속",
+    "tests": [
+      "docs/IMAGE_IMPORT.md"
+    ]
+  },
+  {
+    "id": "REQ-085",
+    "description": "색 프로필 보존 및 표시용 ICC 변환·16-bit 작업 정밀도",
+    "priority": "P0",
+    "dev": [
+      "DEV-02"
+    ],
+    "module": "M03",
+    "verification": "RGB ICC 변환과 preview 정밀도 고지 검사",
+    "status": "Verified",
+    "risk": "RGB ICC/synthetic P3 numerical path tested; monitor/gray ICC certification remains unverified",
+    "tests": [
+      "docs/COLOR_MANAGEMENT.md"
+    ]
+  },
+  {
+    "id": "REQ-086",
+    "description": "Alpha 경계 및 blend 미지원 처리의 명시성",
+    "priority": "P0",
+    "dev": [
+      "DEV-02",
+      "DEV-08"
+    ],
+    "module": "M17",
+    "verification": "transparent RGB/반투명/저장 composite 기준 비교",
+    "status": "Partially Implemented",
+    "risk": "레이어 compositor 미구현",
+    "tests": [
+      "src-tauri/src/image_tests.rs"
+    ]
+  },
+  {
+    "id": "REQ-087",
+    "description": "고해상도 입력 자원 한도·취소·CPU 미리보기",
+    "priority": "P0",
+    "dev": [
+      "DEV-02"
+    ],
+    "module": "M03",
+    "verification": "Windows 시간/peak RAM/취소 후 자원 측정",
+    "status": "Verified",
+    "risk": "40M RGB8 measured; independent decoded160MiB/working320MiB limits, true OS power-loss excluded",
+    "tests": [
+      "docs/IMAGE_IMPORT.md"
+    ]
+  },
+  {
+    "id": "REQ-088",
+    "description": "손상 PSD·오프셋·폭탄·계층·레이어·ICC·읽기 변경 방어",
+    "priority": "P0",
+    "dev": [
+      "DEV-02",
+      "DEV-29"
+    ],
+    "module": "M03",
+    "verification": "잘린 파일/한도/구조 mutation과 경로 검사",
+    "status": "Partially Implemented",
+    "risk": "bounded parsing/mutation/reparse checks; exhaustive fuzz/hostile same-user race remains DEV-29",
+    "tests": [
+      "src-tauri/src/image_tests.rs"
+    ]
+  },
+  {
+    "id": "REQ-089",
+    "description": "PNG v1 보존 및 PSD 별도 v2 불변 revision·복구 호환",
+    "priority": "P0",
+    "dev": [
+      "DEV-02"
+    ],
+    "module": "M02",
+    "verification": "v1 bytes 보존/PSD reopen/recover/index 시험",
+    "status": "Verified",
+    "risk": "기존 프로젝트 무단 변환 금지",
+    "tests": [
+      "src-tauri/src/image_tests.rs"
+    ]
+  },
+  {
+    "id": "REQ-090",
+    "description": "입력·색·미지원 안내 3언어와 native preview",
+    "priority": "P0",
+    "dev": [
+      "DEV-02"
+    ],
+    "module": "M20",
+    "verification": "catalog parity/UI/native 입력 확인",
+    "status": "Verified",
+    "risk": "actual OS PSD dialog and3locale preview/reload tested; OS drop gesture not run",
+    "tests": [
+      "src/SourcePreview.tsx"
+    ]
+  },
+  {
+    "id": "REQ-091",
+    "description": "합성 PNG·PSD corpus 및 독립 기준/검증 범위 구분",
+    "priority": "P0",
+    "dev": [
+      "DEV-02"
+    ],
+    "module": "M22",
+    "verification": "fixture별 expected 픽셀/구조/hash 검증",
+    "status": "Verified",
+    "risk": "Photoshop 원본 reference 없음",
+    "tests": [
+      "tests/fixtures/source"
+    ]
+  },
+  {
+    "id": "REQ-092",
+    "description": "DEV-00·01 저장·복구·Worker·프로필 전체 회귀",
+    "priority": "P0",
+    "dev": [
+      "DEV-02"
+    ],
+    "module": "M22",
+    "verification": "전체 suite/native recovery",
+    "status": "Verified",
+    "risk": "final local suite40 Rust/helper1,4contracts,2Python,3UI + native recovery; actual AI still unimplemented",
+    "tests": [
+      "docs/TEST_RUNS.md"
+    ]
+  },
+  {
+    "id": "REQ-093",
+    "description": "DEV-02 전체 요구 감사·문서·비용·E 경로·사용자 수정 보호",
+    "priority": "P0",
+    "dev": [
+      "DEV-02"
+    ],
+    "module": "M22",
+    "verification": "78 ID 보존/mirror/status/path audit",
+    "status": "Verified",
+    "risk": "cleanup 파일은 ignore된 사용자 로컬 파일로 보존",
+    "tests": [
+      "docs/PROJECT_STATUS.md"
+    ]
+  },
+  {
+    "id": "REQ-094",
+    "description": "DEV-02 PR·CI·보호 조건·main 병합 후 검증",
+    "priority": "P0",
+    "dev": [
+      "DEV-02"
+    ],
+    "module": "M22",
+    "verification": "GitHub PR/main SHA/CI/tree 검증",
     "status": "Implemented",
-    "risk": "병합 전 완료 아님",
+    "risk": "필수 구현과 검증 전 완료 처리 금지",
     "tests": [
       "docs/PROJECT_STATUS.md"
     ]
