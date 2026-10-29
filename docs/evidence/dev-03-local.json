@@ -1,0 +1,353 @@
+{
+  "dev": "DEV-03",
+  "local_verified_at": "2026-10-29T13:09:34.629517+00:00",
+  "baseline": "c07a6fe6c9f15a3b76e18179974a7db86ba8ab29",
+  "baseline_main_ci": 40696324294,
+  "scope": "Windows local NTFS, trusted built-in synthetic ONNX CPU provider, actual Tauri IPC/rendering; no trained character inference/GPU certification",
+  "counts": {
+    "rust_passed": 53,
+    "rust_ignored_helper": 1,
+    "python_passed": 12,
+    "typescript_contracts": 5,
+    "playwright_mock_ui": 4,
+    "requirements": 110
+  },
+  "logs_sha256": {
+    "artifacts/dev-03-baseline.log": "434394938fa4b382e62c49bd46e4f9c0248b87d91ac713b5c9eb33a33fd3bbdf",
+    "artifacts/dev-03-baseline-clean.log": "3da9d943b99db3969acc7c10fcbe5689456732215b9d0f62b7917d8b2dc9e3b7",
+    "artifacts/dev-03-native-baseline.log": "d0288adf13537acd88c1475c5b6829b598f4838b0ab82799bc9b5e0ddbf3c102",
+    "artifacts/dev-03-install1.log": "a51afee5d281779e13ee74328214655ac91d0d806a6966e75f4c8d177a4bb896",
+    "artifacts/dev-03-install2.log": "24564e57e3b636625265f206986c1ffc461a0a4dc328ebd8dbdd5178a606c8e5",
+    "artifacts/dev-03-inference1.log": "04e037ac4a93a361be29c52fa8d7d72dae6db967dfab4f7bae709fa537e1c158",
+    "artifacts/dev-03-python2.log": "1e4a98e60e19e156df777990cf4f012f7a8124839ff81747d6e868541bd76ce3",
+    "artifacts/dev-03-rust-runtime5.log": "0090b7b3bdb928e9ae951e389a74a0b39f516611d9a61126148c5cd5e9083b0c",
+    "artifacts/dev-03-native-runtime1.log": "584e4e1017e18deaa9c64290ce32d064a6ae58ce30a91a8f7a525a2a3856d94d",
+    "artifacts/dev-03-native-runtime2.log": "8ebd22282ec018c7a3b69f721d26dcc7336fd0b363c30cb0a56799efb9b12842",
+    "artifacts/dev-03-native-runtime3.log": "2f8e3d0ae9cd6bf8afae70eace97a30e91ef38491fc84580e1a469747e2fdd4c",
+    "artifacts/dev-03-acceptance-suite.log": "cbafb0d729afd876d955be668a5f4a9132716e97cb81bf2d761ec42ff23eebd3",
+    "artifacts/dev-03-release3.log": "44555a2c14791d111f6463eb519f857df3caebaa50bdf67abdd47ee84e593e18",
+    "artifacts/dev-03-native-recovery-final.log": "af8f7fe98cf86f9b56094eb240de666a8f65d1616226426e6d5835d017b2b6a0",
+    "artifacts/dev-03-native-large.log": "b34cb084ad867aec45eaa18215cd8976a53009cc73d9d119e004c8053f7dd1ce",
+    "artifacts/dev-03-npm-audit.log": "4b02d4a3c23d969c46bd2041360f80bfcb1fe760d9db864009acdd710f9de601",
+    "artifacts/dev-03-canonical-install.log": "bc92941793be42cd8dbcbc97477e76435125b3382a69a33d72653e32e86d7c82",
+    "artifacts/dev-03-canonical-suite.log": "058cf9ed2653c3f44e6568f914e086af12d251de803e7fe416180e42dcb74fef",
+    "artifacts/dev-03-release-canonical.log": "d9e5199a6e6bd08e6a481b170c0568637e0affdf1106f556e5bab3e0fe612160",
+    "artifacts/dev-03-native-runtime-canonical.log": "6e049099a024efce80e42e6fddc6b111b778994d8fcfb18198ee9de3030bd7c8"
+  },
+  "model": {
+    "schema_version": 1,
+    "id": "synthetic-affine",
+    "version": "1.0.0",
+    "revision": "sha256:56f731422c39f2576a74604122b4ddb14bb4d86869e0011750e17b1196deb765",
+    "provider": "onnx-synthetic-v1",
+    "kind": "runtime_diagnostic",
+    "developer": "Project VTuber synthetic fixture",
+    "official_source": "https://github.com/Raccoon26/Project-VTuber",
+    "download_url": null,
+    "format": "onnx",
+    "bytes": 216,
+    "sha256": "56f731422c39f2576a74604122b4ddb14bb4d86869e0011750e17b1196deb765",
+    "code_license": "project-owned",
+    "weights_license": "CC0-1.0",
+    "dependency_licenses": [
+      "MIT",
+      "Apache-2.0",
+      "BSD-3-Clause",
+      "BSD-2-Clause",
+      "0BSD",
+      "Zlib",
+      "CC0-1.0",
+      "Intel-Simplified",
+      "MPL-2.0",
+      "GPL-3.0-with-GCC-exception"
+    ],
+    "license_review": "approved",
+    "commercial_use": true,
+    "redistribution": true,
+    "allowed_regions": [
+      "*"
+    ],
+    "output_restrictions": "Diagnostic numeric output only; no character-analysis claim",
+    "runtime": "onnx-cpu-win-py312-v1",
+    "backends": [
+      "onnx_cpu"
+    ],
+    "ram_mib": 512,
+    "vram_mib": 0,
+    "disk_mib": 512,
+    "input": "float32[1,3] synthetic vector",
+    "output": "float32[1,2] relu affine result",
+    "preprocessing": "none; original images are not read",
+    "verified_hardware": [],
+    "evidence": [
+      "scripts/generate-runtime-model.py"
+    ],
+    "network_during_inference": false
+  },
+  "runtime_dependencies": {
+    "version": 1,
+    "id": "onnx-cpu-win-py312-v1",
+    "python": "3.12",
+    "platform": "win_amd64",
+    "allowed_hosts": [
+      "files.pythonhosted.org"
+    ],
+    "files": [
+      {
+        "name": "onnxruntime",
+        "version": "1.31.1",
+        "filename": "onnxruntime-1.31.1-cp312-cp312-win_amd64.whl",
+        "url": "https://files.pythonhosted.org/packages/45/b2/793b4051d8dc6acb379ead9b72050f0ffa283ca49a6904add2e218b83e2e/onnxruntime-1.31.1-cp312-cp312-win_amd64.whl",
+        "bytes": 14888466,
+        "sha256": "ae8a9a351efda685cc59a66226cdefaa37a126c1d66872ca23a2de9425326130",
+        "license": "MIT License",
+        "requires": [
+          "flatbuffers",
+          "numpy>=1.21.6",
+          "packaging",
+          "protobuf>=4.25.8",
+          "sympy; extra == \"symbolic\"",
+          "ml_dtypes; extra == \"quantization\""
+        ]
+      },
+      {
+        "name": "numpy",
+        "version": "2.5.4",
+        "filename": "numpy-2.5.4-cp312-cp312-win_amd64.whl",
+        "url": "https://files.pythonhosted.org/packages/12/33/fefe62073dc8acfd0f2b9ed7c003af2f50aa61555e113e6db02b8f79f145/numpy-2.5.4-cp312-cp312-win_amd64.whl",
+        "bytes": 12573091,
+        "sha256": "a7b1b6353e36a7e50de2973a38d705c88ee93adcf120673cee7f45a4a3fa223a",
+        "license": "BSD-3-Clause AND 0BSD AND MIT AND Zlib AND CC0-1.0",
+        "requires": []
+      },
+      {
+        "name": "flatbuffers",
+        "version": "25.12.19",
+        "filename": "flatbuffers-25.12.19-py2.py3-none-any.whl",
+        "url": "https://files.pythonhosted.org/packages/e8/2d/d2a548598be01649e2d46231d151a6c56d10b964d94043a335ae56ea2d92/flatbuffers-25.12.19-py2.py3-none-any.whl",
+        "bytes": 26661,
+        "sha256": "7634f50c427838bb021c2d66a3d1168e9d199b0607e6329399f04846d42e20b4",
+        "license": "Apache 2.0",
+        "requires": []
+      },
+      {
+        "name": "packaging",
+        "version": "26.3",
+        "filename": "packaging-26.3-py3-none-any.whl",
+        "url": "https://files.pythonhosted.org/packages/63/34/ba1c580383c9eada3711951fef0795c80b829a078d72188184bcab9dd527/packaging-26.3-py3-none-any.whl",
+        "bytes": 129956,
+        "sha256": "d7193f7c8e4e93f444fde0262bf90af30e16fa0ad0ad44cb553c87339b23cd1c",
+        "license": "Apache-2.0 OR BSD-2-Clause",
+        "requires": []
+      },
+      {
+        "name": "protobuf",
+        "version": "7.36.2",
+        "filename": "protobuf-7.36.2-cp310-abi3-win_amd64.whl",
+        "url": "https://files.pythonhosted.org/packages/8a/55/b77bda4e5e5f5971fb51b07663694690e9afdb9402136c16a522bd621cad/protobuf-7.36.2-cp310-abi3-win_amd64.whl",
+        "bytes": 456514,
+        "sha256": "a300819d441e078a5608c0d3c709796bb548136058fda017ae51d425b44fd353",
+        "license": "3-Clause BSD License",
+        "requires": []
+      }
+    ]
+  },
+  "native": {
+    "method": "actual Windows Tauri IPC and rendered UI",
+    "gpu": {
+      "detection": "detected",
+      "devices": [
+        {
+          "name": "NVIDIA GeForce RTX 2060",
+          "vram_mib": 6144,
+          "driver": "591.74",
+          "free_vram_mib": 4222
+        }
+      ],
+      "inference": "unverified",
+      "dummy_cpu_available": true
+    },
+    "probe": {
+      "backend": "onnx_cpu",
+      "cpu_seconds": 0.53125,
+      "device": "CPU",
+      "inference_ms": 0.31590042635798454,
+      "load_ms": 5.639399867504835,
+      "model_hash": "56f731422c39f2576a74604122b4ddb14bb4d86869e0011750e17b1196deb765",
+      "output": [
+        2.25,
+        5.5
+      ],
+      "peak_ram_bytes": 60489728,
+      "resources": {
+        "available_ram_bytes": 27207856128,
+        "backend": "onnx_cpu",
+        "free_disk_bytes": 2768635736064,
+        "required_ram_mib": 512,
+        "required_vram_mib": 0
+      }
+    },
+    "results": [
+      {
+        "backend": "onnx_cpu",
+        "cpu_seconds": 0.4375,
+        "device": "CPU",
+        "inference_ms": 0.3113001585006714,
+        "input": [
+          1,
+          2,
+          3
+        ],
+        "kind": "runtime_diagnostic",
+        "load_ms": 4.894699901342392,
+        "model_hash": "56f731422c39f2576a74604122b4ddb14bb4d86869e0011750e17b1196deb765",
+        "model_version": "1.0.0",
+        "output": [
+          2.25,
+          5.5
+        ],
+        "peak_ram_bytes": 60678144,
+        "preprocessing": "none",
+        "provider": "onnx-synthetic-v1",
+        "seed": null,
+        "source_hash": "1980d7d031f19567b358706af9e386a2bf465fa8a157f83a1137d07cb35cd5be",
+        "uncertainty": "unknown",
+        "version": 1
+      },
+      {
+        "backend": "onnx_cpu",
+        "cpu_seconds": 0.4375,
+        "device": "CPU",
+        "inference_ms": 0.32010022550821304,
+        "input": [
+          1,
+          2,
+          3
+        ],
+        "kind": "runtime_diagnostic",
+        "load_ms": 4.5449999161064625,
+        "model_hash": "56f731422c39f2576a74604122b4ddb14bb4d86869e0011750e17b1196deb765",
+        "model_version": "1.0.0",
+        "output": [
+          2.25,
+          5.5
+        ],
+        "peak_ram_bytes": 60624896,
+        "preprocessing": "none",
+        "provider": "onnx-synthetic-v1",
+        "seed": null,
+        "source_hash": "1bc1286ffa8836a1e1897d824179b756e9f486e02fcd42ac3de570dc27f16821",
+        "uncertainty": "unknown",
+        "version": 1
+      }
+    ],
+    "checks": [
+      "native consent and real installation from verified local wheel cache",
+      "actual process cancellation; no completed artifact exposed",
+      "app kill/restart restores interrupted job without auto-resume",
+      "model tampering blocks real inference; restored fixture can run again",
+      "cancel and app kill during installation retain old active generation; incomplete generations are not active; retry calculation succeeds",
+      "three locales; diagnostic-only result; export remains blocked; PNG/PSD source and revision hashes unchanged"
+    ],
+    "not_run": [
+      "GPU tensor execution",
+      "OS-disconnected network / complete native traffic audit",
+      "trained character analysis"
+    ]
+  },
+  "native_40m_preview": {
+    "scope": "actual release Windows/WebView/rAF while40M synthetic PNG preview, developer-only Rust input helper (not OS file-picker gesture)",
+    "elapsed_ms": 931,
+    "frame_count": 51,
+    "max_frame_gap_ms": 100.09999999999997,
+    "cached_preview_ms": 4.100000381469727,
+    "original": [
+      8000,
+      5000
+    ],
+    "preview": [
+      1000,
+      625
+    ],
+    "source_hash": "d086fd5f2b83685ad775313e2a12f7940fdb00d8b0338d5d788d229b3884f151"
+  },
+  "resource_scope": {
+    "download_bytes": 28074688,
+    "active_generation_disk_bytes": 100486892,
+    "measurement": "file lengths of one installed generation, not filesystem allocated clusters or installer peak",
+    "output_tensor_bytes": 8,
+    "per_process_peak_is_not_aggregate_peak": true,
+    "cpu_percent_not_measured": true
+  },
+  "dependency_review": {
+    "npm_audit": "zero reported vulnerabilities at recorded run",
+    "rust_windows_packages": 270,
+    "python_osv": {
+      "date": "2026-10-29",
+      "scope": "Exact five pinned PyPI package versions; no native transitive/SBOM or zero-vulnerability guarantee",
+      "results": [
+        {
+          "query": {
+            "package": {
+              "name": "onnxruntime",
+              "ecosystem": "PyPI"
+            },
+            "version": "1.31.1"
+          }
+        },
+        {
+          "query": {
+            "package": {
+              "name": "numpy",
+              "ecosystem": "PyPI"
+            },
+            "version": "2.5.4"
+          }
+        },
+        {
+          "query": {
+            "package": {
+              "name": "flatbuffers",
+              "ecosystem": "PyPI"
+            },
+            "version": "25.12.19"
+          }
+        },
+        {
+          "query": {
+            "package": {
+              "name": "packaging",
+              "ecosystem": "PyPI"
+            },
+            "version": "26.3"
+          }
+        },
+        {
+          "query": {
+            "package": {
+              "name": "protobuf",
+              "ecosystem": "PyPI"
+            },
+            "version": "7.36.2"
+          }
+        }
+      ]
+    },
+    "license_inventory_sha256": "c649b87a7af2391ce681cd7a67c7d63ad9bb8c000cbdac0ee4cb01c461f81b94"
+  },
+  "preserved_user_cleanup_sha256": "ab3d3c8d67157d1341e1fb25e71633a83516c98023e43849f80f24459becb1a8",
+  "release_exe_sha256": "dbb63f80ee7509a58310b4e1f902bab76cd22d429b19cd5622a11f361f18e4b3",
+  "release_script_sha256": "715d0840865fafe5f53b47466f9380f78e9b1ac3ab5696b504cc7c0dfd071ea7",
+  "release_notices_sha256": "d5bb7b45e277d39ca96f84437450d292a7cc6f091f9c930b89e1e731e49d6840",
+  "not_run": [
+    "GPU tensors/CUDA/DirectML/PyTorch",
+    "physical disk exhaustion or power loss",
+    "physical network disconnection/full native DLL traffic audit",
+    "clean-machine Python distribution",
+    "trained semantics/rigging/character identity/broadcast app certification",
+    "five-person beginner study"
+  ],
+  "remote_release": "Pending exact PR head checks, protection/review/conflict checks, safe merge and merge-SHA main CI; local tests alone are not final completion",
+  "canonical_runtime_lock_sha256": "a846705cb271c406d9eeeaaba62e5edde72163b2278ceadeee13bbca7e9a1d13",
+  "canonical_acceptance": "LF bytes match Git index; fresh immutable generation, full suite, release and expanded actual native runtime passed after normalization."
+}

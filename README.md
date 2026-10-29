@@ -2,7 +2,7 @@
 
 2D 캐릭터 일러스트로부터 편집 가능한 2D 또는 실제 3D 모델을 만들고, 제작 단계에서 리깅을 완성해 방송 앱으로 내보내는 로컬 데스크톱 도구를 개발합니다.
 
-**DEV-02 원본 PNG·PSD 입력 및 저장·복구 기반입니다. 실제 AI 생성·자동 리깅·모델 내보내기는 아직 구현되지 않았습니다.** CPU 더미 Worker는 저장·작업 진행·취소·오류 처리만 검증합니다. 지원 범위의 PNG/PSD를 원본 bytes 그대로 보존하고 프로젝트를 저장/다시 열 수 있습니다.
+**DEV-03 로컬 AI 실행 기반입니다. 실제 ONNX CPU 진단 연산을 지원하지만 캐릭터 생성·자동 리깅·모델 내보내기는 아직 구현되지 않았습니다.** 기존 더미 Worker와 실제 합성 텐서 Provider를 구분합니다. 지원 범위의 PNG/PSD를 원본 bytes 그대로 보존하고 프로젝트를 저장/다시 열 수 있습니다.
 
 ## Windows 개발 실행
 
@@ -27,6 +27,8 @@ npm ci
 ```powershell
 . ./scripts/env.ps1
 npx playwright install chromium
+# 명시 개발 준비: 약26.8MiB 고정 CPU 패키지, 프로젝트 전용 환경에만 설치
+./scripts/prepare-runtime.ps1 -Python $env:VTUBER_PYTHON
 ./scripts/test.ps1 -Python $env:VTUBER_PYTHON
 npm run desktop:build
 ```
@@ -42,7 +44,7 @@ npm run desktop:build
 ## 문서
 
 - [현재 상태와 차단 항목](docs/PROJECT_STATUS.md), [DEV-00–33 로드맵](docs/DEV_ROADMAP.md)
-- [94개 요구사항 추적](docs/REQUIREMENTS.md), [아키텍처](docs/ARCHITECTURE.md), [ADR](docs/DECISIONS.md), [공통 계약](docs/MODEL_CONTRACT.md)
+- [110개 요구사항 추적](docs/REQUIREMENTS.md), [아키텍처](docs/ARCHITECTURE.md), [ADR](docs/DECISIONS.md), [공통 계약](docs/MODEL_CONTRACT.md)
 - [기술 조사](docs/TECH_RESEARCH.md), [최소 실험](docs/TECH_SPIKES.md), [모델 전략](docs/MODEL_STRATEGY.md), [권리 감사](docs/LICENSE_AUDIT.md)
 - [호환성 표](docs/COMPATIBILITY_MATRIX.md), [VBridger 필수 조건](docs/VBRIDGER_REQUIREMENTS.md)
 - [품질 게이트](docs/QUALITY_GATES.md), [테스트 전략](docs/TEST_STRATEGY.md), [실행 이력](docs/TEST_RUNS.md), [실패 기록](docs/FAILURE_REGISTER.md)
@@ -66,3 +68,11 @@ npm run desktop:build
 원본은64MiB/40M canvas 한도 및 160MiB 디코딩/별도320MiB RGBA16 작업 버퍼 한도를 적용합니다. 8-bit PNG의 기존40M canvas 범위를 유지합니다. 16-bit/채널 수에 따라 별도 디코딩 한도가 먼저 적용됩니다. 지원 초과는 원본을 축소하지 않고 오류로 안내합니다. 화면용 사본만 최대1024px/sRGB8로 만들어 원본과 구별합니다. RGB ICC 변환을 지원하며 프로필 미지정·사용자 gAMA/cHRM 미적용은 미검증 경고가 나옵니다.
 
 PSD는 RGB/Grayscale8/16, bounded layer 기록, raw/RLE/ZIP/예측 ZIP 및 저장된 합성 이미지 범위를 지원합니다. PSB/32-bit/CMYK 등은 미지원입니다. 효과·스마트 오브젝트·특수 blend·mask 재합성은 Photoshop 호환 인증을 하지 않습니다. [입력 계약](docs/IMAGE_IMPORT.md), [PSD 표](docs/PSD_SUPPORT_MATRIX.md), [색 관리](docs/COLOR_MANAGEMENT.md), [영구 정체성 정책](docs/CHARACTER_IDENTITY_POLICY.md)을 확인하세요.
+
+## DEV-03 로컬 AI 준비
+
+앱의 로컬 AI 준비 영역에서 크기·목적·출처·라이선스 안내를 확인하고 동의 후 준비합니다. 기존 전역 Python에는 패키지를 설치하지 않습니다. 준비 후 CPU 검사 또는 원본을 포함한 프로젝트의 시험 연산을 실행하세요. 결과 [2.25,5.5]는 실제 ONNX MatMul/Add/ReLU 계산이며 캐릭터 분석 결과가 아닙니다. 취소 버튼과 기존 작업 기록을 사용할 수 있습니다.
+
+데이터 루트/runtime 아래 generation/download/staging/artifact/report를 분리합니다. 실패한 설치는 기존 정상 환경을 덮어쓰지 않습니다. GPU 정보 감지는 CUDA 검증과 다릅니다. 현재 CPU만 제공하며 GPU fallback/offload는 활성화하지 않습니다. 개발 시험의 VTUBER_RUNTIME_DIR과 앱 데이터 runtime은 별도이며 앱 설치 동의를 건너뛰지 않습니다.
+
+[실행 계약](docs/AI_RUNTIME.md), [설치·복구](docs/MODEL_INSTALLATION.md), [백엔드](docs/BACKEND_COMPATIBILITY.md), [자원 측정](docs/RESOURCE_BUDGET.md), [보안 경계](docs/PROVIDER_SECURITY.md), [배포 고지](third_party/RUNTIME_NOTICES.md). 실제 앱 시험: `node scripts/native-runtime.mjs` (전용 합성 데이터; 먼저 개발용 runtime 준비 및 release build).

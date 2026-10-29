@@ -37,3 +37,7 @@
 ## DEV-01 재확인 — 2026-10-27 JST
 
 base main ac7e257 및 CI40314991998 success, clean tree에서 codex/dev-01-project-resilience 생성. 기존 실제 Python3.12.14 경로/Node22.15.0/Rust1.99.1/SDK env를 유지했다. E 드라이브 DriveInfo는 NTFS, 조회 시 가용 2,777,176,973,312 bytes였다. 기존 app-data 프로젝트5개는 구조만 열거하고 테스트에는 새 tempfile/native fixture를 사용했다. 추가한 rusqlite/SQLite 및 캐시/빌드/로그는 E 작업 루트에 있다.
+
+## DEV-03 2026-10-29 observed environment
+
+Ryzen7 4800H8cores/16logical, RAM41,809,104KiB; RTX2060 total6144MiB/free4332MiB at sample, driver591.74. E local NTFS capacity4,000,750,497,792B/free2,769,608,577,024B. Actual Python3.12.14 from existing installation is read-only; new provider environments/caches are E-only. These values change with other applications. CPU ONNX tested; GPU tensor backend unverified. No Rust/Python installation or C cleanup was changed.

@@ -58,3 +58,15 @@ DEV-02 시작: (1) DEV-01 merge SHA/main CI와 clean tree 확인, (2) E env 및 
 ## DEV-02→03 start contract
 
 DEV-03 starts only after DEV-02 PR/main CI verification, local/remote main identity and clean tree. Read IMAGE_IMPORT, PSD_SUPPORT_MATRIX, COLOR_MANAGEMENT and CHARACTER_IDENTITY_POLICY; run scripts/test.ps1 with actual Python3.12 and native-recovery baseline. Do not alter original/PSD blob permissions or source contracts for model convenience. Implement versioned ModelManifest consent/hash/license/backend/resource preflight before any real download. Test with tiny local synthetic provider fixtures and CPU fallback; no heavy model, paid API, sustained GPU or source upload is implicitly authorized. Plan worker process/resource isolation around source read-only grants, derived staging, cancellation and journal; full OS process-tree/AI checkpoint guarantee remains DEV-28 until actually verified.
+
+## DEV-03 result and DEV-04 exact start contract
+
+DEV-03 provides the trusted CPU runtime and synthetic ONNX proof; installed CUDA/large-model capability is not implied. Requirements095–110 and AI_RUNTIME/MODEL_INSTALLATION/PROVIDER_SECURITY define boundaries. Legacy fulltree cleanup, AI checkpoint resume and power-loss guarantees remain DEV-28, OS sandbox/supply-chain closure DEV-29, clean-PC Python packaging DEV-30.
+
+DEV-04 (Astra High; Sol High alternative):
+1. Verify DEV-03 PR merge SHA/main CI/local tree, read status/failures/110 requirements and run the full prepared CPU baseline plus native-runtime. Preserve original v1/v2 sample/schema and user changes.
+2. Select a commercially usable, region-compatible lightweight semantic model only after code/weights/dependency review, exact version/hash and resource preflight. Diagnostic ONNX is not a face detector. Heavy weights need explicit approval with size.
+3. Define a new versioned provider behind v2; keep current diagnostic for regression. Add bounded read-only derived-image input grants with source hash, dimensions, ICC/precision, preprocessing transform and inverse coordinates. Do not grant original write paths.
+4. Output observed/inferred/unknown feature references for face/eyes/body/clothes/accessories, confidence/occlusion and parent provenance. Human-approved edits require explicit approval records; hash equality alone is not identity evidence.
+5. Implement original-overlay comparison and3locale minimal-click UX. Automated tests: malformed contracts, uncertain/occluded features, crop/scale/color transform round-trip, cancellation/OOM/staging rejection and full DEV00–03 regressions. Actual app: synthetic/licensed images, overlay, retry/restart/hash check onCPU; GPU only when a tested provider supports it.
+6. Done only with meaningful semantic accuracy evidence/limitations, requirements audit, safe PR/mainCI. If model rights/resources/accuracy block, keep model disabled and record exact evidence/retest conditions; never relabel the diagnostic as semantic AI. DEV-04/20/32 retain REQ079 identity/REQ080 beginner/REQ081 complete broadcast-authoring goals.

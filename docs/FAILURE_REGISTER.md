@@ -61,3 +61,20 @@ F02-008 bounded-memory compatibility: the first new RGBA16 buffer160MiB cap acci
 F02-009 legacy PSD names: review identified UTF-8 lossy decoding of Pascal names when no luni block exists. A MacRoman Café fixture demonstrates the difference. Decode bounded Pascal bytes with encoding_rs0.8.42 MACINTOSH, preserve authoritative UTF16BE luni, and warn for region-dependent non-ASCII legacy fallback. Original bytes never changed. Unit/name bounds and all previous PNG/PSD/UI/native regressions are rerun before merging the new head.
 
 F02-010 review hardening: global unknown extension count previously had only the64MiB file bound, allowing many repeated diagnostics. A crash was not reproduced; this was a code-review resource risk. Added4096-block budget,1MiB total layer-name budget and deduplicated warning keys. Regression verifies8 repeated blocks produce one diagnostic and4097 blocks fail image_too_large. No source mutation or Normal-mode fallback was introduced.
+
+## DEV-03 failures and review hardening
+
+| ID | Reproduction/evidence | Cause and correction | Regression/result |
+|---|---|---|---|
+| F03-001 | baseline UI assertions passed but sandbox runner remained; dev-03-baseline.log | Remaining Playwright/Vite tree confirmed, environment-specific termination cause unknown (F01-001). Stop only exact baseline tree; rerun unchanged source with authorized execution | dev-03-baseline-clean.log full pass; no version changes |
+| F03-002 | install1 failed after55%; direct venv succeeds; install2 with8-process budget succeeds | Windows venv redirectors add processes. Four-process budget was insufficient in observed run; initial generic exception alone does not prove every causal detail. Increase bounded budget to8, keep512MiB | actual installation/native; no global Python modification |
+| F03-003 | smoke-repro traces reject gethostname, then platform ver fallback | overly broad Python audit blocked local host-name and trusted stdlib OS query. Cache platform.uname before guard and allow only local gethostname | actual ONNX three vectors and denied socket attempt; Python2 log pass |
+| F03-004 | native-runtime1 rejected-consent assertion could not see code | Playwright wraps page.evaluate rejection objects. Harness now returns explicit success/error envelope then asserts outside page | native-runtime2 pass, product consent code unchanged |
+| F03-005 | review identified venv redirector spawning before OS assignment | Direct venv launcher could create descendant before ownership. Always start trusted base bootstrap, await assigned stdin, then spawn venv child | actual descendant timeout and RAMlimit tests pass; no claim malicious bootstrap sandbox |
+| F03-006 | review found report was read as arbitrary JSON and corrupt installation looked absent | Add version/job/checksum report envelope, typed artifact/content-address revalidation and blocked install state | report_and_artifact_tampering_and_corrupt_installation_are_not_certified passes |
+
+Test-authoring corrections: groups-composite.png fixture name was nonexistent (use groups-merged.png); Windows handle constant is PROCESS_SYNCHRONIZE; JSON-import schema_version is widened number in TypeScript (assert1 then literal typed copy). Compile errors occurred before affected tests, retained in logs and rerun. No dependency roulette or source resets. F00 Python/SDK/Tauri versions, UTF8 handling and native CDP readiness retained.
+
+F03-007 release byte audit: Git staging reported CRLF→LF for runtime-lock.json. Because environment receipts bind exact lock bytes, the previous local CRLF environment differs from a clean Git checkout. Normalize the file to repository LF, add a contract assertion preventing CRLF, create a new verified environment generation and rerun final runtime tests/build/native. Existing generations are retained. No wheel version/hash changes or bypass of integrity validation.
+
+F03-008 commit identity: git commit refused because repository identity was unset. No commit was made. Read prior commit authors and reuse their Kawauso / GitHub noreply identity via per-command git -c options; do not write global C-drive configuration.

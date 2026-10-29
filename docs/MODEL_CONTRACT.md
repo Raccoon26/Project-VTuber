@@ -35,3 +35,9 @@ Job에 queued/interrupted/recovery_required 상태를 추가했다. 별도 journ
 ## DEV-02 integration
 
 DEV-02 introduces CharacterProject v2 only for newly imported PSD sources (same reference fields, format=psd). PNG remains v1. Existing v1 manifest/sample/schema is unchanged. Readers accept known v1/v2 and reject unknown schemas. Inspection DTO v1 separately binds source_hash, parser, ICC hash, source dimensions/depth/mode, original layer/channel byte ranges, support warnings, decode/preview timing and explicitly derived preview. Source/working/preview provenance roles and future semantic identity anchors are specified in CHARACTER_IDENTITY_POLICY.
+
+## DEV-03 runtime contracts
+
+CharacterProject and sample/schema v1 are unchanged; existing PSD v2 remains readable/recoverable. ModelManifest v1 is in schemas/model-manifest.schema.json and mirrored Rust/TypeScript types: exact model/version/revision/hash/bytes/format, origin, separate code/weight/dependency rights, allowed regions, resources, input/output/preprocessing and evidence. The current registry is application-owned and admits only the bundled diagnostic; unknown fields/version/format/license are rejected by Rust. The JSON Schema describes transport shape; Rust additionally enforces reviewed identity and exact content.
+
+Worker v1 dummy is retained; v2 uses strict events documented in AI_RUNTIME. DiagnosticArtifact is a separate version1 record: source hash/provider/model/hash/input/preprocessing/seed/uncertainty/result/backend/measurements. It never sets semantic Observed or User Approved claims. Reports bind version/job/data hash and recheck content-addressed artifacts on read; this detects corruption, not malicious same-user signing. No project migration is needed. Job journal v1 adds a closed set of known provider IDs.

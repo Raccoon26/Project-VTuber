@@ -70,3 +70,9 @@ M02는 storage.rs + durable.rs + recovery.rs + index.rs로 구분한다. 저장 
 ## DEV-02 integration
 
 M03 now contains image_input.rs (PNG/ICC/derived preview), psd_input.rs (checked borrowed PSD sections), source_input.rs (stable source capture/publication). Dialog and native OS drop are the only path authorities; UI drop command carries no pathname. A process-local single-entry preview cache is derived and source hash checked. Parsing runs in a blocking pool; cancellation uses an atomic flag. This is bounded CPU decoding, not a full OS sandbox. IMAGE_IMPORT/PSD_SUPPORT_MATRIX/COLOR_MANAGEMENT define exact limits.
+
+## DEV-03 integration
+
+M04 RuntimeManager → JobManager/journal → v2 process supervisor → trusted bootstrap → isolated provider venv. M05 supplies device information separately from verified inference. M03 ProjectStore remains the sole authority for originals/revisions; inference passes only source hash and fixed synthetic tensor. M15 gates and M18 export are not promoted by diagnostic success. M01 RuntimePanel handles consent/readiness/progress/cancel; M20 translates all safe error codes. M21 remains offline/null and has no runtime access.
+
+Storage boundaries: app/runtime/downloads → immutable environments/<generation> → verified receipt → append-only active pointer. Runtime staging → Rust validation/source reopen → content-addressed artifacts + checksummed version1 report. File state and job journal are not one transaction: a terminal write failure never exposes a completed result; restart marks interrupted/recovery_required. Environment registry v1, Worker protocol v2 and CharacterProject v1/v2 evolve independently. Interfaces and replacement constraints: AI_RUNTIME / MODEL_INSTALLATION.
