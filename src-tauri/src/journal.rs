@@ -105,7 +105,13 @@ pub fn history(root: &Path) -> Result<Vec<Job>> {
                 || r.sequence != seq
                 || r.job.id != id
                 || r.job.progress > 100
-                || r.job.provider != "dummy"
+                || ![
+                    "dummy",
+                    "onnx-synthetic-v1",
+                    "runtime-install-v1",
+                    "runtime-probe-v1",
+                ]
+                .contains(&r.job.provider.as_str())
                 || uuid::Uuid::parse_str(&r.job.project_id).is_err()
                 || ![
                     "queued",

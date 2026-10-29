@@ -27,6 +27,7 @@ test("simulated source input automatically creates a project and separates begin
         if (cmd === "search_projects")
           return { version: 2, healthy: [], issues: [], index_warning: null };
         if (cmd === "job_history") return [];
+        if (cmd === "runtime_view") return null;
         if (cmd === "job_status") return null;
         if (cmd === "create_project") return p;
         if (cmd === "import_source") {

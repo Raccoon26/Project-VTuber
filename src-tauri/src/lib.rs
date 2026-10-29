@@ -10,6 +10,10 @@ pub mod psd_input;
 pub mod recovery;
 #[cfg(test)]
 mod resilience_tests;
+pub mod runtime;
+pub mod runtime_process;
+#[cfg(test)]
+mod runtime_tests;
 pub mod source_input;
 pub mod storage;
 pub mod worker;

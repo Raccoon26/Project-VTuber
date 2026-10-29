@@ -16,6 +16,7 @@ pub struct Device {
     pub name: String,
     pub vram_mib: u64,
     pub driver: String,
+    pub free_vram_mib: Option<u64>,
 }
 pub fn detect() -> GpuReport {
     let mut report = GpuReport {
@@ -26,7 +27,7 @@ pub fn detect() -> GpuReport {
     };
     let mut cmd = Command::new("nvidia-smi");
     cmd.args([
-        "--query-gpu=name,memory.total,driver_version",
+        "--query-gpu=name,memory.total,driver_version,memory.free",
         "--format=csv,noheader,nounits",
     ])
     .stdout(Stdio::piped())
@@ -46,12 +47,13 @@ pub fn detect() -> GpuReport {
                             if out.stdout.len() < 65536 {
                                 for line in String::from_utf8_lossy(&out.stdout).lines() {
                                     let fields: Vec<_> = line.split(',').map(str::trim).collect();
-                                    if fields.len() == 3 {
+                                    if fields.len() == 4 {
                                         if let Ok(vram) = fields[1].parse() {
                                             report.devices.push(Device {
                                                 name: fields[0].into(),
                                                 vram_mib: vram,
                                                 driver: fields[2].into(),
+                                                free_vram_mib: fields[3].parse().ok(),
                                             });
                                         }
                                     }

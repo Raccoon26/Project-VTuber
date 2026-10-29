@@ -14,6 +14,11 @@ $env:VTUBER_DATA_DIR = Join-Path $taskTools 'app-data'
 $env:WEBVIEW2_USER_DATA_FOLDER = Join-Path $taskTools 'webview'
 $env:PYTHONDONTWRITEBYTECODE = '1'
 $env:PYTHONPYCACHEPREFIX = Join-Path $taskTools 'python-cache'
+$env:PIP_CACHE_DIR = Join-Path $taskTools 'pip-cache'
+$env:PIP_DISABLE_PIP_VERSION_CHECK = '1'
+$env:HF_HOME = Join-Path $taskTools 'model-cache/huggingface'
+$env:TORCH_HOME = Join-Path $taskTools 'model-cache/torch'
+$env:XDG_CACHE_HOME = Join-Path $taskTools 'model-cache/xdg'
 # Use installed compilers read-only; bypass rustup shims that update a user-profile cache.
 $taskCompiler = Join-Path $env:USERPROFILE '.rustup/toolchains/1.99.1-x86_64-pc-windows-msvc/bin'
 if (Test-Path (Join-Path $taskCompiler 'cargo.exe')) { $env:PATH = "$taskCompiler;$env:PATH" }

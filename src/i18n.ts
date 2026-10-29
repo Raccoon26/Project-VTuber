@@ -1,4 +1,68 @@
 export const en = {
+  runtimeJobCompleted:
+    "Local AI task completed. No character model was generated.",
+  runtimeTitle: "Local AI readiness",
+  runtimeVerified: "CPU calculation verified in this run.",
+  runtimeInstalled: "Installed. Check this computer before use.",
+  runtimeNeedsSetup: "Local AI preparation is needed.",
+  runtimeBlocked:
+    "The installed AI environment could not be verified. Prepare a new environment to retry; existing files will be kept.",
+  runtimeDiagnosticOnly:
+    "This small calculation checks the AI engine. It does not analyze or modify your character, create a model, or rig it.",
+  runtimeSetupDetails: "Preparation and download details",
+  runtimeSetupPurpose:
+    "Install a dedicated CPU environment and a 216-byte synthetic test model. It can run offline after setup.",
+  runtimeDisk: "Required free space",
+  runtimeLicenseNotice:
+    "Full runtime and third-party license notices are retained with the installation. Synthetic weights: CC0. No payment or account is required.",
+  runtimeDownloadOrigin:
+    "Source: pinned official PyPI files (files.pythonhosted.org). Your images are not sent.",
+  runtimeConsent: "I approve this download and installation.",
+  runtimePrepare: "Prepare local AI",
+  runtimeProbe: "Check CPU calculation",
+  runtimeRun: "Run local test calculation",
+  runtimeResult: "Verified synthetic result",
+  runtimeExpert: "Backend and model diagnostics",
+  download_consent:
+    "Review the download details and approve preparation first.",
+  download_origin:
+    "The download source was not approved. No file was activated.",
+  download_failed:
+    "Download stopped. Check the connection and retry preparation.",
+  model_size: "The received file size was unexpected. It was not installed.",
+  model_hash: "File integrity could not be confirmed. It will not be executed.",
+  runtime_manifest:
+    "This model registration is not supported. Keep the current project and check the application version.",
+  model_license:
+    "Model use is blocked until license and regional restrictions are verified.",
+  ram_insufficient:
+    "There is not enough available memory. Close other tasks and retry. The original is preserved.",
+  backend_unverified:
+    "This execution method has not passed its calculation test. Use the verified CPU path.",
+  runtime_not_installed: "Prepare the local AI environment first.",
+  runtime_integrity:
+    "The AI environment has changed or is incomplete. Prepare a new verified environment; previous files are retained.",
+  runtime_setup_failed:
+    "AI preparation failed. The incomplete environment was not activated. Retry preparation after checking the diagnostic.",
+  runtime_platform:
+    "This runtime package requires Windows x64 and Python 3.12.",
+  inference_mismatch:
+    "The calculation result did not match its check. The result was not accepted.",
+  provider_blocked: "This AI provider is not approved for execution.",
+  artifact_invalid:
+    "The output failed validation. Existing project files are preserved.",
+  artifact_unverified: "This job has no confirmed completed result.",
+  runtime_isolation:
+    "The operating system could not apply the execution limits. The worker was stopped.",
+  network_denied:
+    "The provider attempted an operation outside its local calculation permissions. It was stopped.",
+  resource_unknown:
+    "Available computer resources could not be checked. Retry the diagnostic.",
+  runtime_io:
+    "AI files could not be accessed. Check disk space and permissions, then retry.",
+  runtime_failed:
+    "The local AI test stopped. Your original and saved revisions are preserved. Check preparation and retry.",
+
   legacy_name_encoding:
     "Some legacy layer names may use a different regional encoding. Original name bytes are preserved; Unicode names are preferred.",
   previewLoading: "Preparing a display copy…",
@@ -89,7 +153,7 @@ export const en = {
     "Job state could not be saved. Do not treat this run as completed.",
   jobHistory: "Job history",
   retryHint:
-    "To retry, open and verify the original project, then start a new dummy job. No automatic resume is performed.",
+    "To retry, check the original project and AI readiness, then start a new task. No automatic resume is performed.",
   search: "Search projects",
   refresh: "Refresh and rebuild index",
   field_name: "Name",
@@ -102,9 +166,9 @@ export const en = {
     "Latest state is unreadable; exact differences are unknown",
   title: "Character workshop",
   subtitle: "Preserve the original. Build with evidence.",
-  foundation: "DEV-02 · Original image input",
+  foundation: "DEV-03 · Local AI execution",
   notice:
-    "This build tests project storage and a dummy worker. It does not generate or rig a character.",
+    "This build preserves source images and tests local CPU inference. It does not generate or rig a character.",
   language: "Language",
   mode: "Workspace",
   beginner: "Beginner",
@@ -151,7 +215,7 @@ export const en = {
   detect: "Check GPU",
   unknown: "Not detected; GPU capability is unknown",
   inference:
-    "AI inference support has not been tested. The dummy worker runs on CPU.",
+    "GPU inference is unverified. The local AI panel checks the supported CPU calculation separately.",
   driver: "Driver",
   details: "Technical details",
   offline: "Local workspace · No image uploads · No advertising connection",
@@ -194,6 +258,66 @@ export const en = {
 export type MessageKey = keyof typeof en;
 export type Locale = "en" | "ja" | "ko";
 export const ja: Record<MessageKey, string> = {
+  runtimeJobCompleted:
+    "ローカルAIの処理が完了しました。キャラクターモデルは生成していません。",
+  runtimeTitle: "ローカルAIの準備",
+  runtimeVerified: "今回のCPU演算を確認しました。",
+  runtimeInstalled: "インストール済みです。このPCで動作を確認できます。",
+  runtimeNeedsSetup: "ローカルAIの準備が必要です。",
+  runtimeBlocked:
+    "AI環境を確認できませんでした。既存ファイルを残して、新しい環境を準備してください。",
+  runtimeDiagnosticOnly:
+    "小さな演算でAIエンジンを確認します。キャラクターの解析・変更、モデル生成、リギングは行いません。",
+  runtimeSetupDetails: "準備とダウンロードの詳細",
+  runtimeSetupPurpose:
+    "専用のCPU実行環境と216バイトの合成テストモデルを用意します。準備後はオフラインで実行できます。",
+  runtimeDisk: "必要な空き容量",
+  runtimeLicenseNotice:
+    "実行環境と依存部品のライセンス表記をインストール先に保持します。合成重みはCC0です。支払い・アカウントは不要です。",
+  runtimeDownloadOrigin:
+    "取得先：固定済みの公式PyPIファイル（files.pythonhosted.org）。画像は送信しません。",
+  runtimeConsent: "このダウンロードとインストールに同意します。",
+  runtimePrepare: "ローカルAIを準備",
+  runtimeProbe: "CPU演算を確認",
+  runtimeRun: "ローカルのテスト演算を実行",
+  runtimeResult: "検証済みの合成結果",
+  runtimeExpert: "バックエンドとモデルの診断",
+  download_consent: "ダウンロード内容を確認して準備に同意してください。",
+  download_origin:
+    "許可されていない取得先です。ファイルは有効化されていません。",
+  download_failed:
+    "取得が停止しました。接続を確認して準備を再試行してください。",
+  model_size:
+    "受信したファイルのサイズが異なります。インストールしていません。",
+  model_hash: "ファイルの整合性を確認できません。実行しません。",
+  runtime_manifest:
+    "このモデル登録は未対応です。プロジェクトを保持してアプリのバージョンを確認してください。",
+  model_license: "ライセンスと地域制限を確認するまでモデルを使用できません。",
+  ram_insufficient:
+    "使用可能なメモリが不足しています。他の処理を閉じて再試行してください。原本は保持されています。",
+  backend_unverified:
+    "この実行方式は演算検証が済んでいません。検証済みのCPU方式を使用してください。",
+  runtime_not_installed: "まずローカルAI環境を準備してください。",
+  runtime_integrity:
+    "AI環境が変更されたか不完全です。検証済みの環境を再準備してください。以前のファイルは保持されます。",
+  runtime_setup_failed:
+    "AIの準備に失敗しました。不完全な環境は有効化されていません。診断を確認して再試行してください。",
+  runtime_platform: "この実行環境はWindows x64とPython 3.12が必要です。",
+  inference_mismatch:
+    "演算結果が検証値と一致しません。結果を採用していません。",
+  provider_blocked: "このAIプロバイダーは実行を許可されていません。",
+  artifact_invalid:
+    "出力の検証に失敗しました。既存のプロジェクトは保持されています。",
+  artifact_unverified: "このジョブには確認済みの完了結果がありません。",
+  runtime_isolation: "OSが実行制限を適用できませんでした。処理を停止しました。",
+  network_denied: "ローカル演算の許可範囲外の操作があったため停止しました。",
+  resource_unknown:
+    "使用可能なPC資源を確認できませんでした。診断を再試行してください。",
+  runtime_io:
+    "AIファイルにアクセスできません。空き容量と権限を確認して再試行してください。",
+  runtime_failed:
+    "ローカルAIの試験が停止しました。原本と保存履歴は保持されています。準備状態を確認して再試行してください。",
+
   legacy_name_encoding:
     "古いレイヤー名は地域別の文字コードにより異なって表示される場合があります。原本の名前データは保持しています。",
   previewLoading: "表示用コピーを準備しています…",
@@ -277,7 +401,7 @@ export const ja: Record<MessageKey, string> = {
     "作業状態を保存できませんでした。完了とは扱わないでください。",
   jobHistory: "作業履歴",
   retryHint:
-    "再試行する場合は元のプロジェクトを開いて確認し、新しいダミー作業を開始してください。自動再開は行いません。",
+    "再試行する場合は元のプロジェクトとAI準備状態を確認し、新しい処理を開始してください。自動再開は行いません。",
   search: "プロジェクト検索",
   refresh: "再読み込み・索引再構築",
   field_name: "名前",
@@ -289,9 +413,9 @@ export const ja: Record<MessageKey, string> = {
   field_latest_unreadable: "最新状態を読めないため差分は不明",
   title: "キャラクター工房",
   subtitle: "原画を守り、検証を重ねて制作。",
-  foundation: "DEV-02 · 原画の読み込み",
+  foundation: "DEV-03 · ローカルAI実行",
   notice:
-    "このビルドでは保存とダミー処理を検証します。キャラクター生成・リギングは未実装です。",
+    "このビルドでは原画の保持とローカルCPU推論を検証します。キャラクター生成・リギングは未実装です。",
   language: "言語",
   mode: "ワークスペース",
   beginner: "初心者",
@@ -337,7 +461,8 @@ export const ja: Record<MessageKey, string> = {
   gpu: "デバイス診断",
   detect: "GPUを確認",
   unknown: "未検出：GPU性能は不明です",
-  inference: "AI推論は未検証です。ダミー処理はCPUで動作します。",
+  inference:
+    "GPU推論は未検証です。対応するCPU演算はローカルAI欄で別途確認します。",
   driver: "ドライバー",
   details: "技術情報",
   offline: "ローカル作業 · 画像送信なし · 広告接続なし",
@@ -378,6 +503,68 @@ export const ja: Record<MessageKey, string> = {
     "処理データが不正なため停止しました。ワーカーとアプリのバージョンを確認してください。",
 };
 export const ko: Record<MessageKey, string> = {
+  runtimeJobCompleted:
+    "로컬 AI 작업을 완료했습니다. 캐릭터 모델은 생성하지 않았습니다.",
+  runtimeTitle: "로컬 AI 준비",
+  runtimeVerified: "이번 실행에서 CPU 연산을 확인했습니다.",
+  runtimeInstalled:
+    "설치되어 있습니다. 이 컴퓨터에서 동작을 확인할 수 있습니다.",
+  runtimeNeedsSetup: "로컬 AI 준비가 필요합니다.",
+  runtimeBlocked:
+    "설치된 AI 환경을 확인할 수 없습니다. 기존 파일을 보존하고 새 환경을 준비해 다시 시도하세요.",
+  runtimeDiagnosticOnly:
+    "작은 계산으로 AI 엔진을 검사합니다. 캐릭터 분석·변경, 모델 생성 또는 리깅 기능은 아닙니다.",
+  runtimeSetupDetails: "준비 및 다운로드 안내",
+  runtimeSetupPurpose:
+    "전용 CPU 실행 환경과 216바이트 합성 시험 모델을 준비합니다. 설치 후에는 오프라인으로 실행할 수 있습니다.",
+  runtimeDisk: "필요한 여유 공간",
+  runtimeLicenseNotice:
+    "실행 환경과 종속 구성요소의 전체 라이선스 고지문을 설치 위치에 보존합니다. 합성 가중치는 CC0이며 결제나 계정은 필요 없습니다.",
+  runtimeDownloadOrigin:
+    "출처: 버전과 해시가 고정된 공식 PyPI 파일(files.pythonhosted.org). 사용자 이미지는 전송하지 않습니다.",
+  runtimeConsent: "이 다운로드와 설치에 동의합니다.",
+  runtimePrepare: "로컬 AI 준비하기",
+  runtimeProbe: "CPU 연산 검사",
+  runtimeRun: "로컬 시험 연산 실행",
+  runtimeResult: "검증된 합성 계산 결과",
+  runtimeExpert: "백엔드 및 모델 진단",
+  download_consent: "다운로드 내용을 확인하고 먼저 설치에 동의해 주세요.",
+  download_origin:
+    "허용되지 않은 다운로드 출처입니다. 파일을 활성화하지 않았습니다.",
+  download_failed:
+    "다운로드가 중단됐습니다. 연결을 확인하고 준비를 다시 시도해 주세요.",
+  model_size: "받은 파일 크기가 예상과 다릅니다. 설치하지 않았습니다.",
+  model_hash: "파일 무결성을 확인할 수 없습니다. 이 파일은 실행하지 않습니다.",
+  runtime_manifest:
+    "지원하지 않는 모델 등록 정보입니다. 현재 프로젝트를 보존하고 앱 버전을 확인해 주세요.",
+  model_license:
+    "라이선스와 지역 제한 확인 전에는 이 모델을 사용할 수 없습니다.",
+  ram_insufficient:
+    "사용 가능한 메모리가 부족합니다. 다른 작업을 닫고 다시 시도해 주세요. 원본은 보존됩니다.",
+  backend_unverified:
+    "이 실행 방식은 연산 검증을 통과하지 않았습니다. 검증된 CPU 방식을 사용해 주세요.",
+  runtime_not_installed: "먼저 로컬 AI 실행 환경을 준비해 주세요.",
+  runtime_integrity:
+    "AI 환경이 변경됐거나 불완전합니다. 검증된 환경을 다시 준비해 주세요. 기존 파일은 보존합니다.",
+  runtime_setup_failed:
+    "AI 준비에 실패했습니다. 불완전한 환경은 활성화하지 않았습니다. 진단을 확인한 뒤 다시 준비해 주세요.",
+  runtime_platform: "이 실행 환경은 Windows x64와 Python 3.12가 필요합니다.",
+  inference_mismatch:
+    "계산 결과가 검증값과 일치하지 않습니다. 결과를 등록하지 않았습니다.",
+  provider_blocked: "실행이 승인되지 않은 AI Provider입니다.",
+  artifact_invalid:
+    "출력 검증에 실패했습니다. 기존 프로젝트 파일은 보존됩니다.",
+  artifact_unverified: "이 작업에는 완료가 확인된 결과가 없습니다.",
+  runtime_isolation:
+    "운영체제가 실행 제한을 적용하지 못했습니다. Worker를 중단했습니다.",
+  network_denied: "로컬 연산 허용 범위를 벗어난 작업이 감지되어 중단했습니다.",
+  resource_unknown:
+    "사용 가능한 컴퓨터 자원을 확인하지 못했습니다. 진단을 다시 실행해 주세요.",
+  runtime_io:
+    "AI 파일에 접근하지 못했습니다. 여유 공간과 권한을 확인한 뒤 다시 시도해 주세요.",
+  runtime_failed:
+    "로컬 AI 시험이 중단됐습니다. 원본과 저장 이력은 보존됩니다. 준비 상태를 확인한 뒤 다시 시도해 주세요.",
+
   legacy_name_encoding:
     "일부 오래된 레이어 이름은 지역별 문자 인코딩에 따라 다르게 보일 수 있습니다. 원본 이름 데이터는 보존됩니다.",
   previewLoading: "화면에 표시할 사본을 준비하고 있습니다…",
@@ -463,7 +650,7 @@ export const ko: Record<MessageKey, string> = {
     "작업 상태를 저장하지 못했습니다. 완료된 작업으로 취급하지 마세요.",
   jobHistory: "작업 기록",
   retryHint:
-    "재시도하려면 원래 프로젝트를 열어 확인한 뒤 새 더미 작업을 시작하세요. 자동 재개는 하지 않습니다.",
+    "재시도하려면 원래 프로젝트와 AI 준비 상태를 확인한 뒤 새 작업을 시작하세요. 자동 재개는 하지 않습니다.",
   search: "프로젝트 검색",
   refresh: "새로고침 및 인덱스 재구축",
   field_name: "이름",
@@ -475,9 +662,9 @@ export const ko: Record<MessageKey, string> = {
   field_latest_unreadable: "최신 상태를 읽지 못해 정확한 차이를 알 수 없음",
   title: "캐릭터 제작실",
   subtitle: "원본을 지키고, 검증을 거쳐 완성합니다.",
-  foundation: "DEV-02 · 원본 이미지 입력",
+  foundation: "DEV-03 · 로컬 AI 실행",
   notice:
-    "이 버전은 프로젝트 저장과 더미 작업을 시험합니다. 캐릭터 생성과 리깅은 아직 구현되지 않았습니다.",
+    "이 버전은 원본 보존과 로컬 CPU 추론을 시험합니다. 캐릭터 생성과 리깅은 아직 구현되지 않았습니다.",
   language: "언어",
   mode: "작업 모드",
   beginner: "초보자",
@@ -524,7 +711,7 @@ export const ko: Record<MessageKey, string> = {
   detect: "GPU 확인",
   unknown: "감지되지 않음: GPU 성능을 확인할 수 없습니다",
   inference:
-    "AI 추론 지원 여부는 미검증입니다. 더미 작업은 CPU에서 실행됩니다.",
+    "GPU 추론은 미검증입니다. 지원하는 CPU 연산은 로컬 AI 준비 화면에서 별도로 검사합니다.",
   driver: "드라이버",
   details: "기술 정보",
   offline: "로컬 작업 · 이미지 외부 전송 없음 · 광고 연결 없음",
