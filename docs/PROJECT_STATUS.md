@@ -1,3 +1,19 @@
+# Project status — DEV-03
+
+2026-10-29 JST. 시작 main/원격 main c07a6fe6c9f15a3b76e18179974a7db86ba8ab29, PR#3 merged 및 main CI40696324294 success 확인. clean tree에서 codex/dev-03-local-ai-runtime 생성. 기존94 요구 ID 유지, 신규095–110, 총110개. 사용자 cleanup 스크립트는 기존 hash를 보존하고 실행/변경/삭제하지 않았다. 신규 task 데이터는 E에 둔다.
+
+구현: 실제 ONNX CPU 진단, 고정 Registry/ModelManifest, 명시 동의·HTTPS/hash/크기 제한, 전용 Python generation과 격리 smoke, v2 감독기/Windows Job Object, strict protocol, 자원 사전 검사, 결과 staging/검증/원본 재확인, 기존 journal과3언어 UI. 원본 PNG/PSD v1/v2와 master/gates는 변경하지 않는다. 216-byte 합성 가중치는 학습된 캐릭터 모델이 아니다.
+
+검증된 기반: 깨끗한 DEV-02 전체 기준선 및 native recovery 통과. 실제 CPU 연산/PNG·PSD 원본 보존, 취소/kill/restart, 모델 변조 차단, 실제 RAM 한도 및 descendant 종료 시험 통과. 최종 acceptance 기록은 TEST_RUNS의 DEV-03 절과 docs/evidence/dev-03-local.json을 기준으로 한다. 코드 존재만으로 요구를 Verified로 승격하지 않는다.
+
+제한: RTX2060 6144MiB 장치는 확인했으나 CUDA/DirectML/PyTorch 추론은 미검증·미설치. AI 캐릭터 분석/생성/rig/export/VBridger 실동작 미구현·미검증. Python audit guard는 OS 네트워크 sandbox가 아니며 물리적 offline/전체 DLL traffic 미검증. 같은 사용자 악성 변경 race/전원 차단/legacy dummy 전체tree/AI checkpoint는 DEV-28/29. Python3.12는 기존 실제 설치가 필요하며 깨끗한 PC용 bootstrap은 DEV-30.
+
+최종 완료는 DEV-03 PR의 exact head CI·필수 리뷰/보호/충돌 검사 후 안전한 main 병합과 그 merge SHA의 main CI 성공을 모두 확인해야 한다. PR/merge SHA는 해당 변경 자체에 미리 쓸 수 없으므로 원격 PR 기록·최종 보고·로컬 release-verification 증거를 최종 권위로 사용한다. 강제/관리자 bypass는 금지한다.
+
+DEV-04는 DEV_ROADMAP 마지막 시작 계약을 따른다. 아래 DEV-00~02 기록은 당시의 범위이며 현재 미지원 상태는 위 내용과 각 전용 문서가 우선한다.
+
+---
+
 # Project status — DEV-02
 
 2026-10-28 JST. 시작 main 5d38dcb817e7f9d53c373ab584c280dc251154ce / CI40502328646 success, clean tree. 작업 브랜치 codex/dev-02-source-fidelity. 기존78개 ID 유지, 신규16개(079–094), 총94개. 사용자 artifacts/plan-c-cleanup.py SHA256 AB3D3C8D67157D1341E1FB25E71633A83516C98023E43849F80F24459BECB1A8를 확인하고 변경/실행/삭제하지 않았다. C 정리는 범위 밖이다.
@@ -63,3 +79,9 @@ Local evidence: docs/evidence/dev-02-local.json; TEST_RUNS final acceptance. Fin
 Final review fix: legacy Pascal layer names now use explicit MacRoman decoding with authoritative UTF16BE luni; uncertain regional fallback has3locale warning. Global extension count and total name bytes are bounded. Final42-test suite/release/native recovery and OS PSD input rerun are recorded in TEST_RUNS.
 
 Actual40M native preview responsiveness was measured:972ms to displayed copy, max sampled rAF gap100.1ms/54 samples, cached3.8ms. Original8000×5000 remains unchanged while displayed copy1000×625. This is a synthetic machine-specific sample; five-person beginner/OS drop studies remain unverified.
+
+## DEV-03 final local acceptance
+
+Full53Rust/12Python/5contract/4UI suite, Windows release, expanded actual native runtime including installation cancel/kill, prior native recovery and40M preview all passed. Detailed scope/measurements/failures: TEST_RUNS and evidence/dev-03-local.json. New095–109 are Verified only within their stated tests/limits;110 remains Implemented until remote release. Original94IDs preserved; future character AI/rig/VBridger/GPU gates remain unverified. No uncommitted user file was staged and cleanup hash remains unchanged.
+
+Remote release authority: [DEV-03 branch PR lookup](https://github.com/Raccoon26/Project-VTuber/pulls?q=is%3Apr+head%3Acodex%2Fdev-03-local-ai-runtime) and [main workflow](https://github.com/Raccoon26/Project-VTuber/actions/workflows/ci.yml?query=branch%3Amain). Final report supplies actual PR/merge SHA after checks. DEV-04 must verify these remote records rather than inferring completion from this local paragraph.

@@ -11,3 +11,7 @@
 중단·실패 작업은 원래 프로젝트를 다시 열어 원본 검증 후 사용자가 새 더미 작업을 실행할 수 있다. 기존 job ID/기록을 재사용하거나 자동 재개하지 않는다. 이미지·checkpoint 경로는 아직 Worker에 전달하지 않는다. DEV-03은 provider protocol을 유지하고 별도 artifact/checkpoint manifest를 도입해야 한다.
 
 Windows Job Object를 사용하지 않으므로 앱 강제 종료 시 모든 자식·손자 프로세스 종료를 보장하지 않는다. OS lock 해제는 소유 앱의 종료 증거이며 잔존 Worker가 없다는 증거가 아니다. 실제 AI 재개·프로세스 트리 회수·journal retention/압축은 DEV-03/28에서 검증한다. 현재 더미는 짧은 CPU 작업이고 결과 파일을 생성하지 않는다.
+
+## DEV-03 provider extension
+
+The v1 journal retains old dummy entries and adds onnx-synthetic-v1/runtime-install-v1/runtime-probe-v1 to its provider allowlist. JobManager::start_task serializes all providers through the existing data-root OS lock. Progress is not a CharacterProject revision. A result may be staged/accepted before a terminal journal failure, but IPC exposes it only with a completed journal record. Restart labels unfinished jobs interrupted/recovery_required and never resumes automatically. V2 owned children receive Job Object cleanup; legacy dummy behavior is unchanged. Checkpoint/retention remain DEV-28.

@@ -89,6 +89,31 @@ impl JobManager {
         self.cancel.store(true, Ordering::SeqCst);
     }
     pub fn start(&self, project_id: String, python: PathBuf, script: PathBuf) -> Result<Job> {
+        self.start_task(project_id, "dummy".into(), move |id, cancel, progress| {
+            execute(
+                python,
+                script,
+                id,
+                cancel,
+                Duration::from_secs(20),
+                progress,
+            )
+        })
+    }
+    pub fn start_task<F>(&self, project_id: String, provider: String, task: F) -> Result<Job>
+    where
+        F: FnOnce(&str, &AtomicBool, &mut dyn FnMut(u8)) -> Result<()> + Send + 'static,
+    {
+        if ![
+            "dummy",
+            "onnx-synthetic-v1",
+            "runtime-install-v1",
+            "runtime-probe-v1",
+        ]
+        .contains(&provider.as_str())
+        {
+            return Err(AppError::new("provider_blocked"));
+        }
         let mut guard = self.job.lock().unwrap();
         if guard
             .as_ref()
@@ -105,7 +130,7 @@ impl JobManager {
             project_id,
             status: "running".into(),
             progress: 0,
-            provider: "dummy".into(),
+            provider,
             error: None,
         };
         if let Some(root) = &self.journal {
@@ -133,24 +158,17 @@ impl JobManager {
                     }
                 }
             }
-            let result = execute(
-                python,
-                script,
-                &id,
-                &cancel,
-                Duration::from_secs(20),
-                |progress| {
-                    if let Some(j) = state.lock().unwrap().as_mut() {
-                        j.progress = progress;
-                        if let Some(root) = &journal {
-                            if crate::journal::append(root, j).is_err() {
-                                journal_failed = true;
-                                cancel.store(true, Ordering::SeqCst);
-                            }
+            let result = task(&id, &cancel, &mut |progress| {
+                if let Some(j) = state.lock().unwrap().as_mut() {
+                    j.progress = progress;
+                    if let Some(root) = &journal {
+                        if crate::journal::append(root, j).is_err() {
+                            journal_failed = true;
+                            cancel.store(true, Ordering::SeqCst);
                         }
                     }
-                },
-            );
+                }
+            });
             let mut guard = state.lock().unwrap();
             let j = guard.as_mut().unwrap();
             match result {

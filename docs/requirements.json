@@ -25,9 +25,11 @@
     "module": "M04",
     "verification": "offline 실제 모델 inference",
     "status": "Partially Implemented",
-    "risk": "dummy만 구현",
+    "risk": "실제 소형 ONNX CPU 진단 구현; 캐릭터 제작 AI/GPU는 후속",
     "tests": [
-      "tests/contracts.test.ts"
+      "tests/contracts.test.ts",
+      "src-tauri/src/runtime_tests.rs",
+      "workers/test_runtime.py"
     ]
   },
   {
@@ -56,10 +58,12 @@
     ],
     "module": "M04",
     "verification": "모델 설치 후 disconnected 실행",
-    "status": "Planned",
-    "risk": "현재 CPU dummy만 검증",
+    "status": "Partially Implemented",
+    "risk": "설치 후 실제 CPU 추론 및 Python socket 거부 시험; 물리적 네트워크 단절/전체 OS traffic 미검증",
     "tests": [
-      "src-tauri/src/worker.rs"
+      "src-tauri/src/worker.rs",
+      "src-tauri/src/runtime_tests.rs",
+      "workers/test_runtime.py"
     ]
   },
   {
@@ -73,9 +77,11 @@
     "module": "M05",
     "verification": "장치 query와 실제 tensor smoke 분리",
     "status": "Partially Implemented",
-    "risk": "NVIDIA만 감지; 추론 미검증",
+    "risk": "managed ONNX CPU 실연산 검증; RTX2060 장치 감지는 CUDA 검증과 분리",
     "tests": [
-      "src-tauri/src/gpu.rs"
+      "src-tauri/src/gpu.rs",
+      "src-tauri/src/runtime_tests.rs",
+      "workers/test_runtime.py"
     ]
   },
   {
@@ -87,10 +93,12 @@
     ],
     "module": "M04",
     "verification": "consent/download/hash/offline fixtures",
-    "status": "Planned",
-    "risk": "weights 미설치",
+    "status": "Partially Implemented",
+    "risk": "소형 모델 registry/승인/무결성/격리 설치 기반; 대형 외부 모델 미설치",
     "tests": [
-      "docs/MODEL_STRATEGY.md"
+      "docs/MODEL_STRATEGY.md",
+      "src-tauri/src/runtime_tests.rs",
+      "workers/test_runtime.py"
     ]
   },
   {
@@ -105,7 +113,7 @@
     "module": "M03",
     "verification": "입력/저장 bytes 동일 및 변조 거부",
     "status": "Verified",
-    "risk": "PNG 지원 범위",
+    "risk": "지원 PNG/PSD 원본 bytes/hash 보존; 악의적 동일 사용자 race 완전 방어 제외",
     "tests": [
       "src-tauri/src/storage.rs"
     ]
@@ -121,7 +129,7 @@
     "module": "M03",
     "verification": "원본 byte 보존과 ICC/render 비교",
     "status": "Partially Implemented",
-    "risk": "bytes 보존; 색 renderer 미구현",
+    "risk": "DEV-02 RGB ICC/16-bit 표시 사본 지원; 모든 profile/monitor 인증은 미검증",
     "tests": [
       "src-tauri/src/storage.rs"
     ]
@@ -138,7 +146,7 @@
     "module": "M02",
     "verification": "provenance DAG/revision round-trip",
     "status": "Partially Implemented",
-    "risk": "현재 원본만 존재",
+    "risk": "원본·preview·진단 artifact 분리; 실제 캐릭터 master/수정 승인 흐름은 후속",
     "tests": [
       "docs/MODEL_CONTRACT.md"
     ]
@@ -601,7 +609,7 @@
     "module": "M02",
     "verification": "git diff/status/branch 확인",
     "status": "Verified",
-    "risk": "DEV-00 사용자 변경 보존; DEV-01 별도 브랜치/합성 fixture 사용",
+    "risk": "DEV-03 별도 브랜치; 사용자 cleanup 파일 hash 보존 및 미실행",
     "tests": [
       "docs/ENVIRONMENT_REPORT.md"
     ]
@@ -632,7 +640,7 @@
     "module": "M04",
     "verification": "schema/contract tests",
     "status": "Partially Implemented",
-    "risk": "현재 schema는 최소 v1",
+    "risk": "CharacterProject v1/v2 유지; ModelManifest v1/Worker v2 추가, 실제 캐릭터 adapter는 후속",
     "tests": [
       "docs/MODEL_CONTRACT.md"
     ]
@@ -772,7 +780,7 @@
     "module": "M04",
     "verification": "실제 subprocess 단위·통합",
     "status": "Verified",
-    "risk": "OS 강제종료 트리 회수 후속",
+    "risk": "기존 dummy v1 유지; 신규 v2만 OS Job Object 보호, 전체 legacy/AI checkpoint는 DEV-28",
     "tests": [
       "src-tauri/src/worker.rs"
     ]
@@ -804,7 +812,7 @@
     "module": "M22",
     "verification": "clean npm ci/cargo locked",
     "status": "Verified",
-    "risk": "DEV-00 main CI 40314991998 성공, DEV-01은 최종 PR CI 확인",
+    "risk": "DEV-02 main CI40696324294 success; DEV-03 해당 PR/main CI 별도 확인",
     "tests": [
       "scripts/test.ps1"
     ]
@@ -836,10 +844,12 @@
     ],
     "module": "M04",
     "verification": "manifest audit/quarantine",
-    "status": "Planned",
-    "risk": "실제 모델0",
+    "status": "Partially Implemented",
+    "risk": "합성 ONNX와 고정 wheel 출처/license/hash 검사; 외부 checkpoint/plugin 미허용",
     "tests": [
-      "docs/SECURITY.md"
+      "docs/SECURITY.md",
+      "src-tauri/src/runtime_tests.rs",
+      "workers/test_runtime.py"
     ]
   },
   {
@@ -854,10 +864,12 @@
     "module": "M22",
     "verification": "fault injection/soak",
     "status": "Partially Implemented",
-    "risk": "프로세스 kill·job 복원 검증; 실제 GPU OOM/전원 차단/전체 process tree는 미검증",
+    "risk": "신규 provider 실제 RAM 한도/timeout/descendant kill 시험; GPU OOM/전원 차단 미검증",
     "tests": [
       "src-tauri/src/worker.rs",
-      "docs/JOB_PERSISTENCE.md"
+      "docs/JOB_PERSISTENCE.md",
+      "src-tauri/src/runtime_tests.rs",
+      "workers/test_runtime.py"
     ]
   },
   {
@@ -934,7 +946,7 @@
     "module": "M22",
     "verification": "GitHub checks/protection/merge SHA",
     "status": "Implemented",
-    "risk": "DEV-00 PR#1/main 검증 완료; DEV-01은 해당 PR/main CI 확인 후 최종 완료",
+    "risk": "DEV-00~02 PR/main 검증 완료; DEV-03은 해당 PR와 main CI 성공 후 완료",
     "tests": [
       "docs/PROJECT_STATUS.md"
     ]
@@ -966,7 +978,7 @@
     "module": "M04",
     "verification": "작업/모델 inventory audit",
     "status": "Verified",
-    "risk": "현재 AI 다운로드0/GPU inference0",
+    "risk": "명시 개발 준비로 약26.8MiB 고정 CPU wheels만 설치; 대형 모델/GPU 부하/유료/사용자 데이터 전송 없음",
     "tests": [
       "docs/ENVIRONMENT_REPORT.md"
     ]
@@ -1101,7 +1113,7 @@
     "module": "M04",
     "verification": "journal 저장 실패·손상·owner kill·restart·실제 Python",
     "status": "Verified",
-    "risk": "OS process tree 정리·AI 자동 재개는 DEV-28",
+    "risk": "신규 v2 작업 tree 회수 시험; legacy dummy 전체 tree 및 AI checkpoint 재개는 DEV-28",
     "tests": [
       "src-tauri/src/resilience_tests.rs"
     ]
@@ -1131,7 +1143,7 @@
     "module": "M02",
     "verification": "DEV-00 sample/unknown field/future schema 격리",
     "status": "Verified",
-    "risk": "v2 변환 필요 없어 미구현; migration 수행 주장 금지",
+    "risk": "DEV-02 PSD v2 별도 revision/기존 v1 보존; DEV-03 project migration 없음",
     "tests": [
       "docs/MIGRATION_STRATEGY.md"
     ]
@@ -1206,7 +1218,7 @@
     "module": "M01",
     "verification": "native Windows IPC와 OS process kill/rehash",
     "status": "Verified",
-    "risk": "OS file picker 직접 조작은 이전처럼 미실행",
+    "risk": "DEV-01 native 복구, DEV-02 실제 OS PSD picker 검증; DEV-03 runtime native는 합성 seed helper 사용",
     "tests": [
       "scripts/native-recovery.mjs"
     ]
@@ -1275,7 +1287,7 @@
     "module": "M18",
     "verification": "원본→rig→quality→대상 runtime 종단 검증",
     "status": "Planned",
-    "risk": "AI/rig/export 미구현; 입력 성공은 모델 완료 아님",
+    "risk": "진단 연산은 실제 캐릭터 AI/rig/export가 아님; 완성 모델 생성 미구현",
     "tests": [
       "docs/CHARACTER_IDENTITY_POLICY.md"
     ]
@@ -1324,7 +1336,7 @@
     "module": "M03",
     "verification": "source hash와 derivative 부모 참조 검사",
     "status": "Partially Implemented",
-    "risk": "생성/승인 아티팩트는 후속",
+    "risk": "원본/preview/진단 생성 artifact 분리; 캐릭터 생성 및 사용자 승인 편집은 후속",
     "tests": [
       "docs/IMAGE_IMPORT.md"
     ]
@@ -1446,7 +1458,7 @@
     "module": "M22",
     "verification": "전체 suite/native recovery",
     "status": "Verified",
-    "risk": "final42 Rust/helper1,4contracts,2Python,3UI + native recovery/input/40M preview; AI remains unimplemented",
+    "risk": "DEV-02 최종42Rust/helper1,4contract,2Python,3UI 근거 유지; DEV-03 회귀는 TEST_RUNS 별도",
     "tests": [
       "docs/TEST_RUNS.md"
     ]
@@ -1475,8 +1487,263 @@
     ],
     "module": "M22",
     "verification": "GitHub PR/main SHA/CI/tree 검증",
+    "status": "Verified",
+    "risk": "PR#3 merge c07a6fe6c9f15a3b76e18179974a7db86ba8ab29 및 CI40696324294 success 시작 시 확인",
+    "tests": [
+      "docs/PROJECT_STATUS.md"
+    ]
+  },
+  {
+    "id": "REQ-095",
+    "description": "로컬 Runtime Manager·버전 adapter·전용 환경",
+    "priority": "P0",
+    "dev": [
+      "DEV-03"
+    ],
+    "module": "M04",
+    "verification": "실제 환경 설치/기존 dummy 공존",
+    "status": "Verified",
+    "risk": "Windows Python3.12 x64 CPU 경로만 검증",
+    "tests": [
+      "src-tauri/src/runtime_tests.rs",
+      "docs/evidence/dev-03-local.json"
+    ]
+  },
+  {
+    "id": "REQ-096",
+    "description": "ModelManifest 버전·hash·권리·지역·지원 형식 검증",
+    "priority": "P0",
+    "dev": [
+      "DEV-03"
+    ],
+    "module": "M04",
+    "verification": "잘못된 manifest/license/region 거부",
+    "status": "Verified",
+    "risk": "외부 모델 추가는 새 권리 검토와 앱 업데이트 필요",
+    "tests": [
+      "src-tauri/src/runtime_tests.rs",
+      "docs/evidence/dev-03-local.json"
+    ]
+  },
+  {
+    "id": "REQ-097",
+    "description": "모델 설치 정보와 명시적 사용자 동의",
+    "priority": "P0",
+    "dev": [
+      "DEV-03"
+    ],
+    "module": "M01/M04",
+    "verification": "UI checkbox 및 stale token/미승인 process 차단",
+    "status": "Verified",
+    "risk": "개발/CI prepare 명령은 별도 명시 실행",
+    "tests": [
+      "tests/ui/runtime.spec.ts",
+      "docs/evidence/dev-03-local.json"
+    ]
+  },
+  {
+    "id": "REQ-098",
+    "description": "HTTPS 출처·redirect·크기·hash·부분 다운로드 안전성",
+    "priority": "P0",
+    "dev": [
+      "DEV-03"
+    ],
+    "module": "M04",
+    "verification": "mock stream cancel/disconnect/hash/size/redirect 시험",
+    "status": "Verified",
+    "risk": "실제 디스크 소진/원격 서버 장애는 모의 주입",
+    "tests": [
+      "workers/test_runtime.py",
+      "docs/evidence/dev-03-local.json"
+    ]
+  },
+  {
+    "id": "REQ-099",
+    "description": "격리 로딩 및 불변 설치 generation·실패 복구",
+    "priority": "P0",
+    "dev": [
+      "DEV-03"
+    ],
+    "module": "M04/M22",
+    "verification": "native 설치 취소/kill 후 기존 active 및 재실행",
+    "status": "Verified",
+    "risk": "불완전 환경은 보존, 재개 대신 새 generation; 자동 삭제 없음",
+    "tests": [
+      "scripts/native-runtime.mjs",
+      "docs/evidence/dev-03-local.json"
+    ]
+  },
+  {
+    "id": "REQ-100",
+    "description": "GPU 감지와 실제 CPU 연산 기반 backend 지원 구분",
+    "priority": "P0",
+    "dev": [
+      "DEV-03"
+    ],
+    "module": "M05",
+    "verification": "실제 ORT CPU probe 및 NVIDIA 장치 정보 별도 기록",
+    "status": "Verified",
+    "risk": "CUDA/PyTorch/DirectML 실행 미검증·미설치",
+    "tests": [
+      "src-tauri/src/runtime_tests.rs",
+      "docs/evidence/dev-03-local.json"
+    ]
+  },
+  {
+    "id": "REQ-101",
+    "description": "RAM·디스크·backend 사전 검사 및 실행 자원 한도",
+    "priority": "P0",
+    "dev": [
+      "DEV-03"
+    ],
+    "module": "M04/M05",
+    "verification": "자원 부족 mock/실제512MiB Job Object allocation 실패",
+    "status": "Verified",
+    "risk": "GPU offload/fallback 미허용;6GB 대형 모델 성능 보장 없음",
+    "tests": [
+      "src-tauri/src/runtime_tests.rs",
+      "docs/evidence/dev-03-local.json"
+    ]
+  },
+  {
+    "id": "REQ-102",
+    "description": "실제 합성 ONNX 추론과 설치 후 로컬 반복 실행",
+    "priority": "P0",
+    "dev": [
+      "DEV-03"
+    ],
+    "module": "M04",
+    "verification": "3개 입력의 실제 출력 및 Python socket 차단",
+    "status": "Verified",
+    "risk": "물리적 offline/네이티브 DLL 전체 네트워크 감사 미실행",
+    "tests": [
+      "workers/test_runtime.py",
+      "docs/evidence/dev-03-local.json"
+    ]
+  },
+  {
+    "id": "REQ-103",
+    "description": "Worker v2 strict protocol 및 기존 v1 호환",
+    "priority": "P0",
+    "dev": [
+      "DEV-03"
+    ],
+    "module": "M04/M22",
+    "verification": "잘못된 ID/version/progress/terminal/큰 출력/crash",
+    "status": "Verified",
+    "risk": "임의 Provider 코드 실행 금지",
+    "tests": [
+      "src-tauri/src/runtime_tests.rs",
+      "docs/evidence/dev-03-local.json"
+    ]
+  },
+  {
+    "id": "REQ-104",
+    "description": "Staging·결과 검증·원본 provenance·보고서 무결성",
+    "priority": "P0",
+    "dev": [
+      "DEV-03"
+    ],
+    "module": "M03/M04",
+    "verification": "형식/math/source/hash/내용주소 결과 변조 거부",
+    "status": "Verified",
+    "risk": "무결성 checksum은 동일 사용자 악의적 재작성에 대한 서명이 아님",
+    "tests": [
+      "src-tauri/src/runtime_tests.rs",
+      "docs/evidence/dev-03-local.json"
+    ]
+  },
+  {
+    "id": "REQ-105",
+    "description": "Job Journal·취소·비정상 중단·재시도",
+    "priority": "P0",
+    "dev": [
+      "DEV-03"
+    ],
+    "module": "M22",
+    "verification": "실제 취소/descendant timeout/앱 kill/restart",
+    "status": "Verified",
+    "risk": "AI checkpoint 자동 재개/legacy 전체 tree는 DEV-28",
+    "tests": [
+      "scripts/native-runtime.mjs",
+      "docs/evidence/dev-03-local.json"
+    ]
+  },
+  {
+    "id": "REQ-106",
+    "description": "추론 전후 PNG·PSD 및 저장 이력 불변",
+    "priority": "P0",
+    "dev": [
+      "DEV-03"
+    ],
+    "module": "M03/M04",
+    "verification": "실제CPU 전후 원본/revision hash 대조",
+    "status": "Verified",
+    "risk": "source hash는 캐릭터 정체성 검증이 아님",
+    "tests": [
+      "src-tauri/src/runtime_tests.rs",
+      "docs/evidence/dev-03-local.json"
+    ]
+  },
+  {
+    "id": "REQ-107",
+    "description": "초보자 AI 준비·설치·결과·오류 3언어 UI",
+    "priority": "P0",
+    "dev": [
+      "DEV-03"
+    ],
+    "module": "M01/M20",
+    "verification": "mock consent/실제 native 설치·결과·3locale",
+    "status": "Verified",
+    "risk": "초보자5명/전체 screen reader 평가는 DEV-25/26",
+    "tests": [
+      "tests/ui/runtime.spec.ts",
+      "docs/evidence/dev-03-local.json"
+    ]
+  },
+  {
+    "id": "REQ-108",
+    "description": "E 전용 환경·신뢰 코드·공급망·권한 경계",
+    "priority": "P0",
+    "dev": [
+      "DEV-03"
+    ],
+    "module": "M04/M22",
+    "verification": "고정wheel·환경inventory·경로·변조·실행 allowlist 감사",
+    "status": "Verified",
+    "risk": "venv/-I/Job Object는 OS 파일/네트워크 sandbox가 아님",
+    "tests": [
+      "workers/test_runtime.py",
+      "docs/evidence/dev-03-local.json"
+    ]
+  },
+  {
+    "id": "REQ-109",
+    "description": "실측 자원·DEV00~02 회귀·94개 요구 전수 감사",
+    "priority": "P0",
+    "dev": [
+      "DEV-03"
+    ],
+    "module": "M22",
+    "verification": "전체 suite/release/native 및 evidence hash",
+    "status": "Verified",
+    "risk": "측정은 이 장치/합성 모델 범위; 제품 품질 게이트 미검증",
+    "tests": [
+      "docs/TEST_RUNS.md",
+      "docs/evidence/dev-03-local.json"
+    ]
+  },
+  {
+    "id": "REQ-110",
+    "description": "DEV-03 PR·CI·보호 조건·main 병합 후 검증",
+    "priority": "P0",
+    "dev": [
+      "DEV-03"
+    ],
+    "module": "M22",
+    "verification": "원격 PR head/main SHA·tree·CI 비교",
     "status": "Implemented",
-    "risk": "필수 구현과 검증 전 완료 처리 금지",
+    "risk": "필수 CI/보호/리뷰 미충족 시 병합 금지",
     "tests": [
       "docs/PROJECT_STATUS.md"
     ]

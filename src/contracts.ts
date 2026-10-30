@@ -31,7 +31,11 @@ export interface Job {
     | "interrupted"
     | "recovery_required";
   progress: number;
-  provider: "dummy";
+  provider:
+    | "dummy"
+    | "onnx-synthetic-v1"
+    | "runtime-install-v1"
+    | "runtime-probe-v1";
   error: string | null;
 }
 export interface ProjectIssue {
@@ -178,15 +182,37 @@ export interface ArtifactRef {
   uncertainty: "observed" | "inferred" | "unknown";
 }
 export interface ModelManifest {
+  schema_version: 1;
   id: string;
   version: string;
+  revision: string;
+  provider: string;
+  kind: string;
+  developer: string;
+  official_source: string;
+  download_url: string | null;
+  format: string;
+  bytes: number;
   sha256: string;
-  origin: string;
-  codeLicense: string;
-  weightsLicense: string;
-  redistribution: "approved" | "blocked" | "unreviewed";
-  vramMiB: number | null;
+  code_license: string;
+  weights_license: string;
+  dependency_licenses: string[];
+  license_review: string;
+  commercial_use: boolean;
+  redistribution: boolean;
+  allowed_regions: string[];
+  output_restrictions: string;
+  runtime: string;
   backends: string[];
+  ram_mib: number;
+  vram_mib: number;
+  disk_mib: number;
+  input: string;
+  output: string;
+  preprocessing: string;
+  verified_hardware: string[];
+  evidence: string[];
+  network_during_inference: boolean;
 }
 export interface AIProvider {
   id: string;
@@ -256,3 +282,23 @@ export function validateBindings(
     if (!semantics.has(id)) errors.push(`missing:${id}`);
   return errors;
 }
+
+export type ModelInstallationState =
+  | "discovered"
+  | "legal_review"
+  | "approval_required"
+  | "downloading"
+  | "verifying"
+  | "quarantined_load"
+  | "installed_unverified"
+  | "runnable"
+  | "blocked"
+  | "unavailable"
+  | "unknown";
+export type BackendStatus =
+  | "verified"
+  | "installed_unverified"
+  | "not_installed"
+  | "unsupported"
+  | "probe_failed"
+  | "unverified";

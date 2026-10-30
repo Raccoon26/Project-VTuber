@@ -28,6 +28,11 @@ const docs = [
   "PSD_SUPPORT_MATRIX",
   "COLOR_MANAGEMENT",
   "CHARACTER_IDENTITY_POLICY",
+  "AI_RUNTIME",
+  "MODEL_INSTALLATION",
+  "BACKEND_COMPATIBILITY",
+  "RESOURCE_BUDGET",
+  "PROVIDER_SECURITY",
 ];
 for (const doc of docs)
   assert.ok(
@@ -38,13 +43,13 @@ assert.ok(fs.readFileSync("README.md", "utf8").includes("desktop"));
 const requirements = JSON.parse(
   fs.readFileSync("docs/requirements.json", "utf8"),
 );
-assert.equal(requirements.length, 94);
-assert.equal(new Set(requirements.map((r) => r.id)).size, 94);
+assert.equal(requirements.length, 110);
+assert.equal(new Set(requirements.map((r) => r.id)).size, 110);
 assert.deepEqual(
   requirements,
   JSON.parse(fs.readFileSync("requirements.json", "utf8")),
 );
-for (let n = 1; n <= 94; n++)
+for (let n = 1; n <= 110; n++)
   assert.equal(requirements[n - 1].id, `REQ-${String(n).padStart(3, "0")}`);
 const coverage = fs.readFileSync("docs/REQUIREMENTS.md", "utf8");
 for (const r of requirements)

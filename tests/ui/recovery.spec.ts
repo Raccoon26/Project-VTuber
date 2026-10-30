@@ -24,6 +24,7 @@ test("simulated IPC recovery requires explicit review, supports cancel and three
       transformCallback: () => 1,
       invoke: async (cmd: string) => {
         if (cmd.startsWith("plugin:event|")) return 1;
+        if (cmd === "runtime_view") return null;
         if (cmd === "job_status") return null;
         if (cmd === "job_history") return [];
         if (cmd === "search_projects" || cmd === "list_projects_v2")

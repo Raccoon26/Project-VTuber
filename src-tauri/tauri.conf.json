@@ -19,6 +19,8 @@
     "active": false,
     "resources": {
       "../workers/dummy.py": "workers/dummy.py",
+      "../workers/runtime.py": "workers/runtime.py",
+      "../third_party/RUNTIME_NOTICES.md": "notices/RUNTIME_NOTICES.md",
       "../third_party/IMAGE_INPUT_NOTICES.md": "notices/IMAGE_INPUT_NOTICES.md"
     }
   }

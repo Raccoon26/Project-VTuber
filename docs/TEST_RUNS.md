@@ -122,3 +122,42 @@ Remote release: [PR #3 checks](https://github.com/Raccoon26/Project-VTuber/pull/
 DEV-02 legacy-name/resource hardening: dev-02-review-suite.log Pass42 Rust/helper1,4contracts,2Python,3UI plus all format/build/clippy/doc checks. dev-02-review-release.log Pass; dev-02-review-native-recovery.log and dev-02-review-native-input.log Pass actual Windows recovery and OS PSD dialog/preview/3locale/reload/hash. These runs supersede the earlier40-test/packaging snapshots. Legacy MacRoman Café + truncation and4097 global extension rejection regressions were added. Inventory after encoding_rs0.8.42:86npm/270Rust Windows packages; license notices include MIT and required BSD/WHATWG/COPYRIGHT. No unrelated package version was upgraded.
 
 Actual native high-resolution responsiveness: `node scripts/native-large-input.mjs` Pass in dev-02-native-large.log/.json. Original8000×5000, derived1000×625; preview visible972ms after selection,54 rAF samples with max gap100.1ms, cached verified preview3.8ms. Input was created by developer-only Rust import helper; this is not an OS large-file drag/drop gesture test. It measures this machine/fixture, not universal responsiveness.
+
+## DEV-03 execution record (2026-10-29 Windows)
+
+Every command starts with `. ./scripts/env.ps1`. Actual Python3.12.14 path is the existing installation in ENVIRONMENT_REPORT; VTUBER_RUNTIME_DIR points at E workspace `.tools/dev03-runtime` for local runs. Node/Rust remain the pinned DEV-02 tools. All raw logs/data are ignored artifacts/.tools, not user artwork. Model packages are isolated and model hash is56f731422c39f2576a74604122b4ddb14bb4d86869e0011750e17b1196deb765.
+
+| Command / scope | Outcome / log |
+|---|---|
+| scripts/test.ps1 before edits | Pass: dev-03-baseline-clean.log (42Rust+1ignored subprocess helper,4contract,2Python,3UI,format/build/clippy/docs). First sandbox run stuck after assertions, F03-001 |
+| node scripts/native-recovery.mjs before edits | Pass: dev-03-native-baseline.log; actual DEV-02 release |
+| cargo run --example runtime_check -- install | install1 failure retained, install2 pass; pinned HTTPS CPU wheels and real quarantine inference, dev-03-install2.log |
+| cargo run --example runtime_check -- infer | Pass: dev-03-inference1.log actual ONNX CPU output; not dummy |
+| Python -m unittest discover -s workers -v | dev-03-python2.log:12 Python tests (10 runtime +2 legacy dummy) pass; real vectors/network guard plus injected download/resource faults |
+| cargo test --locked runtime_tests | dev-03-rust-runtime5.log:11 runtime tests pass, including real512MiB allocation limit, descendant kill and new report corruption |
+| npm run desktop:build | earlier release1/2 pass; final rebuilt acceptance separately below |
+| node scripts/native-runtime.mjs | native-runtime1 harness failure, native-runtime2 pass actual install/probe/PNG/PSD/cancel/kill/tamper/3locale; expanded installation-interruption run pending final acceptance |
+
+Observed device: Ryzen7 4800H8C/16T, RAM≈39.87GiB, RTX2060 total6144MiB driver591.74, E NTFS. Device query is not GPU inference. Previous successful native sample: model load4.78ms, inference0.33ms, peak working set≈60.6MB; per-child peak is not aggregate installer peak. Final evidence supersedes individual timing samples. No VRAM allocated by this CPU provider. CPU seconds are process CPU time, not utilization percentage.
+
+Not run: CUDA/DirectML/PyTorch tensor tests, sustained GPU/OOM, physical disk exhaustion, power failure, physical network unplug/full native traffic audit, clean-machine installer,5-person beginner study, character AI/rigging/broadcast certification. Mock stream/resource faults are explicitly simulations, not these physical tests. Full acceptance counts/log hashes/native expanded results and main remote outcome are recorded separately below before completion.
+
+### DEV-03 final local acceptance
+
+`./scripts/test.ps1 -Python <actual Python3.12>` with prepared VTUBER_RUNTIME_DIR: **Pass** in artifacts/dev-03-acceptance-suite.log:53 Rust +1 intentionally ignored subprocess helper (invoked by parent tests),12 Python (10 runtime/2 dummy),5 TypeScript contracts,4 mocked UI;32doc/110requirement audit, format, build and clippy all pass. `npm run desktop:build` Pass in dev-03-release3.log; packaged runtime.py/notices hashes match sources. Final result/report hardening and exact latest manifest/license fields are included.
+
+`node scripts/native-runtime.mjs`: **Pass** dev-03-native-runtime3.log; actual installation consent/cache-integrity/install/probe/inference, PNG+PSD originals/revisions unchanged, cancel/no completed artifact, app kill/restart interruption, model tamper refusal/retry, reinstall cancellation AND app kill during pip phase preserve old active generation, repeated CPU inference,3locales/visible numeric result/export blocked. Screenshot reviewed; expert details are intentionally expanded. Input was developer-seeded synthetic artwork, not an OS picker gesture.
+
+`node scripts/native-recovery.mjs`: **Pass** dev-03-native-recovery-final.log, existing dummy/GPU query/save/restart/selection/corrupt isolation/recovery/index/hash. `node scripts/native-large-input.mjs`: **Pass** dev-03-native-large.log; original8000x5000 preserved, preview1000x625,931ms display, max rAF gap100.1ms/51samples, cached4.1ms. The prior DEV-02 large-image JSON/screenshot was copied to pre-dev03-* before this script reused its default output filenames; new JSON is also copied to dev-03-native-large.json. No importer/source schema changes.
+
+Final native CPU sample: load4.49ms, inference0.305ms, peak60,477,440B, CPU0.53125s; actual PNG/PSD runs4.80/5.08ms load,0.306/0.318ms inference,≈60.6–60.9MB peak. These are child metrics on this machine, not aggregate install peak/CPU percentage. Exact resources and single-generation disk size: evidence/dev-03-local.json. No GPU inference was executed.
+
+`npm audit --audit-level=moderate`: **Pass**,0 findings in dev-03-npm-audit.log. Exact five PyPI versions queried at OSV on2026-10-29: no returned advisories in dev-03-runtime-advisories.json; this does not audit every bundled native component or prove absence of vulnerabilities. Cargo Windows inventory recorded; no existing dependency version upgrade. Source sample/v1 schema/storage/model diff empty. User cleanup file hash unchanged.
+
+Local acceptance is complete; GitHub final completion still requires PR/main exact SHA CI and safe merge. Sanitized evidence hashes retain failed attempts as failures and separate mocked faults from real process tests.
+
+### Canonical committed-byte acceptance (DEV-03 final)
+
+F03-007 LF normalization changed only exact lock/notices bytes, not dependency versions or model content. Fresh generation installed successfully in dev-03-canonical-install.log; the previous generation was retained. dev-03-canonical-suite.log passes the full53Rust/12Python/5contract/4UI suite including the LF regression. dev-03-release-canonical.log passes Windows release; dev-03-native-runtime-canonical.log passes the entire expanded actual runtime/install cancellation/kill flow again. These supersede earlier binary/runtime samples; prior storage/40M importer checks remain valid because importer/storage/UI code did not change.
+
+Final native probe: load5.639ms, inference0.316ms, peak60,489,728B, process CPU0.531s. Exact hash/per-run measurements are in evidence/dev-03-local.json. All hashed runtime inputs match Git LF bytes; no integrity exception was added.

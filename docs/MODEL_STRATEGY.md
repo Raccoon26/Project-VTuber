@@ -20,3 +20,9 @@ Windows CUDA(Pytorch), CPU(검증된 lightweight segmentation/기하 처리), ON
 
 ## 보안·승인 조건
 pickle 기반 checkpoint의 임의 코드 실행 위험을 피하고 가능한 safetensors를 우선한다. 임의 remote code나 pip install script를 신뢰하지 않는다. 의존성·model card·LICENSE 별도 감사 후 제한된 실행 환경에서 로드한다. 대형 weights 다운로드/장시간 GPU 부하/유료 서비스/이미지 전송은 별도 권한 확인이 필요하다. 핵심 제작에 cloud API를 필수로 넣지 않는다. 광고는 모델 관리자에 접근할 수 없다.
+
+## DEV-03 selected provider
+
+Select an untrained, own-generated216-byte ONNX affine/ReLU diagnostic (CC0 weights), ONNX Runtime1.31.1 CPU, NumPy2.5.4 and exact wheels in workers/runtime-lock.json. This is a reproducible engine experiment, not a trained face/segmentation/3D candidate. No outside artwork or checkpoint is downloaded. Dtype float32, [1,3]→[1,2]; three distinct input/output expectations test actual tensor execution.
+
+PyTorch CPU/CUDA, ORT DirectML and image→3D remain candidates, not activated. No GPU package is needed for image import/preview or this probe. Future providers require reviewed region/license/format/hash/input-resource contracts and real hardware evidence before selection. See BACKEND_COMPATIBILITY and PROVIDER_SECURITY; no implicit quality-reducing fallback.

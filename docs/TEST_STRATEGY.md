@@ -37,3 +37,9 @@ UI recovery.spec.ts는 **모의 IPC**로 취소/확인/키보드/3언어를 검�
 ## DEV-02 integration
 
 DEV-02 adds modes/precision/ICC/alpha/hash tests, PSD original-layer and Lr16 contracts, malformed prefixes and offset mutation, and independent synthetic psd-tools compression/group fixtures. The reference package is only an E development installation, not product/CI dependency. TEST_RUNS distinguishes actual OS/file-picker/native IPC, browser mocks, numeric pixels, injected failures and unexecuted Photoshop/monitor certification.
+
+## DEV-03 runtime test tiers
+
+Baseline: unchanged DEV-02 full suite before edits. Python: bounded HTTPS mock streams/redirects, approval, corrupt/cache/partial retry, resource injection and real managed ORT with three numerical cases/network guard. Rust: strict registry/protocol, real CPU with PNG/PSD history hashes, staged/report corruption, journal failure/restart, concurrency/cancel/timeout, actual512MiB Job Object failure and real descendant termination. TypeScript: manifest binding, language parity and unchanged exporter/advertisement contracts. Playwright UI is explicitly mocked; native-runtime uses real release/Tauri IPC/ONNX and synthetic developer-seeded projects, not a mocked provider.
+
+Native acceptance covers installation consent, cached verified wheel install, probe, actual output, cancellation, kill/restart, model tampering, reinstall cancel/kill retaining prior active generation and three locales. Existing native-recovery and native-large-input check previous functionality. Full suite never downloads automatically; run prepare-runtime explicitly first. All logs go to artifacts on E and sanitized hash summaries to docs/evidence. Physical disconnected network, GPU inference, actual disk fill, system power loss and beginner study are not substituted by mocks.

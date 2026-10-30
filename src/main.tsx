@@ -14,6 +14,7 @@ import { message, type Locale } from "./i18n";
 import "./style.css";
 import { RecoveryPanel } from "./RecoveryPanel";
 import { SourcePreview } from "./SourcePreview";
+import { RuntimePanel } from "./RuntimePanel";
 
 function App() {
   const [locale, setLocale] = useState<Locale>("ko");
@@ -39,6 +40,12 @@ function App() {
   const [error, setError] = useState("");
   const native = isTauri();
   const running = job?.status === "running" || job?.status === "queued";
+  const jobLabel = (j: Job | null) =>
+    t(
+      j?.provider !== "dummy" && j?.status === "completed"
+        ? "runtimeJobCompleted"
+        : (j?.status ?? "idle"),
+    );
   function report(e: unknown) {
     setError(
       typeof e === "object" && e !== null && "code" in e
@@ -194,7 +201,7 @@ function App() {
             <h1>{t("title")}</h1>
             <p>{t("subtitle")}</p>
           </div>
-          <span className="version">02 / SOURCE FIDELITY</span>
+          <span className="version">03 / LOCAL AI RUNTIME</span>
         </div>
         <div className="notice">{t("notice")}</div>
         {!native && <div className="notice browser">{t("browser")}</div>}
@@ -401,7 +408,7 @@ function App() {
             </section>
             <section>
               <h2>{t("step3")}</h2>
-              <p role="status">{t(job?.status ?? "idle")}</p>
+              <p role="status">{jobLabel(job)}</p>
               {job?.error && (
                 <p role="alert" className="error">
                   {t(job.error)}
@@ -413,7 +420,7 @@ function App() {
                   <ul>
                     {jobs.map((j) => (
                       <li key={j.id}>
-                        {t(j.status)} · {j.progress}%
+                        {jobLabel(j)} · {j.progress}%
                         {expert && <code>{j.id}</code>}
                         {[
                           "interrupted",
@@ -458,6 +465,15 @@ function App() {
             </section>
           </div>
           <aside>
+            <RuntimePanel
+              native={native}
+              expert={expert}
+              project={project}
+              job={job}
+              started={setJob}
+              report={report}
+              t={t}
+            />
             <section>
               <h2>{t("step4")}</h2>
               <h3>{t("gates")}</h3>

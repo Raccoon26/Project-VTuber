@@ -28,3 +28,9 @@ DEV-00의 합격 범위는 실행 가능한 기반·위험 조사·안전한 더
 ## DEV-02 integration
 
 DEV-02 tests byte/hash preservation separately from decoded pixels, ICC transform and cached PSD composite. Reference compositor/monitor limits remain explicit. No automatic Gate B/C/D pass is granted. Source hashes do not certify AI character identity. Numerical alpha/color fixture results are scoped to the stated renderer and color space; unsupported blend/advanced layers remain unverified.
+
+## DEV-03 scoped evidence
+
+Gate A: actual diagnostic execution on synthetic PNG/PSD projects compares original and immutable revision bytes/hash before/after; no migration or resize. Gate F: download faults (mock), real process timeout/RAM-limit/descendant termination, cancel/app kill/restart/journal and installation generation preservation. These results are development checks, not automatic project gate promotion.
+
+Gate B/C/D remain unverified for generated characters and all broadcast targets. Gate E has developer UI/native workflow evidence, not a five-person beginner/expert evaluation. Gate F power loss/physical disk exhaustion/GPU OOM/legacy fulltree remain unverified. Pass/fail/unverified/not_applicable stay distinct; model diagnostic output cannot certify rigging or character identity.

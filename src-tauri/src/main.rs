@@ -25,6 +25,74 @@ struct AppState {
     importing: Arc<AtomicBool>,
     preview_cache: Arc<Mutex<Option<(String, serde_json::Value)>>>,
     dropped: Mutex<Option<PathBuf>>,
+    runtime: vtuber_core::runtime::RuntimeManager,
+}
+#[tauri::command]
+async fn runtime_view(state: State<'_, AppState>) -> Result<serde_json::Value> {
+    let runtime = state.runtime.clone();
+    tauri::async_runtime::spawn_blocking(move || runtime.view())
+        .await
+        .map_err(|_| AppError::new("runtime_failed"))?
+}
+#[tauri::command]
+fn prepare_runtime(state: State<AppState>, approved: bool, token: String) -> Result<Job> {
+    if !approved || token != state.runtime.consent_token() {
+        return Err(AppError::new("download_consent"));
+    }
+    let runtime = state.runtime.clone();
+    state.jobs.start_task(
+        uuid::Uuid::nil().to_string(),
+        "runtime-install-v1".into(),
+        move |id, cancel, progress| runtime.install(id, approved, &token, cancel, progress),
+    )
+}
+#[tauri::command]
+fn probe_runtime(state: State<AppState>) -> Result<Job> {
+    let runtime = state.runtime.clone();
+    state.jobs.start_task(
+        uuid::Uuid::nil().to_string(),
+        "runtime-probe-v1".into(),
+        move |id, cancel, progress| runtime.probe(id, cancel, progress),
+    )
+}
+#[tauri::command]
+fn start_inference(state: State<AppState>, id: String) -> Result<Job> {
+    let project = state.store.lock().unwrap().open(&id)?;
+    let source = project
+        .sources
+        .first()
+        .ok_or_else(|| AppError::new("source_required"))?
+        .sha256
+        .clone();
+    let runtime = state.runtime.clone();
+    let store = state.store.clone();
+    state.jobs.start_task(
+        id.clone(),
+        vtuber_core::runtime::PROVIDER.into(),
+        move |job_id, cancel, progress| {
+            let artifact = runtime.infer(job_id, Some(source.clone()), cancel, progress)?;
+            let current = store.lock().unwrap().open(&id)?; // also rechecks blob SHA-256
+            if current.sources.first().map(|s| s.sha256.as_str()) != Some(&source) {
+                return Err(AppError::new("source_changed"));
+            }
+            if cancel.load(Ordering::SeqCst) {
+                return Err(AppError::new("cancelled"));
+            }
+            runtime.accept(job_id, &artifact)
+        },
+    )
+}
+#[tauri::command]
+fn runtime_result(state: State<AppState>, id: String) -> Result<serde_json::Value> {
+    if !state
+        .jobs
+        .history()?
+        .iter()
+        .any(|j| j.id == id && j.status == "completed" && j.provider != "dummy")
+    {
+        return Err(AppError::new("artifact_unverified"));
+    }
+    state.runtime.result(&id)
 }
 #[tauri::command]
 fn create_project(
@@ -247,6 +315,17 @@ fn main() {
             let python = std::env::var_os("VTUBER_PYTHON")
                 .map(PathBuf::from)
                 .unwrap_or_else(|| "python".into());
+            let runtime_script = if cfg!(debug_assertions) {
+                PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../workers/runtime.py")
+            } else {
+                app.path().resource_dir()?.join("workers/runtime.py")
+            };
+            let runtime = vtuber_core::runtime::RuntimeManager::new(
+                data.join("runtime"),
+                python.clone(),
+                runtime_script,
+            )
+            .map_err(|e| e.code)?;
             app.manage(AppState {
                 store: Arc::new(Mutex::new(ProjectStore::new(root).map_err(|e| e.code)?)),
                 jobs: JobManager::persistent(data.join("jobs")).map_err(|e| e.code)?,
@@ -256,9 +335,10 @@ fn main() {
                 importing: Arc::new(AtomicBool::new(false)),
                 preview_cache: Arc::new(Mutex::new(None)),
                 dropped: Mutex::new(None),
+                runtime,
             });
             tauri::WebviewWindowBuilder::new(app, "main", tauri::WebviewUrl::default())
-                .title("Project VTuber AI · DEV-02")
+                .title("Project VTuber AI · DEV-03")
                 .inner_size(1180.0, 860.0)
                 .min_inner_size(800.0, 650.0)
                 .data_directory(data.join("webview"))
@@ -292,7 +372,12 @@ fn main() {
             start_job,
             job_status,
             cancel_job,
-            gpu_report
+            gpu_report,
+            runtime_view,
+            prepare_runtime,
+            probe_runtime,
+            start_inference,
+            runtime_result
         ])
         .build(tauri::generate_context!())
         .expect("Desktop initialization failed")

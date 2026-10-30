@@ -4,6 +4,8 @@ $ErrorActionPreference = 'Stop'
 Set-Location $taskRoot
 if (-not $Python) { $Python = (Get-Command python -ErrorAction Stop).Source }
 $env:VTUBER_PYTHON = $Python
+if (-not $env:VTUBER_RUNTIME_DIR) { $env:VTUBER_RUNTIME_DIR = Join-Path $taskTools 'runtime-onnx-v1' }
+if (-not (Test-Path (Join-Path $env:VTUBER_RUNTIME_DIR 'active'))) { throw 'Run scripts/prepare-runtime.ps1 -Python <absolute Python 3.12> first. Tests do not download automatically.' }
 New-Item -ItemType Directory -Force artifacts | Out-Null
 function Invoke-Check([string]$Name, [scriptblock]$Command) {
     Write-Output "Running $Name"

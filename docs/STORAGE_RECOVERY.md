@@ -36,3 +36,7 @@ rusqlite 0.41.0 bundled SQLite를 사용한다. `projects/index.sqlite`, user_ve
 ## DEV-02 integration
 
 DEV-02 PSD original blobs use sources/<sha256>.psd and are verified by the same byte length/hash rules. v2 import publishes a new immutable revision; the earlier v1 revision is preserved. History/list/index/recovery read both versions. Raw originals remain authority; the preview cache is dispensable. Import cancellation before commit can leave an unreferenced blob, never a modified old revision. No source pruning is performed.
+
+## DEV-03 storage isolation
+
+No project storage/revision/blob/index algorithm changed. Runtime data is a sibling hierarchy, not a new project source or SQLite authority. PNG/PSD originals and revisions are revalidated around diagnostic execution. Runtime report or installation corruption is blocked independently; a failed install preserves existing active pointer/generation. Unreferenced staging/partial generations are retained for diagnosis rather than silently deleted. File+job+environment publication are not one transaction; incomplete journal entries are never completed results.
